@@ -1,0 +1,35 @@
+h1= title
+hr
+div(id="contacts" class='grid-container')
+    article(id="infos_contacts")
+        div(id="address")
+            p Jérôme Lanteri
+            p 13 Avenue des Pins
+            p 06200 Nice, France
+        div(id="siret")
+            p SIRET 483 662 854 00015
+        table(id="contact")
+            caption
+                button(id="send_message" class="btn btn-sm btn-primary")= caption
+            tbody
+                tr
+                    th(align='right') mobile: 
+                    th(align='right')= mobile
+                tr
+                    th(align='right') email: 
+                    th(align='right')= email
+    article(id="message_contact" 
+            style="display:none;")
+        form(id="message_contact_form")
+            label(for='fname')= f_fname
+            input(type='text' id='fname' name='fname')
+            label(for='sname')= f_sname
+            input(type='text' id='sname' name='sname')
+            label(for='email')= f_email
+            input(type='email' id='email' name='email')
+            label(for='message')= f_message
+            textarea(type='text' id='message' name='message'
+                    rows="4" cols="50" defaultValue="")
+            br
+            input(type='submit' id='submit_form_message' 
+                value=f_submit)
