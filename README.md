@@ -1,7 +1,7 @@
 # Web site example (SourceCodeMaker - infos)
 
 used to show Fullstack: SSR with Express backend and React frontend
-This will also be a contact point to my freelance activity contact site point.
+This will also be a contact point to my freelance activity contact web site.
 
 ## Technology used
 
