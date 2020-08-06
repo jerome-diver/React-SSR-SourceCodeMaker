@@ -8,17 +8,14 @@ const Home = (props) => {
     content: "" 
   })
 
-  useEffect(
-    () => {
-      if (home.title === "" && home.content === "") {
-        fetch('http://localhost:3000/api/home')
-          .then(res => res.json())
-          .then(respond => setHome( 
-              { title: respond.title,
-                content: respond.content } ) )
-      }
-    }
-  )
+  useEffect( () => {
+      console.log("UseEffect of Home component call")
+      fetch('http://localhost:3000/api/home')
+        .then(res => res.json())
+        .then(respond => setHome( 
+            { title: respond.title,
+              content: respond.content } ) )
+  }, [] )
 
   return (
     <>
