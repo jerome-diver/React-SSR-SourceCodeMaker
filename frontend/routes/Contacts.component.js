@@ -30,8 +30,7 @@ class Contacts extends Component {
 
   render() {
     return (
-      <> 
-          { 
+      <> { 
           parse(this.state.content, 
             { htmlparser2: {
                 xmlMode: true,
@@ -39,10 +38,8 @@ class Contacts extends Component {
                 lowerCaseTags: false
               } 
             } ) 
-        } 
-      </>
-    );
+      } </> );
   }
 }
-export default Contacts;
 
+export default Contacts

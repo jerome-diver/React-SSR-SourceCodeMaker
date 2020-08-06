@@ -3,11 +3,11 @@ hr
 div(id="contacts" class='grid-container')
     article(id="infos_contacts")
         div(id="address")
-            p Jérôme Lanteri
-            p 13 Avenue des Pins
-            p 06200 Nice, France
+            p= sname + " " + fname
+            p= address_road
+            p= address_CP + " " + address_city + ", " + address_country
         div(id="siret")
-            p SIRET 483 662 854 00015
+            p= "SIRET " + enterprise_SIRET
         table(id="contact")
             caption
                 button(id="send_message" class="btn btn-sm btn-primary")= caption
