@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRegistered } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form } from 'react-bootstrap'
 
 const SignUp = (props) => {
@@ -17,8 +17,9 @@ const SignUp = (props) => {
       <> { 
         <Card id='sign'>
             <Card.Body>
-                <Card.Title><FontAwesomeIcon icon={faRegistered} />Sign up</Card.Title>
+                <Card.Title><FontAwesomeIcon icon={faUserPlus} /> Sign up</Card.Title>
                 <Card.Subtitle className='mb-2 text-muted' />
+                <Card.Text>After to register, you will have to check your email box and validate your account by click on the contained link to confirm.</Card.Text>
                 <Form>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Your email of this account</Form.Label>
@@ -42,7 +43,7 @@ const SignUp = (props) => {
                     </Form.Group>
                 </Form>
                 <Card.Link >
-                    <Button type='submit'>Sign up</Button>
+                    <Button type='submit'><FontAwesomeIcon icon={faUserPlus} /></Button>
                 </Card.Link>
                 <Card.Link href='/signin'>I already have an account</Card.Link>
             </Card.Body>
@@ -50,7 +51,7 @@ const SignUp = (props) => {
       } </> 
     )
 } else {
-  return (<div>Loading SignIn form...</div>)
+  return (<div>Loading SignUp form...</div>)
 }
 }
 
