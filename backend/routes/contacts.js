@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
 /* 
 Should find the admin user
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     f_email: "email",
     f_message: "Vôtre message",
     f_submit: "Envoyer"
-  });
-});
+  })
+})
 
-module.exports = router;
+module.exports = router
