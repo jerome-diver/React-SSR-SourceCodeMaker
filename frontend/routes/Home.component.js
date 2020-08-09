@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,9 +26,13 @@ const Home = (props) => {
           </div>
       </>
     )
-} else {
-  return (<div>Loading...</div>)
-}
+  } else {
+    return (
+      <Spinner animation='border' role='status'>
+        <span className='sr-only'>Loading...</span>
+      </Spinner>
+    )
+  }
 }
 
 export default Home;

@@ -66,7 +66,7 @@ class Page extends Component {
             <Route path='/subjects' component={Subjects}/>
             <Route path='/users' component={Users}/>
             <Route path='/example' component={Example}/>
-            <PrivateRoute path='/admin' render={AdminPage}/>
+            <PrivateRoute path='/admin' component={AdminPage}/>
             <Route path='/signin' component={(props) => <Sign {...props} action='in' />}/>
             <Route path='/signup' component={(props) => <Sign {...props} action='up' />}/>
           </Switch>
