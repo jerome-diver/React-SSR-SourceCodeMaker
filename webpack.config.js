@@ -58,7 +58,7 @@ const clientConfig = Object.assign({}, config, {
     name: "clientReact",
     target: "web",
     entry: {
-        client: [ './frontend/client.js' ],
+        client: [ './frontend/client.jsx' ],
     },
     output: {
         path: path.resolve(__dirname, 'build/public/'),
