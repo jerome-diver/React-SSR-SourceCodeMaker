@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
 import { create } from '../user/action-api'
+import { checkPassword } from '../user/user-form-helper'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -21,6 +22,13 @@ const SignUp = (props) => {
     const clickSubmit = () => {
         console.log('Submited')
         if (user.pass1 === user.pass2) {
+            var passwordValidated = true
+            const check = checkPassword(user.pass1)
+            if (!check.countEnough) { passwordValidated = false; messageNeedMoreChars(); }
+            if (!check.special) {  }
+            if (!check.upperCase) {  }
+            if (!check.lowerCase) {  }
+            if (!check.aNumber) {  }
             console.log('Password check success')
             create(user).then((data) => { setSigned({accepted: data.accepted, error: data.error}) } )
         }

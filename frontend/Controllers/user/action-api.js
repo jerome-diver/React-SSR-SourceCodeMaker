@@ -1,4 +1,4 @@
-import cipher from './cypher-password'
+import cipher from './user-form-helper'
 
 const create = (user) => {
     console.log("Client POST request to create User: " + user.username)

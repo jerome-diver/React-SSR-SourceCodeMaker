@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Navigation, Page } from './routes/Routing.component'
-//import { AuthContext } from './context/authenticate'
+import { Navigation } from './Views/routes/Routing.component'
+import { PageSwitcher } from './Views/Pages/PageSwitcher.component'
 import './stylesheet/menu.sass'
 
 const App = (props) => {
@@ -9,7 +9,7 @@ const App = (props) => {
         <div className="App">
           <header>
             <Navigation class="menu"/></header>
-          <main><Page/></main>
+          <main><PageSwitcher/></main>
           <footer>
               <hr />
               <div>Contacts</div>

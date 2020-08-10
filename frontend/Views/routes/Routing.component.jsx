@@ -1,16 +1,8 @@
 import React, { Component } from 'react'
 import { Navbar, Nav, Dropdown, DropdownButton } from 'react-bootstrap'
-import { Route, NavLink, Switch } from "react-router-dom"
-import { PrivateRoute } from './privateRoutes/PrivateRoute.component'
+import { Route, NavLink } from "react-router-dom"
+import { PrivateRoute } from './private/PrivateRoute.component'
 import * as Icon from 'react-bootstrap-icons'
-import Home from './Home.component'
-import Contacts from './Contacts.component'
-import Subjects from './Subjects.component'
-//import Subject from './Subject.component'
-import Users from './Users.component'
-import Example from './Example.component'
-import Admin from './privateRoutes/Admin.component'
-import Sign from "./Sign.component"
 
 class Navigation extends Component {
   state = {}
@@ -55,23 +47,4 @@ class UserNav extends Component {
   }
 }
 
-class Page extends Component {
-  state = {}
-  render() {
-    const signup = <Sign action='up'/>
-    return (
-        <Switch>
-          <Route exact path='/' component={Home}/>
-          <Route path='/contacts' component={Contacts}/>
-          <Route path='/subjects' component={Subjects}/>
-          <Route path='/users' component={Users}/>
-          <Route path='/example' component={Example}/>
-          <PrivateRoute path='/admin' component={Admin}/>
-          <Route path='/signin' component={(props) => <Sign {...props} action='in' />}/>
-          <Route path='/signup' component={(props) => <Sign {...props} action='up' />}/>
-        </Switch>
-    )
-  }
-}
-
-export { Navigation, UserNav, Page }
+export { Navigation, UserNav }

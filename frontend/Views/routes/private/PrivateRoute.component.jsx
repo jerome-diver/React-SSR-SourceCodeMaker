@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { isAuthenticated } from '../../user/authenticate-helper'
+import { isAuthenticated } from '../../Controllers/user/authenticate-helper'
 
 const  PrivateRoute = (props) => {
     <Route path={props.path} component={ (props) => isAuthenticated ? ( <Component {...props} /> ) : 
