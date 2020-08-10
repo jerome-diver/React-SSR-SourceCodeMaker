@@ -1,12 +1,17 @@
-const create = async (user) => {
-    try {
-        let response = await fetch('api/users/', {
+import cipher from './cypher-password'
+
+const create = (user) => {
+    console.log("Client POST request to create User: " + user.username)
+    const newUser = { username: user.username,
+                      email: user.email,
+                      password: cipher(user.pass1) }
+    return fetch('/api/users', {
             method: 'POST',
             headers: { 'Accept': 'application/json',
-                       'Content-Type': 'application/json' },
-            body: JSON.stringify(user) } )
-        return await response.json()
-    } catch(error) { console.log('Failed to create user: ' + error) }
+                        'Content-Type': 'application/json' },
+            body: JSON.stringify(newUser) } )
+        .then((response) => { return response.json() })
+        .catch((error) => console.log('Failed to create user: ' + error) )
 }
 
 const list = async (signal) => {

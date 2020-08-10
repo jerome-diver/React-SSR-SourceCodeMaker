@@ -9,4 +9,14 @@ router.get('/', function(req, res, next) {
   ]);
 });
 
+/* POST to create new user */
+router.post('/', (req, res) => {
+    console.log('server created new user: ' + req.body.username)
+    res.json({
+        accepted: true,
+        error: '',
+    })
+})
+
+
 module.exports = router;

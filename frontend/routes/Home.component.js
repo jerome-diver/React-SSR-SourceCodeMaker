@@ -28,11 +28,12 @@ const Home = (props) => {
     )
   } else {
     return (
-      <Spinner animation='border' role='status'>
-        <span className='sr-only'>Loading...</span>
-      </Spinner>
+      <>
+        <Spinner animation='border' role='status'/>
+        <p>Loading...</p>
+      </>
     )
   }
 }
 
-export default Home;
+export default Home

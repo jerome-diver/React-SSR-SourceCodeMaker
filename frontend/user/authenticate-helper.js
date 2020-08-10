@@ -1,5 +1,6 @@
 const { signout } = require("./authenticate-api")
 
+
 function authenticate(jwt, callback) {
     if (typeof window !== 'undefined') { sessionStorage.setItem('jwt', JSON.stringify(jwt)) }
     callback()

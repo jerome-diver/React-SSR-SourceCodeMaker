@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom"
 import '../node_modules/bootstrap/scss/bootstrap.scss'
 import "./stylesheet/awesome.sass"
 import './stylesheet/index.sass'
-import './stylesheet/menu.sass'
 import './stylesheet/app.sass'
 import App from './App'
 
