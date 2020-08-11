@@ -2,7 +2,6 @@ var express = require('express')
 const cors = require('cors')
 const favicon = require('serve-favicon')
 
-
 var layoutRouter = require('./routes/layout')
 var homeRouter = require('./routes/home')
 var usersRouter = require('./routes/users')

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
-import { create } from '../user/action-api'
-import { checkPassword } from '../user/user-form-helper'
+import Swal from 'sweetalert2'
+import { create } from '../../Controllers/user/action-api'
+import { checkPassword } from '../../Controllers/user/user-form-helper'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
-    const [signed, setSigned] = useState({ accepted: false, error: '' })
     
     useEffect( () => {
         console.log("UseEffect of AdminPage component call")
@@ -20,23 +20,30 @@ const SignUp = (props) => {
         setUser({...user, [name]: event.target.value}) }
 
     const clickSubmit = () => {
-        console.log('Submited')
         if (user.pass1 === user.pass2) {
             var passwordValidated = true
+            var message = "<h6>need:</h6>"
             const check = checkPassword(user.pass1)
-            if (!check.countEnough) { passwordValidated = false; messageNeedMoreChars(); }
-            if (!check.special) {  }
-            if (!check.upperCase) {  }
-            if (!check.lowerCase) {  }
-            if (!check.aNumber) {  }
-            console.log('Password check success')
-            create(user).then((data) => { setSigned({accepted: data.accepted, error: data.error}) } )
+            if (!check.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
+            if (!check.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
+            if (!check.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
+            if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
+            if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
+            if (passwordValidated) {
+                console.log('Password check success')
+                create(user).then((response) => {
+                    if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
+                    else { Swal.fire('Singup process success', 
+                                     '<p>Look at your email box, then click on the link to validate your registration</p>',
+                                     'success') }
+                    } ) }
+            else { Swal.fire('Password request failed', message, 'error') } 
         }
     }
 
     if (load) {
         return (
-            <> { <Card id='sign'>
+            <Card id='sign'>
                 <Card.Body>
                     <Card.Title><FontAwesomeIcon icon={faUserPlus} /> Sign up</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted' />
@@ -63,12 +70,12 @@ const SignUp = (props) => {
                             <Form.Text className='text-muted'>hit  again, you can not copy/paste</Form.Text>
                         </Form.Group>
                     </Form>
-                    <Card.Link >
+                    <Card.Link>
                         <Button type='submit' onClick={clickSubmit}><FontAwesomeIcon icon={faUserPlus} /></Button>
                     </Card.Link>
                     <Card.Link href='/signin'>I already have an account</Card.Link>
                 </Card.Body>
-            </Card> } </> 
+            </Card>
         )
     } else {
         return (

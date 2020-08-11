@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { list } from '../user/action-api'
+import { list } from '../../../Controllers/user/action-api'
 import { Jumbotron, ListGroup, Spinner } from 'react-bootstrap'
-import '../stylesheet/users.sass'
+import '../../../stylesheet/users.sass'
 
 const User = (props) => {
     return (

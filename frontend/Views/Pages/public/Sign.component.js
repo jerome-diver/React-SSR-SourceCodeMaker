@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import SignIn from '../components/Signin'
-import SignUp from '../components/Signup'
+import SignIn from '../../components/Signin'
+import SignUp from '../../components/Signup'
 
 class Sign extends Component {
   state = { content: "" }

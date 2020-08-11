@@ -8,13 +8,16 @@ This will also be a contact point to my freelance activity contact web site.
 * Express.js backend server
 * React.js frontend framework
 * Webpack-4 bundler tool
-* Babel transpiler
-* Mangoose for MongoDB database
-* Redux
-* Bootstrap-4 with React-bootstrap UI
+* Babel transpiler with [@babel/core](https://github.com/babel/babel) and some other
+* [Mongoose](https://mongoosejs.com/) for MongoDB database
+* Redux with [react-redux](https://github.com/reduxjs/react-redux)
+* Bootstrap-4 UI stylesheet framework with [react-bootstrap](https://react-bootstrap.github.io/)
+* Fontawesome fonts and icons with [@fontawesome/react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
 * Pug template
 * SASS stylesheet
 * autoprefixer builder plugin for CSS facility
+* [SweetAlert2](https://sweetalert2.github.io/) nice dialog modal customized
+* [validator](https://github.com/validatorjs/validator.js) and [express-validator](https://express-validator.github.io/docs/) to check entries validation.
 
 ## DevOps part
 

@@ -1,10 +1,10 @@
-import cipher from './user-form-helper'
+import { cypher } from './user-form-helper'
 
 const create = (user) => {
     console.log("Client POST request to create User: " + user.username)
     const newUser = { username: user.username,
                       email: user.email,
-                      password: cipher(user.pass1) }
+                      password: cypher(user.pass1) }
     return fetch('/api/users', {
             method: 'POST',
             headers: { 'Accept': 'application/json',
