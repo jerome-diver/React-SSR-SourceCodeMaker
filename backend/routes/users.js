@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
+import { db } from '../controllers/database'
+import User from '../models/user.model'
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -15,11 +16,16 @@ router.get('/', function(req, res, next) {
 const jsonParser = bodyParser.json()
 
 router.post('/', jsonParser, (req, res) => {
-    console.log('server created new user: ' + req.body.username)
-    res.json({
-        accepted: true,
-        error: '',
-    })
+    let result = User.create( {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password },
+     (error, u) => {
+       if(error) { 
+         res.json({accepted: false, error: error.message})
+         return console.log('Error is: ' + error) }
+         else { res.json({accepted: true, error: ''}) }
+     }  )
 })
 
 module.exports = router;
