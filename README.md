@@ -6,6 +6,8 @@ This will also be a contact point to my freelance activity contact web site.
 ## Technology used
 
 * [Express.js](https://expressjs.com/) Node backend server
+* JSON Web Token with [express-jwt](https://www.npmjs.com/package/express-jwt) to enforce secret access control
+* JWT and user role authorization with [express-jwt-permissions](https://github.com/MichielDeMey/express-jwt-permissions)
 * [React.js](https://reactjs.org/) frontend framework
 * Babel transpiler with [@babel/core](https://github.com/babel/babel) and some other
 * [Mongoose](https://mongoosejs.com/) for MongoDB database
