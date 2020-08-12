@@ -16,16 +16,14 @@ router.get('/', function(req, res, next) {
 const jsonParser = bodyParser.json()
 
 router.post('/', jsonParser, (req, res) => {
-    let result = User.create( {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password },
-     (error, u) => {
-       if(error) { 
-         res.json({accepted: false, error: error.message})
-         return console.log('Error is: ' + error) }
-         else { res.json({accepted: true, error: ''}) }
-     }  )
+    User.create( {
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password },
+      (error, u) => {
+        if (error) { res.json({accepted: false, error: error.message}) }
+        else { res.json({accepted: true, error: ''}) }
+    } )
 })
 
 module.exports = router;

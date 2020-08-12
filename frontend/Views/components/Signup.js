@@ -13,12 +13,10 @@ const SignUp = (props) => {
     const [redirect, setRedirect] = useState(0)
     
     useEffect( () => {
-        console.log("UseEffect of AdminPage component call")
         setLoad(true)
     }, [] )
     
     const handleChange = name => event => { 
-        console.log('Event handled for: ' + name + ' with value: ' + event.target.value)
         setUser({...user, [name]: event.target.value}) }
 
     const clickSubmit = () => {
@@ -32,7 +30,6 @@ const SignUp = (props) => {
             if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
             if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
             if (passwordValidated) {
-                console.log('Password check success')
                 create(user).then((response) => {
                     if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
                     else { 
