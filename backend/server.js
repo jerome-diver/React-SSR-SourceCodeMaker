@@ -1,4 +1,5 @@
 var express = require('express')
+const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
 
@@ -12,6 +13,18 @@ var signRouter = require('./routes/sign')
 
 var app = express()
 app.use(favicon("./backend/img/favicon.ico"))
+
+mailer.extend(app, {
+    from: 'jerome.archlinux@gmail.com',
+    host: 'smtp.gmail.com',
+    secureconnection: true,
+    port: 465,
+    transportMethod: 'SMTP',
+    auth: {
+      user: 'jerome.archlinux@gmail.com',
+      pass: process.env.EMAIL_PASSWORD
+    }
+})
 
 // view engine setup
 app.set('views', 'backend/views')

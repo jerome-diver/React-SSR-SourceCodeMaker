@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 import Crypto from 'crypto'
 
+/* Schema for document user for collection "users" */
 const UserSchema = new Schema({
     username: {
         type: String,
@@ -38,6 +39,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    ticket: {
+        type: String,
+        trim: true
+    },
     role: {
         type: String,
         default: 'Reader',
@@ -56,6 +61,7 @@ UserSchema.virtual('password')
               this._password = password
               this.salt = this.makeSalt()
               this.hashed_password = this.encryptPassword(password, this.salt) 
+              this.ticket = this.makeTicket(this.hashed_password)
             })
           .get(function() { return this._password })
 
@@ -71,8 +77,12 @@ UserSchema.methods = {
             return done
         } catch (error) { return 'error' }
     },
+    makeTicket: (hashed_password) => {
+        return Crypto.createHash('md5').update(hashed_password).digest('hex')
+    },
     makeSalt: () => {
         return Math.round(new Date().valueOf() * Math.random()) + '' }
 }
 
+/* Export Schema to Model User */
 export default model('User', UserSchema)
