@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
@@ -9,6 +10,7 @@ import { checkPassword } from '../../Controllers/user/user-form-helper'
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
+    const [redirect, setRedirect] = useState(0)
     
     useEffect( () => {
         console.log("UseEffect of AdminPage component call")
@@ -33,17 +35,38 @@ const SignUp = (props) => {
                 console.log('Password check success')
                 create(user).then((response) => {
                     if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
-                    else { Swal.fire('Singup process success', 
-                                     '<p>Look at your email box, then click on the link to validate your registration</p>',
-                                     'success') }
+                    else { 
+                        Swal.fire({ 
+                                title: 'Singup process success', 
+                                html:  '<p>Look at your email box, then click on the link to validate your registration</p>',
+                                icon:  'success',
+                                showCancelButton: true,
+                                cancelButtonText: "Home page",
+                                confirmButtonText: "Try to Signin" } )
+                            .then((result) => {
+                                if (result.value) { setRedirect(1) }
+                                else { setRedirect(2) }
+                            } ) }
                     } ) }
             else { Swal.fire('Password request failed', message, 'error') } 
+        }
+    }
+
+    const renderRedirect = () => {
+        switch (redirect) {
+            case 1:
+                return <Redirect to='/signin'/>
+                break
+            case 2:
+                return <Redirect to='/'/>
+                break
         }
     }
 
     if (load) {
         return (
             <Card id='sign'>
+            {renderRedirect()}
                 <Card.Body>
                     <Card.Title><FontAwesomeIcon icon={faUserPlus} /> Sign up</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted' />
