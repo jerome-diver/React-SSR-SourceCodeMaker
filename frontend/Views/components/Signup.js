@@ -30,22 +30,23 @@ const SignUp = (props) => {
             if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
             if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
             if (passwordValidated) {
-                create(user).then((response) => {
-                    if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
-                    else { 
-                        Swal.fire({ 
+                create(user)
+                    .then((response) => {
+                        if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
+                        else { 
+                          Swal.fire({ 
                                 title: 'Singup process success', 
                                 html:  '<p>Look at your email box, then click on the link to validate your registration</p>',
                                 icon:  'success',
                                 showCancelButton: true,
                                 cancelButtonText: "Home page",
                                 confirmButtonText: "Try to Signin" } )
-                            .then((result) => {
-                                if (result.value) { setRedirect(1) }
-                                else { setRedirect(2) }
-                            } ) }
-                    } ) }
-            else { Swal.fire('Password request failed', message, 'error') } 
+                              .then((result) => {
+                                  if (result.value) { setRedirect(1) }
+                                  else { setRedirect(2) }
+                                } ) } } )
+                    .catch((error) => { Swal.fire('Create User account Failed', error, 'error') } )
+            } else { Swal.fire('Password request failed', message, 'error') } 
         }
     }
 

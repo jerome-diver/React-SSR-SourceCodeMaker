@@ -37,7 +37,7 @@ const send_email_to_validate = (username) => {
     const date_start = user.created
     const date_end = moment().add('2 days').format('%d/%m/%Y at %H:%M')
     const localhost_web = 'http:/localhost:300/'
-    const validation_link = localhost_web + `validate/?user=${username}?ticket=${user.ticket}`
+    const validation_link = localhost_web + `validate?user=${username}?ticket=${user.ticket}`
     /* send an email to ask confirmation */
     router.mailer.send('new_user_confirm_email', {
         to: user.email,
