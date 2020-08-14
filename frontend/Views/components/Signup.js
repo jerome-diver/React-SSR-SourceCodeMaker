@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import { create } from '../../Controllers/user/action-api'
+import { create, validateAccount } from '../../Controllers/user/action-api'
 import { checkPassword } from '../../Controllers/user/user-form-helper'
+import { validationResult } from 'express-validator'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -36,18 +37,30 @@ const SignUp = (props) => {
                         else { 
                           Swal.fire({ 
                                 title: 'Singup process success', 
-                                html:  '<p>Look at your email box, then click on the link to validate your registration</p>',
-                                icon:  'success',
+                                html:  '<p>A new user has been created, but need a validation to be ready to use.</p>',
+                                icon:  'warning',
                                 showCancelButton: true,
-                                cancelButtonText: "Home page",
-                                confirmButtonText: "Try to Signin" } )
-                              .then((result) => {
-                                  if (result.value) { setRedirect(1) }
-                                  else { setRedirect(2) }
-                                } ) } } )
-                    .catch((error) => { Swal.fire('Create User account Failed', error, 'error') } )
+                                cancelButtonText: "go Home",
+                                confirmButtonText: "Send email with link to validate" } )
+                            .then((result) => { 
+                                if (result.value) {
+                                    console.log("START TO SEND EMAIL PROCESS")
+                                    validateAccount(user.username) 
+                                        .then((response) => { 
+                                            console.log('GET BACK: ', response.sent, response.error)
+                                            if(response.sent) {
+                                                Swal.fire({ title: 'Email as been sent', 
+                                                            html: '<p>Check your email account, then click on validate link to get account up.</p>', 
+                                                            icon: 'success',
+                                                            showCancelButton: true,
+                                                            cancelButtonText: "go Home",
+                                                            confirmButtonText: 'Sign in'} )
+                                                       .then((result) => { 
+                                                           if (result.value) { setRedirect(1) } else {setRedirect(2) } } )
+                                            } else { Swal.fire('Failed to send email', error, 'error') } } )
+                                } else { setRedirect(2) } } ) } } )
             } else { Swal.fire('Password request failed', message, 'error') } 
-        }
+        } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }
     }
 
     const renderRedirect = () => {

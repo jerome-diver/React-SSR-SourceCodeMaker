@@ -1,17 +1,25 @@
 import { cypher } from './user-form-helper'
 
-const create = (user) => {
-    console.log("Client POST request to create User: " + user.username)
+const create = async (user) => {
     const newUser = { username: user.username,
                       email: user.email,
                       password: cypher(user.pass1) }
-    return fetch('/api/users', {
+    let response = await fetch('/api/users', {
             method: 'POST',
             headers: { 'Accept': 'application/json',
-                        'Content-Type': 'application/json' },
+                       'Content-Type': 'application/json' },
             body: JSON.stringify(newUser) } )
-        .then((response) => { return response.json() })
-        .catch((error) => console.log('Failed to create user: ' + error) )
+    return response.json()
+}
+
+const validateAccount = async (username) => {
+    console.log("Start to send email with validation link inside for ", username)
+    let response = await fetch(`/api/validate`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify( {username: username} ) } )
+    return response.json() 
 }
 
 const list = async (signal) => {
@@ -23,9 +31,9 @@ const list = async (signal) => {
     } catch(error) { console.log('Failed to show users list: ' + error) }
 }
 
-const read = async (params, credentials, signal) => {
+const read = async (username, credentials, signal) => {
     try {
-        let response = await fetch('/api/users/' + params.id, {
+        let response = await fetch('/api/users/' + username, {
             method: 'GET',
             signal: signal,
             headers: { 'Accept': 'application/json',
@@ -58,4 +66,4 @@ const remove = async (params, credentials) => {
     } catch(error) { console.log('Failed to remove user: ' + error) }
 }
 
-export { create, list, read, update, remove }
+export { create, list, read, update, remove, validateAccount }

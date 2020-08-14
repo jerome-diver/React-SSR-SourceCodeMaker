@@ -10,6 +10,7 @@ import Users from './public/Users.component'
 import Example from './public/Example.component'
 import Sign from "./public/Sign.component"
 import Admin from './private/Admin.component'
+import Profile from './private/Profile.component'
 
 class PageSwitcher extends Component {
   state = {}
@@ -23,6 +24,7 @@ class PageSwitcher extends Component {
           <Route path='/users' component={Users}/>
           <Route path='/example' component={Example}/>
           <PrivateRoute path='/admin' component={Admin}/>
+          <PrivateRoute path='/profile' component={(props) => <Profile {...props}/>}/>
           <Route path='/signin' component={(props) => <Sign {...props} action='in' />}/>
           <Route path='/signup' component={(props) => <Sign {...props} action='up' />}/>
         </Switch>

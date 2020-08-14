@@ -27,6 +27,7 @@ class Navigation extends Component {
                 <NavDropdown.Item href='/signin'>Sign in</NavDropdown.Item>
                 <NavDropdown.Item href='/signup'>Sign up</NavDropdown.Item>
                 <NavDropdown.Item href='/users'><Icon.PeopleFill/> Users list</NavDropdown.Item>
+                <NavDropdown.Item href='/profile/:username'><Icon.PersonBadge/> Profile</NavDropdown.Item>
                 <NavDropdown.Item href='/admin'><Icon.PersonBadge/> Admin</NavDropdown.Item>
               </NavDropdown>
             </Nav>

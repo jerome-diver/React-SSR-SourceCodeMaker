@@ -3,21 +3,12 @@ const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
 
-var layoutRouter = require('./routes/layout')
-var homeRouter = require('./routes/home')
-var usersRouter = require('./routes/users')
-var contactsRouter = require('./routes/contacts')
-var subjectRouter = require('./routes/subject')
-var adminRouter = require('./routes/admin')
-var signRouter = require('./routes/sign')
-
 var app = express()
-app.use(favicon("./backend/img/favicon.ico"))
 
 mailer.extend(app, {
     from: 'jerome.archlinux@gmail.com',
     host: 'smtp.gmail.com',
-    secureconnection: true,
+    secureConnection: true,
     port: 465,
     transportMethod: 'SMTP',
     auth: {
@@ -25,6 +16,17 @@ mailer.extend(app, {
       pass: process.env.EMAIL_PASSWORD
     }
 })
+
+var layoutRouter = require('./routes/layout')
+var homeRouter = require('./routes/home')
+var usersRouter = require('./routes/users')
+var contactsRouter = require('./routes/contacts')
+var subjectRouter = require('./routes/subject')
+var adminRouter = require('./routes/admin')
+var signRouter = require('./routes/sign')
+var validateEmailRouter = require('./routes/validate')
+
+app.use(favicon("./backend/img/favicon.ico"))
 
 // view engine setup
 app.set('views', 'backend/views')
@@ -44,6 +46,7 @@ app.use('/api/users', usersRouter)
 app.use('/template/contacts', contactsRouter)
 app.use('/api/subject/*', subjectRouter)
 app.use('/api/admin', adminRouter)
+app.use('/api/validate', validateEmailRouter)
 app.use('/template/sign', signRouter)
 app.use('/', layoutRouter)
 
