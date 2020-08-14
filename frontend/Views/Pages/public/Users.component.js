@@ -32,36 +32,56 @@ const User = (props) => {
 
 const Users = () => {
     const [users, setUsers] = useState([])
-    const [load, setLoad] = useState(false)
+    const [load, setLoad] = useState(0)
+    const [error, setError] = useState('')
   
     useEffect( () => {
         const abort = new AbortController()
         const signal = abort.signal
         list(signal).then( (data) => {
-            if (data && data.error) { console.log(data.error) } 
-            else { setUsers(data) } } )
-        setLoad(true)
+            if (data) {
+                if (data.error) { 
+                    setLoad(2)
+                    setError(data.error) } 
+                else { 
+                    setUsers(data)
+                    setLoad(1) } }
+            else { 
+                setLoad(2)
+                setError('Empty answer') } } )
         return function cleanup() { abort.abort() }
     }, [] )
   
-    if (load) {
-        return (
-            <Jumbotron fluid id="users">
-                <h1>Users list</h1>    
-                <ListGroup>
-                    {users.map((user, index) => {
-                        return (<User user={user} />)
-                    })}
-                </ListGroup>
-            </Jumbotron>
-        )
-    } else {
+    switch (load) {
+        case 0:     // loading run
+            return (
+                <>
+                    <Spinner animation='border' role='status'/>
+                    <p>Loading...</p>
+                </>
+            )
+            break
+        case 1:     // loaded
+            return (
+                <Jumbotron fluid id="users">
+                    <h1>Users list</h1>    
+                    <ListGroup>
+                        {users.map((user, index) => {
+                            return (<User user={user} />)
+                        })}
+                    </ListGroup>
+                </Jumbotron>
+            )
+            break
+        case 2:     // error, failed to load
         return (
             <>
-                <Spinner animation='border' role='status'/>
-                <p>Loading...</p>
+                <h6>Loading users list failed</h6>
+                <hr/>
+                <p>{error}</p>
             </>
         )
+            break
     }
 }
 
