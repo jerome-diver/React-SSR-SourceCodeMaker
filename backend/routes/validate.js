@@ -15,7 +15,7 @@ router.get('/:username/:ticket', (req, res) => {
             if (error) { res.json( {error: error, validated: false} ) }
             else { res.json( { error: null, validated: result.validated } ) }
         } )
-})
+} )
 
 /* POST to send email to validate new user */
 const jsonParser = bodyParser.json()
@@ -29,7 +29,7 @@ router.post('/', jsonParser, (req, res) => {
         } else {
             console.log('Find user: ', user)
             const date_start = user.created
-            const date_end = moment().add('2 days').format('%d/%m/%Y at %H:%M')
+            const date_end = moment().add(2, 'days').format('DD/MM/YYY at HH:mm')
             const url = 'http:/localhost:3000/api/validate'
             const validation_link = url + `/${user.username}/${user.ticket}`
             /* send an email to ask confirmation */
