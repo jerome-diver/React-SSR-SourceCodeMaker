@@ -28,8 +28,8 @@ router.post('/', jsonParser, (req, res) => {
             res.json( { error: err, accepted: false } )
         } else {
             console.log('Find user: ', user)
-            const date_start = user.created
-            const date_end = moment().add(2, 'days').format('DD/MM/YYY at HH:mm')
+            const date_start = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
             const url = 'http:/localhost:3000/api/validate'
             const validation_link = url + `/${user.username}/${user.ticket}`
             /* send an email to ask confirmation */
@@ -39,7 +39,7 @@ router.post('/', jsonParser, (req, res) => {
                 title: 'Source Maker Code validation process',
                 content_title: "New account validation for Source Maker Code web site",
                 introduction: `The  ${date_start} you create a new user account on my Source Maker Code web site.`,
-                text: `You should confirm your new account before the ${date_end} by clicking the next link.`,
+                text: `You should confirm your new account before the ${date_end} (local server UTC time) by clicking the next link.`,
                 link_validate: validation_link,
                 validation_text: 'Click this link to valid your account'
             }, (error) => {

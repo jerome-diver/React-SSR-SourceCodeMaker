@@ -34,8 +34,8 @@ const Profile = (props) => {
         }
     }
 
-    const editProfile = () => {
-        console.log("EDIT PROFILE FOR: ", user.username)
+    const editProfile = (username) => {
+        console.log("EDIT PROFILE FOR: ", username)
     } 
 
     if (load) {
@@ -46,7 +46,8 @@ const Profile = (props) => {
                 <p>Email: {user.email}</p> 
                 <p>First name: {user.first_name}</p>
                 <p>Second name: {user.second_name}</p>
-                <Button className='btn btn-sm btn-primary' onClick={editProfile}>Edit profile</Button>
+                <Button className='btn btn-sm btn-primary' 
+                        onClick={() => { editProfile(user.username) } }>Edit profile</Button>
             </Jumbotron>
         )
     } else {

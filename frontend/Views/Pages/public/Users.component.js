@@ -4,6 +4,7 @@ import { Jumbotron, ListGroup, Spinner, Badge } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
 const User = (props) => {
+    const { user } = props
     const variant = (role) => {
         switch (role) {
             case 'Reader':
@@ -17,14 +18,14 @@ const User = (props) => {
                 break
         }
     }
-    const role = props.data.role
+    const role = user.role
     return (
-        <ListGroup.Item id={props.data.id}>
-          <h4>{props.data.username} <Badge pill variant={variant(role)}>{role}</Badge></h4>
+        <ListGroup.Item id={user.id}>
+          <h4>{user.username} <Badge pill variant={variant(role)}>{role}</Badge></h4>
           <hr/>
-          <p>Email: {props.data.email}</p> 
-          <p>First name: {props.data.first_name}</p>
-          <p>Second name: {props.data.second_name}</p>
+          <p>Email: {user.email}</p> 
+          <p>First name: {user.first_name}</p>
+          <p>Second name: {user.second_name}</p>
         </ListGroup.Item>
     )
 }
@@ -49,7 +50,7 @@ const Users = () => {
                 <h1>Users list</h1>    
                 <ListGroup>
                     {users.map((user, index) => {
-                        return (<User data={user} />)
+                        return (<User user={user} />)
                     })}
                 </ListGroup>
             </Jumbotron>

@@ -38,7 +38,8 @@ const read = async (username, credentials, signal) => {
             signal: signal,
             headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json',
-                       'Authorization': 'Bearer ' + credentials.t } } )
+                       'Authorization': 'Bearer ' + credentials.t },
+            credentials: credentials } )
         return await response.json()
     } catch(error) { console.log('Failed to show user: ' + error) }
 }
