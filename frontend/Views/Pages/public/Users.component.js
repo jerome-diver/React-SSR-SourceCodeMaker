@@ -31,29 +31,29 @@ const User = (props) => {
 }
 
 const Users = () => {
-    const [users, setUsers] = useState([])
-    const [load, setLoad] = useState(0)
-    const [error, setError] = useState('')
+    const [users, setUsers] = useState([])      // list data from mongodb users server collection
+    const [load, setLoad] = useState(0)         // 0: loading, 1: loaded, 2: failed to load
+    const [error, setError] = useState('')      // error loading users report text
   
     useEffect( () => {
-        const abort = new AbortController()
+        const abort = new AbortController()     // stop to fetch a request if we cancel this page
         const signal = abort.signal
         list(signal).then( (data) => {
-            if (data) {
-                if (data.error) { 
+            if (data) {                         // have something back
+                if (data.error) {                   // but an error
                     setLoad(2)
                     setError(data.error) } 
-                else { 
+                else {                              // success, set users collection
                     setUsers(data)
                     setLoad(1) } }
-            else { 
+            else {                              // have nothing back, exceed time
                 setLoad(2)
                 setError('Empty answer') } } )
         return function cleanup() { abort.abort() }
     }, [] )
   
     switch (load) {
-        case 0:     // loading run
+        case 0:     // loading
             return (
                 <>
                     <Spinner animation='border' role='status'/>
@@ -73,7 +73,7 @@ const Users = () => {
                 </Jumbotron>
             )
             break
-        case 2:     // error, failed to load
+        case 2:     // failed to load
         return (
             <>
                 <h6>Loading users list failed</h6>
