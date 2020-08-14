@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { Card, Button, Form, Spinner } from 'react-bootstrap'
+import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { create, validateAccount } from '../../Controllers/user/action-api'
 import { checkPassword } from '../../Controllers/user/user-form-helper'
@@ -13,6 +13,9 @@ const SignUp = (props) => {
     const [load, setLoad] = useState(false)
     const [redirect, setRedirect] = useState(0)
     
+    const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
+    const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
+
     useEffect( () => {
         setLoad(true)
     }, [] )
@@ -37,7 +40,7 @@ const SignUp = (props) => {
                         else { 
                           Swal.fire({ 
                                 title: 'Singup process success', 
-                                html:  '<p>A new user has been created, but need a validation to be ready to use.</p>',
+                                html:  htmlNewUser,
                                 icon:  'warning',
                                 showCancelButton: true,
                                 cancelButtonText: "go Home",
@@ -50,7 +53,7 @@ const SignUp = (props) => {
                                             console.log('GET BACK: ', response.sent, response.error)
                                             if(response.sent) {
                                                 Swal.fire({ title: 'Email as been sent', 
-                                                            html: '<p>Check your email account, then click on validate link to get account up.</p>', 
+                                                            html: htmlEmailSent, 
                                                             icon: 'success',
                                                             showCancelButton: true,
                                                             cancelButtonText: "go Home",

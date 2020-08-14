@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { read } from '../../../Controllers/user/action-api'
-import { Modal, Jumbotron, Spinner, Badge, Button } from 'react-bootstrap'
+import { Modal, Alert, Jumbotron, Spinner, Badge, Button } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
@@ -33,8 +33,10 @@ const Validate = (props) => {
         case 0:
             return (
                 <>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
+                    <Alert variant='warning'>
+                        <Spinner animation='border' role='status'/>
+                        <p>Loading...</p>
+                    </Alert>
                 </>
             )
             break
@@ -61,9 +63,11 @@ const Validate = (props) => {
         case 2:
             return (
                 <>
-                    <h6>Validation for {username} failed</h6>
-                    <hr/>
-                    <p>{error}</p>
+                    <Alert variant='danger'>
+                        <h6>Validation for {username} failed</h6>
+                        <hr/>
+                        <p>{error}</p>
+                    </Alert>
                 </>
             )
             break

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-api'
-import { Jumbotron, ListGroup, Spinner, Badge } from 'react-bootstrap'
+import { Jumbotron, ListGroup, Spinner, Badge, Alert } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
 const User = (props) => {
@@ -57,8 +57,10 @@ const Users = () => {
         case 0:     // loading
             return (
                 <>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
+                    <Alert variant='warning'>
+                        <Spinner animation='border' role='status'/>
+                        <p>Loading...</p>
+                    </Alert>
                 </>
             )
             break
@@ -75,9 +77,11 @@ const Users = () => {
         case 2:     // failed to load
             return (
                 <>
-                    <h6>Loading users list failed</h6>
-                    <hr/>
-                    <p>{error}</p>
+                    <Alert variant='danger'>
+                        <h2>Loading users list failed</h2>
+                        <hr/>
+                        <p>{error}</p>
+                    </Alert>
                 </>
             )
             break
