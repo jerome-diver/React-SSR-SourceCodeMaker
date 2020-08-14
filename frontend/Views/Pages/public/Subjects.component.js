@@ -6,5 +6,4 @@ class Subjects extends Component {
     return ( <div>Subjects list page</div> );
   }
 }
-export default Subjects;
-
+export default Subjects

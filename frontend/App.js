@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Navigation } from './Views/routes/Routing.component'
-import { PageSwitcher } from './Views/Pages/PageSwitcher.component'
+import Navigation from './Views/routes/Routing.component'
+import PageSwitcher from './Views/Pages/PageSwitcher.component'
 import './stylesheet/menu.sass'
 
 const App = (props) => {

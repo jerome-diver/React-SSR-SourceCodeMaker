@@ -19,9 +19,10 @@ const User = (props) => {
         }
     }
     const role = user.role
+    const promote = variant(role)
     return (
-        <ListGroup.Item id={user.id}>
-          <h4>{user.username} <Badge pill variant={variant(role)}>{role}</Badge></h4>
+        <ListGroup.Item id={user._id.toString()}>
+          <h4>{user.username} <Badge pill variant={promote}>{role}</Badge></h4>
           <hr/>
           <p>Email: {user.email}</p> 
           <p>First name: {user.first_name}</p>
@@ -66,21 +67,19 @@ const Users = () => {
                 <Jumbotron fluid id="users">
                     <h1>Users list</h1>    
                     <ListGroup>
-                        {users.map((user, index) => {
-                            return (<User user={user} />)
-                        })}
+                        {users.map( (user, index) => { return ( <User user={user} key={index}/> ) } ) }
                     </ListGroup>
                 </Jumbotron>
             )
             break
         case 2:     // failed to load
-        return (
-            <>
-                <h6>Loading users list failed</h6>
-                <hr/>
-                <p>{error}</p>
-            </>
-        )
+            return (
+                <>
+                    <h6>Loading users list failed</h6>
+                    <hr/>
+                    <p>{error}</p>
+                </>
+            )
             break
     }
 }

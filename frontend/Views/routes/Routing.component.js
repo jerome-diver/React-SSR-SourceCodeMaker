@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Navbar, Nav, Dropdown, DropdownButton, NavDropdown } from 'react-bootstrap'
-import { Route, NavLink } from "react-router-dom"
-import { PrivateRoute } from './private/PrivateRoute.component'
-import * as Icon from 'react-bootstrap-icons'
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
+import { NavLink, Link } from "react-router-dom"
+import { NavDrop } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers, faUserPlus, faUserCircle, faUserTie, 
+        faUserEdit, faAddressCard, faFolder, faHome, 
+        faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 
 class Navigation extends Component {
-  state = {}
   render () {
-    const users = ``
     return (
       <>
         <Navbar expand="lg" bg="dark" fg="light" fixed="top">
@@ -16,19 +17,34 @@ class Navigation extends Component {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
-                <Icon.House/> Home</Nav.Link>
+                <FontAwesomeIcon icon={faHome}/> Home</Nav.Link>
               <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
-                <Icon.ListNested/> Subjects</Nav.Link>
+                <FontAwesomeIcon icon={faFolder}/> Subjects</Nav.Link>
               <Nav.Link as={NavLink} to='/contacts' activeClassName="menuselected">
-                <Icon.PersonLinesFill/> Contacts</Nav.Link>
+                <FontAwesomeIcon icon={faAddressCard}/> Contacts</Nav.Link>
               <Nav.Link as={NavLink} to='/example' activeClassName="menuselected">
-                <Icon.PeopleFill/> Example</Nav.Link>
-              <NavDropdown title={<span><Icon.PeopleFill/> Users</span>} id="basic-nav-dropdown">
-                <NavDropdown.Item href='/signin'>Sign in</NavDropdown.Item>
-                <NavDropdown.Item href='/signup'>Sign up</NavDropdown.Item>
-                <NavDropdown.Item href='/users'><Icon.PeopleFill/> Users list</NavDropdown.Item>
-                <NavDropdown.Item href='/profile/:username'><Icon.PersonBadge/> Profile</NavDropdown.Item>
-                <NavDropdown.Item href='/admin'><Icon.PersonBadge/> Admin</NavDropdown.Item>
+                Example</Nav.Link>
+              <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
+                <NavDropdown.Item>
+                  <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
+                    <FontAwesomeIcon icon={faSignInAlt}/> Sign in</NavLink>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
+                    <FontAwesomeIcon icon={faUserPlus}/> Sign up</NavLink>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
+                    <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <NavLink as={NavLink} to='/profile/:username' activeClassName='menuselected'>
+                    <FontAwesomeIcon icon={faUserEdit}/> Profile</NavLink>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
+                  <FontAwesomeIcon icon={faUserTie}/> Admin</NavLink>
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
@@ -38,4 +54,4 @@ class Navigation extends Component {
   }
 }
 
-export { Navigation }
+export default Navigation

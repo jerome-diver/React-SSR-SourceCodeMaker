@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { DropdownButton } from 'react-bootstrap'
 import { Route, Switch } from "react-router-dom"
-import { PrivateRoute } from '../routes/private/PrivateRoute.component'
+import PrivateRoute from '../routes/private/PrivateRoute.component'
 import Home from './public/Home.component'
 import Contacts from './public/Contacts.component'
 import Subjects from './public/Subjects.component'
@@ -11,11 +10,11 @@ import Example from './public/Example.component'
 import Sign from "./public/Sign.component"
 import Admin from './private/Admin.component'
 import Profile from './private/Profile.component'
+import Validate from './public/Validate.component'
 
 class PageSwitcher extends Component {
   state = {}
   render() {
-    const signup = <Sign action='up'/>
     return (
         <Switch>
           <Route exact path='/' component={Home}/>
@@ -24,12 +23,13 @@ class PageSwitcher extends Component {
           <Route path='/users' component={Users}/>
           <Route path='/example' component={Example}/>
           <PrivateRoute path='/admin' component={Admin}/>
-          <PrivateRoute path='/profile' component={(props) => <Profile {...props}/>}/>
-          <Route path='/signin' component={(props) => <Sign {...props} action='in' />}/>
-          <Route path='/signup' component={(props) => <Sign {...props} action='up' />}/>
+          <PrivateRoute path='/profile' render={(props) => <Profile {...props}/>}/>
+          <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
+          <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
+          <Route path='/validate/:username/:ticket' component={Validate}/>
         </Switch>
     )
   }
 }
 
-export { PageSwitcher }
+export default PageSwitcher
