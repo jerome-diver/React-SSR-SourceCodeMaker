@@ -6,7 +6,7 @@ import './stylesheet/menu.sass'
 const App = (props) => {
 
     return (
-        <div className="App">
+        <>
           <header>
             <Navigation class="menu"/></header>
           <main><PageSwitcher/></main>
@@ -14,7 +14,7 @@ const App = (props) => {
               <hr />
               <div>Contacts</div>
           </footer>
-        </div>
+        </>
     )
 }
 

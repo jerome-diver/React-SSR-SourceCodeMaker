@@ -1,42 +1,40 @@
-.App
-  position: relative
-  display: block
-  background-color: #000
-  height: 100vmin
-
 body
   position: relative
+  background-color: #000
   display: block
-  top: 0px
-  height: 95vmin
+  height: 100vh
   width: 100%
   h1
     padding-left: 10px
+
 #root
   width: 100%
+  height: calc(100% - 2.1rem)
   color: #FFF
+  display: grid
+  grid-template-rows: 250px auto 1.5rem
 
 header 
-  position: relative
-  top: 0px
   width: 100%
-  height: 250px
   background-image: url("../img/source_code_maker_HEADER.png")
   background-clip: border-box
   background-repeat: no-repeat
   background-size: 100% 250px
+  height: 250px
 
 main
-  position: relative
-  display: block
+  grid-row-start: 2
+  grid-row-end: 3
 
 footer
-  position: absolute
-  bottom: 2rem
-  height: 2rem
+  bottom: 0
   width: 100%
   color: #FFF
   background-color: #000
+  hr
+    border-bottom: 1px dotted white
+  div
+    margin-left: 10px
 
 article
   padding: 5px;

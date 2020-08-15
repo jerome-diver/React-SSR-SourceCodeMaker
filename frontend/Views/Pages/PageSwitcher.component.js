@@ -22,8 +22,8 @@ class PageSwitcher extends Component {
           <Route path='/subjects' component={Subjects}/>
           <Route path='/users' component={Users}/>
           <Route path='/example' component={Example}/>
-          <PrivateRoute path='/admin' component={Admin}/>
-          <PrivateRoute path='/profile' render={(props) => <Profile {...props}/>}/>
+          <PrivateRoute path='/admin/:username' render={(props) => <Admin {...props}/>}/>
+          <PrivateRoute path='/profile/:username' render={(props) => <Profile {...props}/>}/>
           <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
           <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
           <Route path='/validate/:username/:ticket' component={Validate}/>

@@ -4,8 +4,8 @@ import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
 
 const SignIn = (props) => {
-    const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
-    const [load, setLoad] = useState(false)
+    let [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
+    let [load, setLoad] = useState(false)
   
     useEffect( () => {
         console.log("UseEffect of AdminPage component call")

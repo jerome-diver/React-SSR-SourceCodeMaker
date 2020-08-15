@@ -6,12 +6,12 @@ import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
     const { username, ticket } = useParams()
-    [load, setLoad] = useState(0)
-    [validated, setValidated] = setState(false)
-    [error, setError] = setState('')
-    [show, setShow] = setState(false)
+    let [load, setLoad] = useState(0)
+    let [validated, setValidated] = useState(false)
+    let [error, setError] = useState('')
+    let [show, setShow] = useState(false)
 
-    useEffect() ( () => {
+    useEffect( () => {
         fetch(`/api/validate/${username}/${ticket}`)
         .then((response) => response.json() )
         .then((transaction) => {
