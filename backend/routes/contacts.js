@@ -10,8 +10,7 @@ from the MongoDB content with Mongoose
 
 /* GET contacts page. */
 router.get('/', function(req, res, next) {
-  res.render('contacts', { 
-    title: 'Contacts',
+  res.json( { 
     fname: "Lanteri",
     sname: "Jérôme",
     address_road: "13 avenue des Pins",
@@ -19,9 +18,8 @@ router.get('/', function(req, res, next) {
     address_city: "Nice",
     address_country: "France",
     enterprise_SIRET: "483 662 854 00015",
-    mobile: "+33 769 488 739",
     email: "jerome.archlinux@gmail.com",
-    caption: "Envoyez moi un message",
+    caption: "Écrivez-moi un message",
     f_fname: "Nom de famille",
     f_sname: "Prénom",
     f_email: "email",

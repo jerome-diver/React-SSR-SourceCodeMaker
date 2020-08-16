@@ -25,10 +25,8 @@ const Navigation = (props) => {
               <FontAwesomeIcon icon={faHome}/> Home</Nav.Link>
             <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
               <FontAwesomeIcon icon={faFolder}/> Subjects</Nav.Link>
-            <Nav.Link as={NavLink} to='/contacts' activeClassName="menuselected">
-              <FontAwesomeIcon icon={faAddressCard}/> Contacts</Nav.Link>
-            <Nav.Link as={NavLink} to='/example' activeClassName="menuselected">
-              Example</Nav.Link>
+            <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
+              <FontAwesomeIcon icon={faAddressCard}/> Contact</Nav.Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
                 <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
                   <FontAwesomeIcon icon={faSignInAlt}/> Sign in</NavLink>

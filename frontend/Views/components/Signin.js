@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
-import { Card, Button, Form, Spinner } from 'react-bootstrap'
+import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 
 const SignIn = (props) => {
     let [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -14,7 +14,7 @@ const SignIn = (props) => {
 
     if (load) {
         return (
-            <> { <Card id='sign'>
+            <>  <Card id='sign'>
                 <Card.Body>
                     <Card.Title><FontAwesomeIcon icon={ faUserCheck } /> Sign in</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted' />
@@ -36,18 +36,20 @@ const SignIn = (props) => {
                         <Form.Text className='text-muted'>please, you should provide your password</Form.Text>
                     </Form.Group>
                     </Form>
-                    <Card.Link >
+                    <Card.Link>
                         <Button type='submit'><FontAwesomeIcon icon={ faUserCheck } /></Button>
                     </Card.Link>
                     <Card.Link href='/signup'>I don't have an account</Card.Link>
                 </Card.Body>
-            </Card> } </> 
+            </Card> </> 
         )
   } else {
       return (
           <>
-              <Spinner animation='border' role='status'/>
-              <p>Loading...</p>
+                <Alert variant='info'>
+                    <Spinner animation='border' role='status'/>
+                    <p>Loading...</p>
+                </Alert>
           </>
       )
   }

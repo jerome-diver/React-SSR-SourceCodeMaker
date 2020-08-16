@@ -43,7 +43,7 @@ app.use(express.static('build/public'))
 // define route to use and action to respond from own defined requests
 app.use('/api/home', homeRouter)
 app.use('/api/users', usersRouter)
-app.use('/template/contacts', contactsRouter)
+app.use('/template/contact', contactsRouter)
 app.use('/api/subject/*', subjectRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/validate', validateEmailRouter)

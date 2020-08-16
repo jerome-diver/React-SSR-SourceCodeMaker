@@ -107,8 +107,10 @@ const SignUp = (props) => {
     } else {
         return (
             <>
-                <Spinner animation='border' role='status'/>
-                <p>Loading...</p>
+                <Alert variant='info'>
+                    <Spinner animation='border' role='status'/>
+                    <p>Loading...</p>
+                </Alert>
             </>
         )
     }
