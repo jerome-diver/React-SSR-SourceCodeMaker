@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen } from '@fortawesome/free-solid-svg-icons'
+import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
 
 const FormContact = (props) => {
+
+  let [clientType, setClientType] = useState('particulier')
   const family_name = props.fname
   const second_name = props.sname
   const email = props.email
   const message = props.message
+
+  useEffect( () => {
+  }, [setClientType])
+
+  const switchClientType = () => {
+    const types = document.querySelectorAll('input[name="clientType')
+    let selection = ''
+    for (const type of types) { if (type.checked) { selection = type.value } }
+    setClientType(selection)
+  }
 
   return (
       <> <Form>
@@ -24,9 +36,18 @@ const FormContact = (props) => {
         <Form.Group as={Row} controlId='formTypeClient'>
           <Form.Label as='legend' column sm={4}>Vous êtes...</Form.Label>
           <Col sm={8}>
-            <Form.Check type='radio' label='un particulier' name='clientType' id='particulier'/> 
-            <Form.Check type='radio' label='une entreprise' name='clientType' id='entreprise'/> 
+            <Form.Check type='radio' label='un particulier' name='clientType' value="particulier" id='particulier' onClick={ switchClientType }/> 
+            <Form.Check type='radio' label='une entreprise' name='clientType' value="enterprise" id='enterprise' onClick={ switchClientType }/> 
           </Col>
+        </Form.Group>
+        { (clientType === 'enterprise') ? 
+          <Form.Group controlId='formEnterpriseName'>
+          <Form.Label>Nom d'entreprise</Form.Label>
+          <Form.Control type='text' placeholder='enterpise name'/>
+        </Form.Group> : null }
+        <Form.Group controlId='formPhone'>
+          <Form.Label><FontAwesomeIcon icon={faPhone}/> Numéro de téléphone</Form.Label>
+          <Form.Control type='phone' placeholder='phone number'/>
         </Form.Group>
         <Form.Group controlId='formEmail'>
           <Form.Label><FontAwesomeIcon icon={faEnvelope}/> {email}</Form.Label>
