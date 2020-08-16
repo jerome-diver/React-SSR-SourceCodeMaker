@@ -5,56 +5,51 @@ import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPh
 
 const FormContact = (props) => {
 
-  let [clientType, setClientType] = useState('particulier')
-  const family_name = props.fname
-  const second_name = props.sname
-  const email = props.email
-  const message = props.message
+  let [clientType, setClientType] = useState('individual')
 
   useEffect( () => {
   }, [setClientType])
 
   const switchClientType = () => {
     const types = document.querySelectorAll('input[name="clientType')
-    let selection = ''
-    for (const type of types) { if (type.checked) { selection = type.value } }
-    setClientType(selection)
+    for (const type of types) { if (type.checked) { setClientType(type.value); break; } }
+    
   }
 
   return (
       <> <Form>
         <Form.Row>
           <Form.Group as={Col} controlId='formFamilyName'>
-            <Form.Label>{family_name}</Form.Label>
+            <Form.Label>{props.fname}</Form.Label>
             <Form.Control type='text' placeholder='family name'/>
           </Form.Group>
           <Form.Group as={Col} controlId='formSecondName'>
-            <Form.Label>{second_name}</Form.Label>
+            <Form.Label>{props.sname}</Form.Label>
             <Form.Control type='text' placeholder='second name'/>
           </Form.Group>
         </Form.Row>
         <Form.Group as={Row} controlId='formTypeClient'>
           <Form.Label as='legend' column sm={4}>Vous êtes...</Form.Label>
           <Col sm={8}>
-            <Form.Check type='radio' label='un particulier' name='clientType' value="particulier" id='particulier' onClick={ switchClientType }/> 
+            <Form.Check type='radio' label='un particulier' name='clientType' value="individual" id='individual' onClick={ switchClientType }/> 
             <Form.Check type='radio' label='une entreprise' name='clientType' value="enterprise" id='enterprise' onClick={ switchClientType }/> 
           </Col>
         </Form.Group>
-        { (clientType === 'enterprise') ? 
+        { (clientType === 'enterprise') &&
           <Form.Group controlId='formEnterpriseName'>
           <Form.Label>Nom d'entreprise</Form.Label>
           <Form.Control type='text' placeholder='enterpise name'/>
-        </Form.Group> : null }
+        </Form.Group> }
         <Form.Group controlId='formPhone'>
           <Form.Label><FontAwesomeIcon icon={faPhone}/> Numéro de téléphone</Form.Label>
           <Form.Control type='phone' placeholder='phone number'/>
         </Form.Group>
         <Form.Group controlId='formEmail'>
-          <Form.Label><FontAwesomeIcon icon={faEnvelope}/> {email}</Form.Label>
+          <Form.Label><FontAwesomeIcon icon={faEnvelope}/> {props.email}</Form.Label>
           <Form.Control type='text' placeholder='email'/>
         </Form.Group>
         <Form.Group controlId='formMessage'>
-          <Form.Label><FontAwesomeIcon icon={faPen}/> {message}</Form.Label>
+          <Form.Label><FontAwesomeIcon icon={faPen}/> {props.message}</Form.Label>
           <Form.Control as='textarea' rows='3' placeholder='your message'/>
         </Form.Group>
       </Form> </>
