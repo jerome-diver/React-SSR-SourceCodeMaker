@@ -6,12 +6,11 @@ import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { create, validateAccount } from '../../Controllers/user/action-api'
 import { checkPassword } from '../../Controllers/user/user-form-helper'
-import { validationResult } from 'express-validator'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
-    const [redirect, setRedirect] = useState(0)
+    const [redirect, setRedirect] = useState('')
     
     const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
     const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
@@ -59,23 +58,14 @@ const SignUp = (props) => {
                                                             cancelButtonText: "go Home",
                                                             confirmButtonText: 'Sign in'} )
                                                        .then((result) => { 
-                                                           if (result.value) { setRedirect(1) } else {setRedirect(2) } } )
+                                                           if (result.value) { setRedirect('/signin') } else {setRedirect('/') } } )
                                             } else { Swal.fire('Failed to send email', error, 'error') } } )
-                                } else { setRedirect(2) } } ) } } )
+                                } else { setRedirect('/') } } ) } } )
             } else { Swal.fire('Password request failed', message, 'error') } 
         } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }
     }
 
-    const renderRedirect = () => {
-        switch (redirect) {
-            case 1:
-                return <Redirect to='/signin'/>
-                break
-            case 2:
-                return <Redirect to='/'/>
-                break
-        }
-    }
+    const renderRedirect = () => { if (redirect !== '') { return <Redirect to={redirect}/> } }
 
     if (load) {
         return (

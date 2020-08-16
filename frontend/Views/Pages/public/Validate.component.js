@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { read } from '../../../Controllers/user/action-api'
 import { Modal, Alert, Jumbotron, Spinner, Badge, Button } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
     const { username, ticket } = useParams()
-    let [load, setLoad] = useState(0)
-    let [validated, setValidated] = useState(false)
-    let [error, setError] = useState('')
-    let [show, setShow] = useState(false)
+    let [load, setLoad] = useState(false)               // Spinner if load is false
+    let [validated, setValidated] = useState(false)     // Validation returned true
+    let [error, setError] = useState('')                // error process return
+    let [show, setShow] = useState(false)               // show Modal dialog box
+    let [redirect, setRedirect] = useState('')          // redirection after
 
     useEffect( () => {
         fetch(`/api/validate/${username}/${ticket}`)
@@ -17,60 +19,61 @@ const Validate = (props) => {
         .then((transaction) => {
             if(transaction) {
                 setValidated(transaction.validated)
-                if (transaction.error) { 
-                    setLoad(2)
-                    setError(transaction.error) }
-                else { 
-                    setLoad(1)
-                    setShow(true) }
-            } else { setLoad(2) }
+                if (transaction.error) { setError(transaction.error) }
+                setShow(true)
+            } else { setValidated(false) }
+            setLoad(true)
         })
     }, [] )
 
     const handleClose = () => { setShow(false) }
+    const goHome = () => { setRedirect('/') }
+    const signIn = () => { setRedirect('/signin') }
 
-    switch(load) {
-        case 0:
+    const renderRedirect = () => { if (redirect !== '') { return <Redirect to={redirect}/> } }
+
+    if (load) {
+        if(validated) {
             return (
                 <>
-                    <Alert variant='warning'>
-                        <Spinner animation='border' role='status'/>
-                        <p>Loading...</p>
-                    </Alert>
-                </>
-            )
-            break
-        case 1:
-            return (
-                <>
+                    {renderRedirect()}
                     <Modal show={show}>
                         <Modal.Header closeButton>
                             <Modal.Title>{username} account validation</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>Your account has been validated</Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Close
+                            <Button variant="secondary" onClick={goHome}>
+                                Go home
                             </Button>
-                            <Button variant="primary" onClick={handleClose}>
-                                Save Changes
+                            <Button variant="primary" onClick={signIn}>
+                                Sign in
                             </Button>
                         </Modal.Footer>
                     </Modal>
                 </>
             )
-            break
-        case 2:
+        } else {
             return (
                 <>
                     <Alert variant='danger'>
-                        <h6>Validation for {username} failed</h6>
+                        <h3>Validation for {username} failed</h3>
                         <hr/>
+                        <p>Validation status: {validated}</p>
                         <p>{error}</p>
                     </Alert>
                 </>
             )
-            break
+        } }
+    else {
+        return (
+            <>
+                <Alert variant='warning'>
+                    <Spinner animation='border' role='status'/>
+                    <p>Loading...</p>
+                </Alert>
+            </>
+        )
     }
 }
 
