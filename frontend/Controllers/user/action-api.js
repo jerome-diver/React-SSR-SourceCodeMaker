@@ -31,15 +31,12 @@ const list = async (signal) => {
     } catch(error) { console.log('Failed to show users list: ' + error) }
 }
 
-const read = async (username, credentials, signal) => {
+const read = async (username, signal) => {
     try {
-        let response = await fetch('/api/users/' + username, {
+        const url = `/api/users/${username}`
+        let response = await fetch(url, {
             method: 'GET',
-            signal: signal,
-            headers: { 'Accept': 'application/json',
-                       'Content-Type': 'application/json',
-                       'Authorization': 'Bearer ' + credentials.t },
-            credentials: credentials } )
+            signal: signal } )
         return await response.json()
     } catch(error) { console.log('Failed to show user: ' + error) }
 }

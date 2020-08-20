@@ -1,28 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-api'
 import { Jumbotron, ListGroup, Spinner, Badge, Alert } from 'react-bootstrap'
+import { variant } from '../../helpers/config'
 import '../../../stylesheet/users.sass'
 
 const User = (props) => {
     const { user } = props
-    const variant = (role) => {
-        switch (role) {
-            case 'Reader':
-                return 'primary'
-                break
-            case 'Writer':
-                return 'warning'
-                break
-            case 'Admin':
-                return 'danger'
-                break
-        }
-    }
-    const role = user.role
-    const promote = variant(role)
+    const promote = variant(user.role)
     return (
         <ListGroup.Item id={user._id.toString()}>
-          <h4>{user.username} <Badge pill variant={promote}>{role}</Badge></h4>
+          <h4>{user.username} <Badge pill variant={promote}>{user.role}</Badge></h4>
           <hr/>
           <p>Email: {user.email}</p> 
           <p>First name: {user.first_name}</p>

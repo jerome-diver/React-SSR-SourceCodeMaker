@@ -7,7 +7,7 @@ function authenticate(jwt, callback) {
 }
 
 function isAuthenticated() {
-    if (typeof window !== 'undefined') return false
+    if (typeof window === 'undefined') return false
     if (sessionStorage.getItem('jwt')) return JSON.parse(sessionStorage.getItem('jwt'))
     return false
 }

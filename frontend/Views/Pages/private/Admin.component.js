@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { Spinner } from 'react-bootstrap'
+import { Button, Spinner } from 'react-bootstrap'
+import { useAuth } from '../../../Controllers/context/authenticate'
 
 const Admin = (props) => {
+  const { setAuthTokens } = useAuth()
   const [user, setUser] = useState({username: "", first_name: "", second_name: "", email: ""})
   const [load, setLoad] = useState(false)
 
@@ -20,6 +22,8 @@ const Admin = (props) => {
             setLoad(true) } )
   }, [] )
 
+  const logOut = () => { setAuthTokens() }
+
   if (load) {
     return (
       <>
@@ -30,6 +34,7 @@ const Admin = (props) => {
           <p>Second name: {user.second_name}</p>
           <p>Email: {user.email}</p>
         </div>
+        <Button onClick={logOut}>Log out</Button>
       </>
     )
   } else {

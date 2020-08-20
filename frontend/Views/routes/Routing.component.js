@@ -36,7 +36,7 @@ const Navigation = (props) => {
                   <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
                 <NavLink as={NavLink} to={`/profile/${username}`}   activeClassName='menuselected'>
                   <FontAwesomeIcon icon={faUserEdit}/> Profile</NavLink>
-                <NavLink as={NavLink} to={`/admin/${username}`} activeClassName='menuselected'>
+                <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
                 <FontAwesomeIcon icon={faUserTie}/> Admin</NavLink>
             </NavDropdown>
           </Nav>

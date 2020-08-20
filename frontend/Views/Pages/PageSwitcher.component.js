@@ -10,25 +10,22 @@ import Sign from "./public/Sign.component"
 import Admin from './private/Admin.component'
 import Profile from './private/Profile.component'
 import Validate from './public/Validate.component'
-import { AuthContext } from '../../Controllers/context/authenticate'
 
 class PageSwitcher extends Component {
   state = {}
   render() {
     return (
-    <AuthContext.Provider value={false}>
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/contact' component={Contact}/>
           <Route path='/subjects' component={Subjects}/>
           <Route path='/users' component={Users}/>
-          <PrivateRoute path='/admin/:username' render={(props) => <Admin {...props}/>}/>
-          <PrivateRoute path='/profile/:username' render={(props) => <Profile {...props}/>}/>
+          <PrivateRoute path='/admin' render={(props) => <Admin {...props}/>}/>
+          <PrivateRoute path={['/profile/:username', '/users/:username']} component={Profile}/>
           <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
           <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
           <Route path='/validate/:username/:ticket' component={Validate}/>
         </Switch>
-    </AuthContext.Provider>
     )
   }
 }

@@ -3,8 +3,7 @@ import validator from 'validator'
 import { check, validationResult } from 'express-validator'
 
 const cypher = (password) => {
-    const ciphered = Crypto.createHash('sha256').update(password).digest('hex')
-    return ciphered
+    return Crypto.createHash('sha256').update(password).digest('hex')
 }
 
 /*

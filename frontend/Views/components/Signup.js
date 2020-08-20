@@ -10,14 +10,15 @@ import { checkPassword } from '../../Controllers/user/user-form-helper'
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
+    const [submit, setSubmit] = useState(false)
     const [redirect, setRedirect] = useState('')
     
     const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
     const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
 
     useEffect( () => {
-        setLoad(true)
-    }, [] )
+        if (!submit) { setLoad(true) }
+    }, [submit] )
     
     const handleChange = name => event => { 
         setUser({...user, [name]: event.target.value}) }
@@ -33,6 +34,7 @@ const SignUp = (props) => {
             if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
             if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
             if (passwordValidated) {
+                setSubmit(true)
                 create(user)
                     .then((response) => {
                         if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
@@ -60,7 +62,8 @@ const SignUp = (props) => {
                                                        .then((result) => { 
                                                            if (result.value) { setRedirect('/signin') } else {setRedirect('/') } } )
                                             } else { Swal.fire('Failed to send email', error, 'error') } } )
-                                } else { setRedirect('/') } } ) } } )
+                                } else { setRedirect('/') } } ) }
+                        setSubmit(false) } )
             } else { Swal.fire('Password request failed', message, 'error') } 
         } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }
     }

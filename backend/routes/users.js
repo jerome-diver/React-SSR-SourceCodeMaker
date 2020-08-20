@@ -1,12 +1,37 @@
 const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
+import Crypto from 'crypto'
 import moment from 'moment'
 import { db } from '../controllers/database'
 import User from '../models/user.model'
 
+
+const authenticate = (pass, salt, hash_pass) => {
+    return Crypto.createHmac('sha256', salt)
+                         .update(pass)
+                         .digest('hex') === hash_pass
+}
+const findMissing = (data) => {
+    let missingMsg = ''
+    if (!data.username || data.username === null) {
+        missingMsg += "\nNo username received" }
+    if (!data.email || data.email === null) {
+        missingMsg += '\nNo email received' }
+    return missingMsg
+}
+
+/* GET user profile. */
+router.get('/:username', (req, res) => {
+    User.findOne({username: req.params.username}, 
+        (err, user) => { 
+            if (err) { return res.status(404).json({error: error, user: null}) } 
+            else { return res.status(200).json( { error: null, user: user.toJSON() } ) }
+    } )
+} )
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res) => {
     User.find({}, (err, o) => { res.json(o.map((u) => { return u.toObject() })) })
 })
 
@@ -23,13 +48,24 @@ router.post('/', jsonParser, (req, res) => {
         else { res.json( {error: '', accepted: true} ) } } )
 } )
 
-/* GET user profile. */
-router.get('/:username', function(req, res, next) {
-    User.find({username: req.params.username}, 
-        (err, user) => { 
-            if (err) { res.json({error: error, user: null})
-            } else { res.json( { error: null, user: user.toObject() } ) }
-    } )
-} )
+/* POST to sign in user with token to ask */
+router.post('/signin', jsonParser, (req, res) => {
+    const msg = findMissing(req.body)
+    if (msg !== '') { res.json({error: msg}) }
+    User.findOne( { username: req.body.username, 
+                    email: req.body.email },
+        (err, user) => {
+            if (!err) { 
+                if (user) {
+                    if(authenticate(req.body.password, 
+                                    user.salt, 
+                                    user.hashed_password)) {
+                        return res.json( {
+                            user: user.toJSON(), 
+                            token: "my tokens",
+                            error: err } ) } }
+                return res.status(404).json({error: 'User not found or password wrong'}) }
+            else { return res.status(404).json( { error: err } ) } } )
+})
 
 module.exports = router
