@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import SignIn from '../../components/Signin'
 import SignUp from '../../components/Signup'
+import SignOut from '../../components/Signout'
 
 const Sign = (props) => {
 

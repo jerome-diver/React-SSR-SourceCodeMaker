@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Modal, Spinner, Alert } from 'react-bootstrap'
 import { signout } from '../../Controllers/user/authenticate-api'
+import { useCookies } from 'react-cookie'
 
-const Signout = (props) => {
+const SignOut = (props) => {
 
     const [load, setLoad] = useState(false)
     const [loggedOut, setLoggedOut] = useState(false)
     const [error, setError] = useState('')
+    const [cookies, setCookie, removeCookie] = useCookies(['token', 'username'])
 
     useEffect( () => {
         signout().then(result => {
             if(result.error) { setError(result.error) }
-            else { setLoggedOut(true) }
+            else {
+                removeCookie('token')
+                removeCookie('username') 
+                setLoggedOut(true) }
             setLoad(true)
         })
     }, [])
@@ -47,3 +52,5 @@ const Signout = (props) => {
         )
     }
 }
+
+export default SignOut

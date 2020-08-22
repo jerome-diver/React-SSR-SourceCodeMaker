@@ -62,7 +62,7 @@ router.post('/signin', jsonParser, (req, res) => {
                 if (user) {
                     if(user.authenticate(req.body.password)) {
                         const token = jwt.sign({id: user.id}, jwtSecret)
-                        res.cookie('t', token, {expire: new Date() + 999})
+                //        res.cookie('token', token, {expire: new Date() + 999})
                         return res.json( {
                             user: user.toJSON(), 
                             token: token,
@@ -73,7 +73,8 @@ router.post('/signin', jsonParser, (req, res) => {
 
 /* POST to sign out user with token to ask */
 router.post('/signout', jsonParser, (req, res) => {
-    res.clearCookie('t')
+ //   res.clearCookie('token')
+ //   res.clearCookie('username')
     return res.status('200').json({message: 'signed out'})
 } )
 

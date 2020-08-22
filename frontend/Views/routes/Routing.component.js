@@ -11,7 +11,8 @@ import { useCookies } from 'react-cookie'
 const UserLoggedEntries = (props) => {
   const { username } = props
   
-  if (username !== '') {
+  console.log("Sub-menu users, username is:", username)
+  if (username !== undefined) {
     return (
       <>
         <NavLink as={NavLink} to={`/profile/${username}`}   activeClassName='menuselected'>
