@@ -11,23 +11,22 @@ import Admin from './private/Admin.component'
 import Profile from './private/Profile.component'
 import Validate from './public/Validate.component'
 
-class PageSwitcher extends Component {
-  state = {}
-  render() {
-    return (
-        <Switch>
-          <Route exact path='/' component={Home}/>
-          <Route path='/contact' component={Contact}/>
-          <Route path='/subjects' component={Subjects}/>
-          <Route path='/users' component={Users}/>
-          <PrivateRoute path='/admin' render={(props) => <Admin {...props}/>}/>
-          <PrivateRoute path={['/profile/:username', '/users/:username']} component={Profile}/>
-          <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
-          <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
-          <Route path='/validate/:username/:ticket' component={Validate}/>
-        </Switch>
-    )
-  }
+const PageSwitcher = (props) => {
+
+  return (
+      <Switch>
+        <Route exact path='/' component={Home}/>
+        <Route path='/contact' component={Contact}/>
+        <Route path='/subjects' component={Subjects}/>
+        <Route path='/users' component={Users}/>
+        <PrivateRoute path='/admin' component={Admin}/>
+        <PrivateRoute path={['/profile/:username', '/users/:username']} component={Profile}/>
+        <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
+        <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
+        <Route path='/signout' render={(props) => <Sign {...props} action='out' />}/>
+        <Route path='/validate/:username/:ticket' component={Validate}/>
+      </Switch>
+  )
 }
 
 export default PageSwitcher

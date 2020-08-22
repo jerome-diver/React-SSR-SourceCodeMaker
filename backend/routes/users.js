@@ -5,6 +5,9 @@ import Crypto from 'crypto'
 import moment from 'moment'
 import { db } from '../controllers/database'
 import User from '../models/user.model'
+import expressJwt from 'express-jwt'
+import jwt from 'jsonwebtoken'
+import { jwtSecret } from '../config'
 
 
 const authenticate = (pass, salt, hash_pass) => {
@@ -57,15 +60,21 @@ router.post('/signin', jsonParser, (req, res) => {
         (err, user) => {
             if (!err) { 
                 if (user) {
-                    if(authenticate(req.body.password, 
-                                    user.salt, 
-                                    user.hashed_password)) {
+                    if(user.authenticate(req.body.password)) {
+                        const token = jwt.sign({id: user.id}, jwtSecret)
+                        res.cookie('t', token, {expire: new Date() + 999})
                         return res.json( {
                             user: user.toJSON(), 
-                            token: "my tokens",
+                            token: token,
                             error: err } ) } }
                 return res.status(404).json({error: 'User not found or password wrong'}) }
             else { return res.status(404).json( { error: err } ) } } )
-})
+} )
+
+/* POST to sign out user with token to ask */
+router.post('/signout', jsonParser, (req, res) => {
+    res.clearCookie('t')
+    return res.status('200').json({message: 'signed out'})
+} )
 
 module.exports = router

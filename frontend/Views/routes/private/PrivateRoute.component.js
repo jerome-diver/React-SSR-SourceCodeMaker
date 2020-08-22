@@ -5,15 +5,15 @@ import { useAuth } from '../../../Controllers/context/authenticate'
 
 const  PrivateRoute = ({component: Component, ...rest}) => {
 
-    const authTokens = useAuth()
-    console.log("Private route is running, with authTokens:", authTokens)
+    const { data, setAuthTokens } = useAuth()
+    console.log("Private route is running, with authTokens:", data.token)
 
     return (
         <Route {...rest} render={ 
-        (props) => (authTokens.token !== '') ? 
+        (props) => (data.token !== '') ? 
             ( <Component {...props} /> ) :
             ( <Redirect to={{ pathname: '/signin', 
-                              state: { referer: props.location, error: 'Failed to authenticate Tokens'}
+                              state: { from: props.location, error: 'Failed to authenticate Tokens'}
                                }} 
                          /> )
     } /> )

@@ -26,3 +26,6 @@ yarn-error.log*
 
 *.code-workspace
 /.idea
+
+# dotenv file
+.env

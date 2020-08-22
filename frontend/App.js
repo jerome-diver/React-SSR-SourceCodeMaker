@@ -3,26 +3,33 @@ import Navigation from './Views/routes/Routing.component'
 import PageSwitcher from './Views/Pages/PageSwitcher.component'
 import './stylesheet/menu.sass'
 import { AuthContext } from './Controllers/context/authenticate'
+import { useCookies } from 'react-cookie'
 
 const App = (props) => {
-  const [authTokens, setAuthTokens] = useState({})
+  const [authTokens, setAuthTokens] = useState({token: '', username: ''})
+  const [cookies, setCookie, removeCookie] = useCookies(['token', 'username'])
 
   useEffect( () => {
     console.log("APP get useEffect updated")
-    setAuthTokens(JSON.parse(localStorage.getItem("tokens")))
+    setAuthTokens( { token: cookies.tokens,
+                     username: cookies.username } )
   }, [])
   
   const setTokens = (data) => {
-    if(data) { localStorage.setItem("tokens", JSON.stringify(data)) }
-    else { localStorage.removeItem('token') }
+    if(data) {
+      setCookie('token', JSON.stringify(data.token)) 
+      setCookie('username', JSON.stringify(data.username)) }
+    else { 
+      removeCookie('token')
+      removeCookie('username') }
     setAuthTokens(data)
   }
 
   return (
     <>
-      <AuthContext.Provider value={{ token: authTokens, setAuthTokens: setTokens }}>
+      <AuthContext.Provider value={{ data: authTokens, setAuthTokens: setTokens }}>
         <header>
-          <Navigation class="menu"/></header>
+          <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>
         <footer>
             <hr />

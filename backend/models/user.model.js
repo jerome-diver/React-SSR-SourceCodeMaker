@@ -66,9 +66,9 @@ UserSchema.virtual('password')
           .get(function() { return this._password })
 
 UserSchema.methods = {
-    authenticate: (pass) => {
+    authenticate: function(pass) {
         return this.encryptPassword(pass, this.salt) === this.hashed_password },
-    encryptPassword: (password, salt) => {
+    encryptPassword: function(password, salt) {
         if (!password) return ''
         try {
             const done = Crypto.createHmac('sha256', salt)
@@ -77,10 +77,10 @@ UserSchema.methods = {
             return done
         } catch (error) { return 'error' }
     },
-    makeTicket: (hashed_password) => {
+    makeTicket: function(hashed_password) {
         return Crypto.createHash('md5').update(hashed_password).digest('hex')
     },
-    makeSalt: () => {
+    makeSalt: function() {
         return Math.round(new Date().valueOf() * Math.random()) + '' }
 }
 

@@ -7,10 +7,10 @@ const Sign = (props) => {
     switch (props.action) {
         case 'up':
           return ( <SignUp /> )
-          break
         case 'in':
           return ( <SignIn /> )
-          break
+        case 'out':
+          return ( <SignOut /> )
     }
 }
 

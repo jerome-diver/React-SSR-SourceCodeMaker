@@ -6,10 +6,13 @@ import "./stylesheet/awesome.sass"
 import './stylesheet/index.sass'
 import './stylesheet/app.sass'
 import App from './App'
+import { CookiesProvider } from 'react-cookie'
 
     hydrate(
+    <CookiesProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
+    </CookiesProvider>
     , document.getElementById('root'));
  // })

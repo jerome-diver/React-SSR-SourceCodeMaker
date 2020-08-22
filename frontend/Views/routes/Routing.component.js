@@ -5,13 +5,44 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faUserPlus, faUserCircle, faUserTie, 
         faUserEdit, faAddressCard, faFolder, faHome, 
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from '../../Controllers/context/authenticate'
+import { useCookies } from 'react-cookie'
+
+const UserLoggedEntries = (props) => {
+  const { username } = props
+  
+  if (username !== '') {
+    return (
+      <>
+        <NavLink as={NavLink} to={`/profile/${username}`}   activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faUserEdit}/> Profile</NavLink>
+        <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faUserTie}/> Admin</NavLink>
+        <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
+        <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faUserTie}/> Sign out</NavLink>
+      </>
+    ) 
+  } else {
+    return (
+      <>
+        <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faSignInAlt}/> Sign in</NavLink>
+        <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
+          <FontAwesomeIcon icon={faUserPlus}/> Sign up</NavLink>
+      </>
+    )
+  }
+}
 
 const Navigation = (props) => {
 
-  let [username, setUsername] = useState('')
+  //const cookies = Cookies()
+  const [cookies, setCookie] = useCookies(['token', 'username'])
 
   useEffect( () => {
-    //
+    console.log("Find cookie's username:", cookies.username)
   }, [] )
 
   return (
@@ -28,16 +59,7 @@ const Navigation = (props) => {
             <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
               <FontAwesomeIcon icon={faAddressCard}/> Contact</Nav.Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
-                <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-                  <FontAwesomeIcon icon={faSignInAlt}/> Sign in</NavLink>
-                <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-                  <FontAwesomeIcon icon={faUserPlus}/> Sign up</NavLink>
-                <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
-                  <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
-                <NavLink as={NavLink} to={`/profile/${username}`}   activeClassName='menuselected'>
-                  <FontAwesomeIcon icon={faUserEdit}/> Profile</NavLink>
-                <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
-                <FontAwesomeIcon icon={faUserTie}/> Admin</NavLink>
+              <UserLoggedEntries username={cookies.username} />
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

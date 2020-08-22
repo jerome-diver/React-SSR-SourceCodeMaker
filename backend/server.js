@@ -2,6 +2,7 @@ var express = require('express')
 const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
+const cookieParser = require('cookie-parser')
 
 var app = express()
 
@@ -23,11 +24,10 @@ var usersRouter = require('./routes/users')
 var contactsRouter = require('./routes/contacts')
 var subjectRouter = require('./routes/subject')
 var adminRouter = require('./routes/admin')
-var signRouter = require('./routes/sign')
 var validateEmailRouter = require('./routes/validate')
 
 app.use(favicon("./backend/img/favicon.ico"))
-
+app.use(cookieParser())
 // view engine setup
 app.set('views', 'backend/views')
 app.set('view engine', 'pug')
@@ -47,7 +47,6 @@ app.use('/template/contact', contactsRouter)
 app.use('/api/subject/*', subjectRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/validate', validateEmailRouter)
-app.use('/template/sign', signRouter)
 app.use('/', layoutRouter)
 
 const port = normalizePort(process.env.PORT || '3000')
