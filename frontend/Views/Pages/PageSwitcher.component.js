@@ -18,12 +18,12 @@ const PageSwitcher = (props) => {
         <Route exact path='/' component={Home}/>
         <Route path='/contact' component={Contact}/>
         <Route path='/subjects' component={Subjects}/>
-        <Route path='/users' component={Users}/>
+        <PrivateRoute path='/users' component={Users}/>
         <PrivateRoute path='/admin' component={Admin}/>
         <PrivateRoute path={['/profile/:username', '/users/:username']} component={Profile}/>
         <Route path='/signin' render={(props) => <Sign {...props} action='in' />}/>
         <Route path='/signup' render={(props) => <Sign {...props} action='up' />}/>
-        <Route path='/signout' render={(props) => <Sign {...props} action='out' />}/>
+        <PrivateRoute path='/signout' component={(props) => <Sign {...props} action='out' />}/>
         <Route path='/validate/:username/:ticket' component={Validate}/>
       </Switch>
   )
