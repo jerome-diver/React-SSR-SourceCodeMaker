@@ -3,18 +3,20 @@ const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
+require('dotenv').config('../')
+import { agenda, agenda_schedule } from './controllers/schedule'
 
 var app = express()
 
 mailer.extend(app, {
-    from: 'jerome.archlinux@gmail.com',
-    host: 'smtp.gmail.com',
+    from: process.env.EMAIL_FROM,
+    host: process.env.EMAIL_HOST,
     secureConnection: true,
-    port: 465,
+    port: process.env.EMAIL_PORT,
     transportMethod: 'SMTP',
     auth: {
-      user: 'jerome.archlinux@gmail.com',
-      pass: process.env.EMAIL_PASSWORD
+      user: process.env.EMAIL_AUTH_USER,
+      pass: process.env.EMAIL_AUTH_PASSWORD
     }
 })
 
@@ -49,10 +51,17 @@ app.use('/api/admin', adminRouter)
 app.use('/api/validate', validateEmailRouter)
 app.use('/', layoutRouter)
 
-const port = normalizePort(process.env.PORT || '3000')
+const port = normalizePort(process.env.SERVER_PORT || '3000')
+
 app.listen(port, () => {
   console.log("Express server started successfully")
 })
+
+//scheduler job tasks actions
+agenda_schedule(agenda)
+const realize = async () => { await agenda.stop(() => process.exit(0)) }
+process.on('SIGTERM', realize )
+process.on('SIGINT', realize )
 
 function normalizePort(val) {
   var port = parseInt(val, 10)

@@ -7,7 +7,7 @@ import { db } from '../controllers/database'
 import User from '../models/user.model'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
-import { jwtSecret } from '../config'
+require('dotenv').config('../../')
 
 
 const authenticate = (pass, salt, hash_pass) => {
@@ -61,7 +61,7 @@ router.post('/signin', jsonParser, (req, res) => {
             if (!err) { 
                 if (user) {
                     if(user.authenticate(req.body.password)) {
-                        const token = jwt.sign({id: user.id}, jwtSecret)
+                        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET)
                 //        res.cookie('token', token, {expire: new Date() + 999})
                         return res.json( {
                             user: user.toJSON(), 

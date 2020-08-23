@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
@@ -12,12 +13,13 @@ const SignUp = (props) => {
     const [load, setLoad] = useState(false)
     const [submit, setSubmit] = useState(false)
     const [redirect, setRedirect] = useState('')
+    const location = useLocation()
     
     const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
     const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
 
     useEffect( () => {
-        if (!submit) { setLoad(true) }
+        setLoad(!submit)
     }, [submit] )
     
     const handleChange = name => event => { 
@@ -60,9 +62,9 @@ const SignUp = (props) => {
                                                             cancelButtonText: "go Home",
                                                             confirmButtonText: 'Sign in'} )
                                                        .then((result) => { 
-                                                           if (result.value) { setRedirect('/signin') } else {setRedirect('/') } } )
+                                                           if (result.value) { setRedirect('/signin') } else {setRedirect(location.state.from) } } )
                                             } else { Swal.fire('Failed to send email', error, 'error') } } )
-                                } else { setRedirect('/') } } ) }
+                                } else { setRedirect(location.state.from) } } ) }
                         setSubmit(false) } )
             } else { Swal.fire('Password request failed', message, 'error') } 
         } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }

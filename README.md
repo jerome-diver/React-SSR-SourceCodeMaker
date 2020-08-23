@@ -5,23 +5,33 @@ This will also be a contact point to my freelance activity contact web site.
 
 ## Technology used
 
+### Backend (server side)
+
 * [Express.js](https://expressjs.com/) Node backend server
 * JSON Web Token with [express-jwt](https://www.npmjs.com/package/express-jwt) to enforce secret access control
+* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) to create JSON token JWT
+* [express-jwt](https://www.npmjs.com/package/express-jwt) to use JWT with Express.js server
 * JWT and user role authorization with [express-jwt-permissions](https://github.com/MichielDeMey/express-jwt-permissions)
-* [React.js](https://reactjs.org/) frontend framework
 * Babel transpiler with [@babel/core](https://github.com/babel/babel) and some other
 * [Mongoose](https://mongoosejs.com/) for MongoDB database
+* [Pug](https://pugjs.org/api/getting-started.html) HTML markup template (HTML easier)
+* [node-sass](https://pugjs.org/api/getting-started.html) SASS stylesheet loader
+* [validator](https://github.com/validatorjs/validator.js) and [express-validator](https://express-validator.github.io/docs/) to check entries validation to be sanitized.
+* [moment.js](https://momentjs.com/) to get better time/date library to use with Node.js
+* [express-mailer](https://www.npmjs.com/package/express-mailer) to send email easy with express.js Node server
+* [cookie-parser](https://www.npmjs.com/package/cookie-parser) to use cookies server side
+* [Webpack-4](https://v4.webpack.js.org/) bundler tool
+  * autoprefixer builder plugin for CSS facility
+* [dotenv](https://www.npmjs.com/package/dotenv) to use files ".env" to embed config and secrets (to not update on version server)
+
+### Frontend (client side)
+
+* [React.js](https://reactjs.org/) frontend framework
+* [react-cookie](https://www.npmjs.com/package/react-cookie) to use cookie client side with React.js
 * Redux with [react-redux](https://github.com/reduxjs/react-redux)
 * Bootstrap-4 UI stylesheet framework with [react-bootstrap](https://react-bootstrap.github.io/)
 * Fontawesome fonts and icons with [@fontawesome/react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
-* [Pug](https://pugjs.org/api/getting-started.html) HTML markup template (HTML easier)
-* [node-sass](https://pugjs.org/api/getting-started.html) SASS stylesheet loader
 * [SweetAlert2](https://sweetalert2.github.io/) nice dialog modal customized
-* [validator](https://github.com/validatorjs/validator.js) and [express-validator](https://express-validator.github.io/docs/) to check entries validation.
-* [moment.js](https://momentjs.com/) to get better time/date library to use with Node.js
-* [express-mailer](https://www.npmjs.com/package/express-mailer) to send email easy with express.js Node server
-* [Webpack-4](https://v4.webpack.js.org/) bundler tool
-  * autoprefixer builder plugin for CSS facility
 
 ## DevOps part
 

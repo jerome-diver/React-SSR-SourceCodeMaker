@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react'
 import { Redirect } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
@@ -34,6 +35,7 @@ const SignIn = (props) => {
                                                    error: '', from: '/login', user: {} })
     const [form, setForm] = useState({})
     const { data, setAuthTokens } = useAuth()
+    const location = useLocation()
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -44,7 +46,7 @@ const SignIn = (props) => {
         dispatch({isLogged: false, error: error})
         setSubmit(false) }
     const getLoggedUser = (who, token) => {
-        dispatch({from: `/profile/${who.username}`, user: who, isLogged: true})
+        dispatch({from: location.state.from, user: who, isLogged: true})
         setSubmit(false)
         setAuthTokens({token: token, username: who.username}) 
     }

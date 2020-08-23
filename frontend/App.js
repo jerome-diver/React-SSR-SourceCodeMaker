@@ -33,7 +33,11 @@ const App = (props) => {
         <main><PageSwitcher/></main>
         <footer>
             <hr />
-            <div>Contacts</div>
+            <div id='foot-links'>
+              <a target="_blank" rel="noreferrer noopener" 
+                href="https://cloud.oceanus-amantum.net" >
+                <span></span>Partagez avec moi via Nextcloud</a>
+            </div>
         </footer>
       </AuthContext.Provider>
     </>

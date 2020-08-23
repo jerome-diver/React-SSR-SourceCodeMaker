@@ -8,11 +8,10 @@ import './stylesheet/app.sass'
 import App from './App'
 import { CookiesProvider } from 'react-cookie'
 
-    hydrate(
+hydrate(
     <CookiesProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
     </CookiesProvider>
     , document.getElementById('root'));
- // })
