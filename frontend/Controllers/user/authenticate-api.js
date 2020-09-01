@@ -10,13 +10,14 @@ const signin = async (identifier, type, hp, signal) => {
     } catch(error) { return { error: `Fetch error: ${error}` }.json() }
 }
 
-const signout = async (id) => {
+const signout = async (id, signal) => {
     console.log("Fetch id to signout", id)
     try {
         let response = await fetch('/api/auth/signout', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            signal: signal,
             body: JSON.stringify({id: id})
         } )
         return await response.json()

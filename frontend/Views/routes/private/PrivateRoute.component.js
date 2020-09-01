@@ -3,7 +3,6 @@ import { Spinner, Alert, Modal, Button } from 'react-bootstrap'
 import { Route, Redirect } from 'react-router-dom'
 import { isAuthenticated } from '../../../Controllers/user/authenticate-helper'
 import { useAuthentify } from '../../../Controllers/context/authenticate'
-import { useCookies } from 'react-cookie'
 
 
 const  PrivateRoute = ({component: Component, ...rest}) => {
@@ -15,17 +14,18 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
     const [ access, setAccess ] = useState(false)
     const [ loaded, setLoaded ] = useState(false)
     const [ error, setError ] = useState('')
-    const { userData, setAuthUser } = useAuthentify()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
+    const { getUser, setUserSession } = useAuthentify()
     //const { authority } = rest
 
     useEffect(() => {
-        console.log('Reload PrivateRoute hook with', cookies.session)
+        const user = getUser()
+        console.log('Reload PrivateRoute hook with', user)
         if(!loaded) {
-            isAuthenticated(userData.user.id).then(response => {
-                setAccess(response.authorized)
-                setLoaded(true)
-            }).catch(error => { setError(error) })
+            if(user) isAuthenticated(user.id)
+                    .then(response => {
+                        setAccess(response.authorized)
+                        setLoaded(true) } )
+                    .catch(error => setError(error) )
         }
     }, [])
 

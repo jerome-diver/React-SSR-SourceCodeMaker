@@ -2,30 +2,33 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Modal, Spinner, Alert, Button } from 'react-bootstrap'
 import { signout } from '../../Controllers/user/authenticate-api'
-import { useCookies } from 'react-cookie'
 import { useAuthentify } from '../../Controllers/context/authenticate'
 
 const SignOut = (props) => {
 
-    const [load, setLoad] = useState(false)
+    const [loaded, setLoaded] = useState(false)
     const [loggedOut, setLoggedOut] = useState(false)
     const [error, setError] = useState('')
-    const [cookies, setCookie, removeCookie] = useCookies(['token', 'username'])
-    const { userData, setAuthUser } = useAuthentify()
+    const { getUser, setUserSession } = useAuthentify()
 
     useEffect( () => {
-        signout(userData.user.id).then(result => {
-            if(result.error) { setError(result.error) }
-            else {
-                removeCookie('session')
-                setLoggedOut(true) }
-            setLoad(true)
-        })
+        const abort = new AbortController()     // stop to fetch a request if we cancel this page
+        const signal = abort.signal
+        const user = getUser()
+        if (user) {
+            signout(user.id, signal).then(result => {
+                if(result.error) { setError(result.error) }
+                else {
+                    setUserSession(0)
+                    setLoggedOut(true) }
+                setLoaded(true) } )
+        }
+        return function cleanup() { abort.abort() }
     }, [])
 
     const closeModal = () => { setError('') }
 
-    if (load) {
+    if (loaded) {
         if (loggedOut) {
             return (<> <Redirect to='/'/> </>)
         } else {

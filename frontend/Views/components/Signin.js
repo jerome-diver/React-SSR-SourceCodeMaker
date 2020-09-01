@@ -8,7 +8,6 @@ import { useAuthentify } from '../../Controllers/context/authenticate'
 import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
 import { read } from '../../Controllers/user/action-CRUD'
 import { cypher } from '../../Controllers/user/user-form-helper'
-import { useCookies } from 'react-cookie'
 
 const reducer = (state, action) => {
     switch (action.isLogged) {
@@ -16,14 +15,12 @@ const reducer = (state, action) => {
             return { isLogged: true,
                      hasError: false,
                      error: null,
-                     from: action.from,
-                     user: action.user }
+                     from: action.from }
         case false:
             return { isLogged: false,
                      hasError: action.hasError,
                      error: action.error,
-                     from: state.from,
-                     user: state.user}
+                     from: state.from }
         default:
             return { isLogged: false, error: "Wrong reduction"}
     }
@@ -31,20 +28,19 @@ const reducer = (state, action) => {
 
 const SignIn = (props) => {
 
-    const [load, setLoad] = useState(false)
-    const [submit, setSubmit] = useState(false)
-    const [sign, dispatch] = useReducer(reducer, { isLogged: false, hasError:false,
+    const [ loaded, setLoaded ] = useState(false)
+    const [ submit, setSubmit ] = useState(false)
+    const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
-    const [form, setForm] = useState({})
-    const { userData, setAuthUser } = useAuthentify()
-    const [selectIdentifier, setSelectIdentifier] = useState('Email')
+    const [ form, setForm ] = useState({})
+    const { getUser, setUserSession } = useAuthentify()
+    const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
         console.log('Location is', location)
-        setLoad(!submit)
+        setLoaded(!submit)
     }, [submit] )
 
     const getError = (error) => { 
@@ -54,8 +50,8 @@ const SignIn = (props) => {
     const getLoggedUser = (data) => {
         console.log("OK, signed in for ", data.user.username)
         const go_to = (location.state) ? location.state.from : '/profile'
-        dispatch({from: go_to, user: data.user.username, isLogged: true})
-        setAuthUser( data ) 
+        dispatch({from: go_to, isLogged: true})
+        setUserSession( data ) 
         setSubmit(false)
     }
     const getSetupPassword = () => {
@@ -80,7 +76,7 @@ const SignIn = (props) => {
     const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const switchIdentifier = (status) => { setSelectIdentifier(status) }
 
-    if (load) {
+    if (loaded) {
         if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
         else {
           return (
@@ -114,15 +110,15 @@ const SignIn = (props) => {
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Label>Your email</Form.Label>
                                 <Form.Control type='email' placeholder='enter email' 
-                                            onChange={handleChange('email')}
-                                            defaultValue={form.email} />
+                                              onChange={handleChange('email')}
+                                              defaultValue={form.email} />
                                 <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                             </Form.Group> 
                         : <Form.Group controlId="formBasicText">
                                 <Form.Label>Your username</Form.Label>
                                 <Form.Control type='text' placeholder='username'
-                                            onChange={handleChange('username')}
-                                            defaultValue={form.username} />
+                                              onChange={handleChange('username')}
+                                              defaultValue={form.username} />
                                 <Form.Text className="text-muted">he is unique there...</Form.Text>
                             </Form.Group> }
                     <Form.Group controlId="formBasicPassword">

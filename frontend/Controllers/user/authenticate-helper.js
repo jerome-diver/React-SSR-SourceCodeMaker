@@ -1,6 +1,6 @@
 const { signout } = require("./authenticate-api")
 
-const isAuthenticated = async (id) => {
+const isAuthenticated = async (id, signal) => {
   console.log("Fetch id", id)
   try {
     let response = await fetch('/api/auth/authorized', {

@@ -13,14 +13,19 @@ const App = (props) => {
     console.log("APP get useEffect updated")
   }, [])
   
-  const setUser = (data) => {
+  const setUserSession = (data) => {
     console.log("Define username and role from", data)
-    setCookies('session', data)
+    if(data != 0) setCookies('session', data)
+    else removeCookies('session')
+  }
+
+  const getUser = () => {
+    if (cookies.session) return cookies.session.user
   }
 
   return (
     <>
-      <AuthentifyContext.Provider value={{ userData: cookies.session, setAuthUser: setUser }}>
+      <AuthentifyContext.Provider value={{ getUser: getUser, setUserSession: setUserSession }}>
         <header>
           <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>

@@ -5,19 +5,16 @@ import { useAuthentify } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
 
 const Profile = (props) => {
-    const [user, setUser] = useState({role: {color: "primary", description:'', id: '', name: 'Reader'}, 
-                                      id: '', username: 'no one', 
-                                      first_name: '', second_name: '', 
-                                      email: '', validated: false})
-    const [loaded, setLoaded] = useState(false)
-    const [accountState, setAccountState] = useState({ color:"success", status: 'disable' })
-    //const { username } = useParams()
-    const { userData, setAuthUser } = useAuthentify()
+    const [ loaded, setLoaded ] = useState(false)
+    const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
+    const [ user, setUser ] = useState(undefined)
+    const { getUser, setUserSession } = useAuthentify()
 
     useEffect( () => {
         console.log("Effect from Profile")
-        setUser(userData.user)
-        setAccountState(accountEnabled(userData.user.validated))
+        const u = getUser()
+        setUser(u)
+        setAccountState(accountEnabled(u.validated))
         setLoaded(true)
     }, [] )
   
@@ -26,7 +23,7 @@ const Profile = (props) => {
         console.log("EDIT PROFILE FOR: ", user.username)
     } 
 
-    if (loaded) {
+    if (loaded && user) {
         return (
             <Jumbotron>
                 <h4>{user.username} <Badge pill variant={user.role.color}>{user.role.name}</Badge></h4>

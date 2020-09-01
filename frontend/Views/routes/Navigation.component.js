@@ -6,7 +6,6 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faUserEdit, faAddressCard, faFolder, faHome, 
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthentify, isAuthorized } from '../../Controllers/context/authenticate'
-import { useCookies } from 'react-cookie'
 
 const UserRoleEntries = (props) => {
 
@@ -57,20 +56,21 @@ const UserLoggedEntries = (props) => {
 
 const Navigation = (props) => {
 
-    const { userData, setAuthUser } = useAuthentify()
-    const [username, setUsername] = useState('')
-    const [role, setRole] = useState('')
+    const { getUser, setUserSession } = useAuthentify()
+    const [ username, setUsername ] = useState('')
+    const [ role, setRole ] = useState('')
 /*   const [cookies, setCookie] = useCookies(['token', 'username'])
   console.log("From Navigation, decoded JWT token is", cookies)
   const [username, user_role] = (cookies && cookies.user) ? [cookies.user.username, cookies.user.role] : ['',''] */
 
   useEffect( () => {
-      if (userData && userData.user) {
-        console.log("Find username:", userData.user.username)
-        setUsername(userData.user.username)
-        setRole(userData.user.role.name)
-      }
-  }, [userData] )
+    const user = getUser()
+    if (user) {
+      console.log("Find username:", user.username)
+      setUsername(user.username)
+      setRole(user.role.name)
+    }
+  }, [getUser()] )
 
   return (
     <>
