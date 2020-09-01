@@ -65,7 +65,7 @@ const Navigation = (props) => {
   const [username, user_role] = (cookies && cookies.user) ? [cookies.user.username, cookies.user.role] : ['',''] */
 
   useEffect( () => {
-      if (userData.user) {
+      if (userData && userData.user) {
         console.log("Find username:", userData.user.username)
         setUsername(userData.user.username)
         setRole(userData.user.role.name)
