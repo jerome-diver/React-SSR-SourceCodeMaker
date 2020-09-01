@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { NavLink } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,11 +7,23 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 
+const reducer = (state, action) => {
+  switch (action.user) {
+    case undefined:
+      return { user: action.user, username: '', role: '' }
+    default:
+      return { isLogged: action.user,
+               username: action.user.username,
+               role: action.user.role.name }
+  }
+}
+
 const UserRoleEntries = (props) => {
 
   const { role } = props
 
   console.log("Sub-menu role, role is:", role)
+  
   switch (role) {
     case 'Admin':
       return (
@@ -57,19 +69,10 @@ const UserLoggedEntries = (props) => {
 const Navigation = (props) => {
 
     const { getUser, setUserSession } = useAuthenticate()
-    const [ username, setUsername ] = useState('')
-    const [ role, setRole ] = useState('')
-/*   const [cookies, setCookie] = useCookies(['token', 'username'])
-  console.log("From Navigation, decoded JWT token is", cookies)
-  const [username, user_role] = (cookies && cookies.user) ? [cookies.user.username, cookies.user.role] : ['',''] */
+    const [ user, dispatch ] = useReducer(reducer, {isLogged: false, username: '', role: ''})
 
   useEffect( () => {
-    const user = getUser()
-    if (user) {
-      console.log("Find username:", user.username)
-      setUsername(user.username)
-      setRole(user.role.name)
-    }
+    dispatch({user: getUser()})
   }, [getUser()] )
 
   return (
@@ -86,8 +89,8 @@ const Navigation = (props) => {
             <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
               <FontAwesomeIcon icon={faAddressCard}/> Contact</Nav.Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
-              <UserLoggedEntries username={username} 
-                                 role={role} />
+              <UserLoggedEntries username={user.username} 
+                                 role={user.role} />
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

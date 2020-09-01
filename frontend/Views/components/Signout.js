@@ -6,9 +6,9 @@ import { useAuthenticate } from '../../Controllers/context/authenticate'
 
 const SignOut = (props) => {
 
-    const [loaded, setLoaded] = useState(false)
-    const [loggedOut, setLoggedOut] = useState(false)
-    const [error, setError] = useState('')
+    const [ loaded, setLoaded ] = useState(false)
+    const [ loggedOut, setLoggedOut ] = useState(false)
+    const [ error, setError ] = useState('')
     const { getUser, setUserSession } = useAuthenticate()
 
     useEffect( () => {
@@ -50,8 +50,8 @@ const SignOut = (props) => {
         return (
         <>
             <Alert variant='info'>
-            <Spinner animation='border' role='status'/>
-            <p>Loading...</p>
+                <Spinner animation='border' role='status'/>
+                <p>Loading...</p>
             </Alert>
         </>
         )
