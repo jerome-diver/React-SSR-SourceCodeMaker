@@ -1,8 +1,7 @@
 import React, { useEffect, useState, Component } from 'react'
 import { Spinner, Alert, Modal, Button } from 'react-bootstrap'
 import { Route, Redirect } from 'react-router-dom'
-import { isAuthenticated } from '../../../Controllers/user/authenticate-helper'
-import { useAuthentify } from '../../../Controllers/context/authenticate'
+import { isAuthenticated, useAuthenticate } from '../../../Controllers/context/authenticate'
 
 
 const  PrivateRoute = ({component: Component, ...rest}) => {
@@ -14,8 +13,7 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
     const [ access, setAccess ] = useState(false)
     const [ loaded, setLoaded ] = useState(false)
     const [ error, setError ] = useState('')
-    const { getUser, setUserSession } = useAuthentify()
-    //const { authority } = rest
+    const { getUser, setUserSession } = useAuthenticate()
 
     useEffect(() => {
         const user = getUser()

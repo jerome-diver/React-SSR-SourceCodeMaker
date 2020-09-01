@@ -3,7 +3,7 @@ import Navigation from './Views/routes/Navigation.component'
 import PageSwitcher from './Views/routes/PageSwitcher.component'
 import { useCookies } from 'react-cookie'
 import './stylesheet/menu.sass'
-import { AuthentifyContext } from './Controllers/context/authenticate'
+import { AuthenticateContext } from './Controllers/context/authenticate'
 import { cookie } from 'express-validator'
 
 const App = (props) => {
@@ -25,7 +25,7 @@ const App = (props) => {
 
   return (
     <>
-      <AuthentifyContext.Provider value={{ getUser: getUser, setUserSession: setUserSession }}>
+      <AuthenticateContext.Provider value={{ getUser: getUser, setUserSession: setUserSession }}>
         <header>
           <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>
@@ -37,7 +37,7 @@ const App = (props) => {
                 <span></span>Partagez avec moi via Nextcloud</a>
             </div>
         </footer>
-      </AuthentifyContext.Provider>
+      </AuthenticateContext.Provider>
     </>
   )
 }

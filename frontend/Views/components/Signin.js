@@ -4,7 +4,7 @@ import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { Card, ToggleButtonGroup, ToggleButton, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
-import { useAuthentify } from '../../Controllers/context/authenticate'
+import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
 import { read } from '../../Controllers/user/action-CRUD'
 import { cypher } from '../../Controllers/user/user-form-helper'
@@ -33,7 +33,7 @@ const SignIn = (props) => {
     const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
     const [ form, setForm ] = useState({})
-    const { getUser, setUserSession } = useAuthentify()
+    const { getUser, setUserSession } = useAuthenticate()
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
   

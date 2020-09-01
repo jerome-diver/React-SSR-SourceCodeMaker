@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faUserPlus, faUserCircle, faUserTie, 
         faUserEdit, faAddressCard, faFolder, faHome, 
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
-import { useAuthentify, isAuthorized } from '../../Controllers/context/authenticate'
+import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 
 const UserRoleEntries = (props) => {
 
@@ -56,7 +56,7 @@ const UserLoggedEntries = (props) => {
 
 const Navigation = (props) => {
 
-    const { getUser, setUserSession } = useAuthentify()
+    const { getUser, setUserSession } = useAuthenticate()
     const [ username, setUsername ] = useState('')
     const [ role, setRole ] = useState('')
 /*   const [cookies, setCookie] = useCookies(['token', 'username'])

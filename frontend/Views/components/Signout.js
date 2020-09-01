@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Modal, Spinner, Alert, Button } from 'react-bootstrap'
 import { signout } from '../../Controllers/user/authenticate-api'
-import { useAuthentify } from '../../Controllers/context/authenticate'
+import { useAuthenticate } from '../../Controllers/context/authenticate'
 
 const SignOut = (props) => {
 
     const [loaded, setLoaded] = useState(false)
     const [loggedOut, setLoggedOut] = useState(false)
     const [error, setError] = useState('')
-    const { getUser, setUserSession } = useAuthentify()
+    const { getUser, setUserSession } = useAuthenticate()
 
     useEffect( () => {
         const abort = new AbortController()     // stop to fetch a request if we cancel this page

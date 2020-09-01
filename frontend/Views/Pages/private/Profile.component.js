@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Jumbotron, Spinner, Badge, Button, Alert } from 'react-bootstrap'
 import { accountEnabled } from '../../helpers/config'
-import { useAuthentify } from '../../../Controllers/context/authenticate'
+import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
 
 const Profile = (props) => {
     const [ loaded, setLoaded ] = useState(false)
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
     const [ user, setUser ] = useState(undefined)
-    const { getUser, setUserSession } = useAuthentify()
+    const { getUser, setUserSession } = useAuthenticate()
 
     useEffect( () => {
         console.log("Effect from Profile")
