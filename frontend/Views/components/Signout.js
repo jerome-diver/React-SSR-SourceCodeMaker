@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { Modal, Spinner, Alert, Button } from 'react-bootstrap'
 import { signout } from '../../Controllers/user/authenticate-api'
 import { useCookies } from 'react-cookie'
-import { useAuthentify } from '../../../Controllers/context/authenticate'
+import { useAuthentify } from '../../Controllers/context/authenticate'
 
 const SignOut = (props) => {
 
