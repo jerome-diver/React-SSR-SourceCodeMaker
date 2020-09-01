@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import Navigation from './Views/routes/Routing.component'
-import PageSwitcher from './Views/Pages/PageSwitcher.component'
-import './stylesheet/menu.sass'
-import { AuthContext } from './Controllers/context/authenticate'
+import Navigation from './Views/routes/Navigation.component'
+import PageSwitcher from './Views/routes/PageSwitcher.component'
 import { useCookies } from 'react-cookie'
+import './stylesheet/menu.sass'
+import { AuthentifyContext } from './Controllers/context/authenticate'
+import { cookie } from 'express-validator'
 
 const App = (props) => {
-  const [authTokens, setAuthTokens] = useState({token: '', username: ''})
-  const [cookies, setCookie, removeCookie] = useCookies(['token', 'username'])
+  const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
 
   useEffect( () => {
     console.log("APP get useEffect updated")
-    setAuthTokens( { token: cookies.tokens,
-                     username: cookies.username } )
   }, [])
   
-  const setTokens = (data) => {
-    if(data) {
-      setCookie('token', JSON.stringify(data.token)) 
-      setCookie('username', JSON.stringify(data.username)) }
-    else { 
-      removeCookie('token')
-      removeCookie('username') }
-    setAuthTokens(data)
+  const setUser = (data) => {
+    console.log("Define username and role from", data)
+    setCookies('session', data)
   }
 
   return (
     <>
-      <AuthContext.Provider value={{ data: authTokens, setAuthTokens: setTokens }}>
+      <AuthentifyContext.Provider value={{ userData: cookies.session, setAuthUser: setUser }}>
         <header>
           <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>
@@ -39,7 +32,7 @@ const App = (props) => {
                 <span></span>Partagez avec moi via Nextcloud</a>
             </div>
         </footer>
-      </AuthContext.Provider>
+      </AuthentifyContext.Provider>
     </>
   )
 }

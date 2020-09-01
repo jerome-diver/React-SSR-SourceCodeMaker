@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
-import Crypto from 'crypto'
 import moment from 'moment'
 import { db } from '../controllers/database'
 import User from '../models/user.model'
@@ -9,34 +8,36 @@ import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
 require('dotenv').config('../../')
 
-
-const authenticate = (pass, salt, hash_pass) => {
-    return Crypto.createHmac('sha256', salt)
-                         .update(pass)
-                         .digest('hex') === hash_pass
+const decodeJWT = (token) => {
+    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+        if (error) return { error: error.message } 
+        else return decoded
+    })
 }
-const findMissing = (data) => {
-    let missingMsg = ''
-    if (!data.username || data.username === null) {
-        missingMsg += "\nNo username received" }
-    if (!data.email || data.email === null) {
-        missingMsg += '\nNo email received' }
-    return missingMsg
-}
-
-/* GET user profile. */
-router.get('/:username', (req, res) => {
-    User.findOne({username: req.params.username}, 
-        (err, user) => { 
-            if (err) { return res.status(404).json({error: error, user: null}) } 
-            else { return res.status(200).json( { error: null, user: user.toJSON() } ) }
-    } )
-} )
 
 /* GET users listing. */
 router.get('/', (req, res) => {
-    User.find({}, (err, o) => { res.json(o.map((u) => { return u.toObject() })) })
+    User.find({}, (err, o) => { res.json(o.map((u) => { return u.toJSON() })) })
 })
+
+/* GET user profile. */
+router.get('/user', (req, res) => {
+    const token = req.cookies.token
+    const user_id = decodeJWT(token)
+    console.log("Found user id:", user_id)
+    if (user_id.error) return res.status(401).json({error: user_id.error})
+    User.findOne({_id: user_id}, (err, user) => { 
+        console.log("Searching for user")
+        if (err) { return res.status(404).json({error: error.message}) } 
+        else { 
+            Role.findOne({_id: user.role_id}, (err, role) => {
+                console.log("Searching for role")
+                if (err) { return res.status(401).json({ error: 'no role found in database' }) }
+                return res.status('200').json( { user: user.toJSON(), role: role.toJSON() })
+            } )
+        }
+    } )
+} )
 
 /* POST to create new user */
 const jsonParser = bodyParser.json()
@@ -45,37 +46,45 @@ router.post('/', jsonParser, (req, res) => {
     User.create( { // Record to MongoDB 
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password },
+        password: req.body.password,
+        role_id: req.body.role_id },
       (error, u) => {
         if (error) { res.json({accepted: false, error: error.message}) }
         else { res.json( {error: '', accepted: true} ) } } )
 } )
 
-/* POST to sign in user with token to ask */
-router.post('/signin', jsonParser, (req, res) => {
-    const msg = findMissing(req.body)
-    if (msg !== '') { res.json({error: msg}) }
-    User.findOne( { username: req.body.username, 
-                    email: req.body.email },
-        (err, user) => {
-            if (!err) { 
-                if (user) {
-                    if(user.authenticate(req.body.password)) {
-                        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET)
-                //        res.cookie('token', token, {expire: new Date() + 999})
-                        return res.json( {
-                            user: user.toJSON(), 
-                            token: token,
-                            error: err } ) } }
-                return res.status(404).json({error: 'User not found or password wrong'}) }
-            else { return res.status(404).json( { error: err } ) } } )
-} )
+/* PUT update user */
 
-/* POST to sign out user with token to ask */
-router.post('/signout', jsonParser, (req, res) => {
- //   res.clearCookie('token')
- //   res.clearCookie('username')
-    return res.status('200').json({message: 'signed out'})
+/* DELETE delete user */
+
+/* POST to reset password by new email to access new password setup */
+
+router.post('/reset_password/:username', jsonParser, (req, res) => {
+    User.findOne({username: req.params.username}, 
+        (err, user) => { 
+            if (err) { return res.json({error: err.message}) }
+            else {
+                if(!user) { return res.json({error: "User doesn't exist"})}
+                else {
+                    const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+                    const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+                    const url = 'http:/localhost:3000/setup_password'
+                    const setup_password_link = `${url}/${user.id}/${user.ticket}`
+                    res.app.mailer.send('send_email_to_user', {
+                        to: user.email,
+                        subject: 'Confirm your want to rest your password',
+                        title: 'Source Code Maker, reset password process',
+                        content_title: "Reset your password for Source Maker Code web site",
+                        introduction: `The ${date_now}, you forget your password and then you would like to reset this one and setup a new one on my Source Maker Code web site.`,
+                        text: `You should confirm you want to setup a new assword before the ${date_end} (local server UTC time) by clicking the next link.`,
+                        link_validate: setup_password_link,
+                        validation_text: 'Click this link to setup a new password'
+                    }, (error) => {
+                        if (error) { return res.json( {error: error, sent: false} ) }
+                        else { return res.json( { error: '', sent: true } ) } } )
+                }
+            }
+    } )
 } )
 
 module.exports = router

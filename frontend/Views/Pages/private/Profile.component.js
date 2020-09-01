@@ -1,54 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { read } from '../../../Controllers/user/action-api'
 import { Jumbotron, Spinner, Badge, Button, Alert } from 'react-bootstrap'
-import { variant, accountEnabled } from '../../helpers/config'
+import { accountEnabled } from '../../helpers/config'
+import { useAuthentify } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
 
 const Profile = (props) => {
-
-    const [user, setUser] = useState({role: 'Reader', username: 'no one', 
-                                     first_name: '', second_name: '', 
-                                     email: '', validated: ''})
-    const [load, setLoad] = useState(false)
+    const [user, setUser] = useState({role: {color: "primary", description:'', id: '', name: 'Reader'}, 
+                                      id: '', username: 'no one', 
+                                      first_name: '', second_name: '', 
+                                      email: '', validated: false})
+    const [loaded, setLoaded] = useState(false)
     const [accountState, setAccountState] = useState({ color:"success", status: 'disable' })
-    const { username } = useParams()
-    const credentials = ''
-    const promote = variant(user.role)
+    //const { username } = useParams()
+    const { userData, setAuthUser } = useAuthentify()
 
     useEffect( () => {
         console.log("Effect from Profile")
-        const abort = new AbortController()
-        const signal = abort.signal
-        read(username, signal)
-            .then( (data) => {
-                if (!data) { console.log('No data received')}
-                else if (data.error) { console.log(data.error) } 
-                else { 
-                    setUser(data.user) 
-                    const accountStatus = accountEnabled(data.user.validated)
-                    setAccountState(accountStatus) } } )
-            .catch((error) => console.log("ERROR", error))
-        setLoad(true)
-        return function cleanup() { abort.abort() }
+        setUser(userData.user)
+        setAccountState(accountEnabled(userData.user.validated))
+        setLoaded(true)
     }, [] )
   
-    const editProfile = username => (e) => {
+    const editProfile = (e) => {
         e.preventDefault()
-        console.log("EDIT PROFILE FOR: ", username)
+        console.log("EDIT PROFILE FOR: ", user.username)
     } 
 
-    if (load) {
+    if (loaded) {
         return (
             <Jumbotron>
-                <h4>{user.username} <Badge pill variant={promote}>{user.role}</Badge></h4>
+                <h4>{user.username} <Badge pill variant={user.role.color}>{user.role.name}</Badge></h4>
                 <hr/>
                 <p>Account: <Badge variant={accountState.color}>{accountState.status}</Badge></p>
                 <p>Email: {user.email}</p> 
                 <p>First name: {user.first_name}</p>
                 <p>Second name: {user.second_name}</p>
                 <Button className='btn btn-sm btn-primary' 
-                        onClick={ editProfile(username) }>Edit profile
+                        onClick={ editProfile }>Edit profile
                 </Button>
             </Jumbotron>
         )

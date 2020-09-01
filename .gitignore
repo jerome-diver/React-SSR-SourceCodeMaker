@@ -29,3 +29,12 @@ yarn-error.log*
 
 # dotenv file
 .env
+
+# doc files on work process
+/doc/*.odt
+/doc/*.odt#
+/doc/*.png
+/doc/*.drawio
+
+# wrong generated compiled dev dist driectories
+**/dist/*

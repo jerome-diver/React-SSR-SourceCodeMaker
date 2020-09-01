@@ -5,8 +5,10 @@ const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
 require('dotenv').config('../')
 import { agenda, agenda_schedule } from './controllers/schedule'
+import { db, init_db } from './controllers/database'
 
 var app = express()
+//app.set('trust proxy', 1)   // NGINX proxy web server requirement
 
 mailer.extend(app, {
     from: process.env.EMAIL_FROM,
@@ -20,48 +22,56 @@ mailer.extend(app, {
     }
 })
 
-var layoutRouter = require('./routes/layout')
-var homeRouter = require('./routes/home')
-var usersRouter = require('./routes/users')
-var contactsRouter = require('./routes/contacts')
-var subjectRouter = require('./routes/subject')
-var adminRouter = require('./routes/admin')
-var validateEmailRouter = require('./routes/validate')
+const layoutRouter = require('./routes/layout')
+const homeRouter = require('./routes/home')
+const usersRouter = require('./routes/users')
+const contactsRouter = require('./routes/contacts')
+const subjectRouter = require('./routes/subject')
+const adminRouter = require('./routes/admin')
+const validateEmailRouter = require('./routes/validate')
+const rolesRouter = require('./routes/roles')
+const authRouter = require('./routes/authenticate')
 
-app.use(favicon("./backend/img/favicon.ico"))
-app.use(cookieParser())
-// view engine setup
-app.set('views', 'backend/views')
-app.set('view engine', 'pug')
-
-// CROSS site ability
-app.use(cors())
-// modules used
-app.use(express.json())
+app.use(favicon("./backend/img/favicon.ico"))   // add icon on tab browser
+app.use(cookieParser())                         // parse Cookies to router
+app.set('views', 'backend/views')               // template views location
+app.set('view engine', 'pug')                   // template views engine type (pug)
+app.use(cors())                                 // Cross sites able
+app.use(express.json())                         // JSON Express module used
 //app.use(express.urlencoded({ extended: false }))
-// read dir as public:
-app.use(express.static('build/public'))
-
+app.use(express.static('build/public'))          // read dir as public
 // define route to use and action to respond from own defined requests
 app.use('/api/home', homeRouter)
+app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/roles', rolesRouter)
 app.use('/template/contact', contactsRouter)
 app.use('/api/subject/*', subjectRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/validate', validateEmailRouter)
 app.use('/', layoutRouter)
 
+/* express-jwt handle error message it thrown */
+/* app.use((err, req, res, next) => {
+  if (err) {
+    if (err.name === 'UnauthorizedError') return res.status('401').json({error: err.name + ": " + err.message})
+    if (err.code === 'EBADCSRFTOKEN') return res.status('403').json({error: err.message})
+    else return res.status('400').json({error: err.name + ": " + err.message}) }
+  next()
+}) */
+
 const port = normalizePort(process.env.SERVER_PORT || '3000')
 
-app.listen(port, () => {
-  console.log("Express server started successfully")
-})
+app.listen(port, () => { console.log("Express server started successfully") })
 
-//scheduler job tasks actions
-agenda_schedule(agenda)
-const realize = async () => { await agenda.stop(() => process.exit(0)) }
-process.on('SIGTERM', realize )
-process.on('SIGINT', realize )
+// Initialize first need entries in MongoDB database collections.
+//init_db()
+
+// scheduler job tasks actions
+//agenda_schedule(agenda)
+//const realize = async () => { await agenda.stop(() => process.exit(0)) }
+//process.on('SIGTERM', realize )
+//process.on('SIGINT', realize )
 
 function normalizePort(val) {
   var port = parseInt(val, 10)

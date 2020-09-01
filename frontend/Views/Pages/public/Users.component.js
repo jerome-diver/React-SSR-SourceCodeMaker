@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { list } from '../../../Controllers/user/action-api'
+import { list } from '../../../Controllers/user/action-CRUD'
 import { Jumbotron, ListGroup, Spinner, Badge, Alert } from 'react-bootstrap'
 import { variant } from '../../helpers/config'
 import '../../../stylesheet/users.sass'

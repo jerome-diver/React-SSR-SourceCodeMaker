@@ -1,15 +1,16 @@
 const { signout } = require("./authenticate-api")
 
-
-function authenticate(jwt, callback) {
-    if (typeof window !== 'undefined') { sessionStorage.setItem('jwt', JSON.stringify(jwt)) }
-    callback()
-}
-
-function isAuthenticated() {
-    if (typeof window === 'undefined') return false
-    if (sessionStorage.getItem('jwt')) return JSON.parse(sessionStorage.getItem('jwt'))
-    return false
+const isAuthenticated = async (id) => {
+  console.log("Fetch id", id)
+  try {
+    let response = await fetch('/api/auth/authorized', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({id: id})
+    })
+    return await response.json()
+  } catch (err) { return { error: err } }
 }
 
 function clearJWT(callback) {
@@ -20,13 +21,4 @@ function clearJWT(callback) {
     } )
 }
 
-const withAuth = (Component) => {
-  const AuthRoute = () => {
-    const isAuth = !!localStorage.getItem("token");
-    if (isAuth) { return <Component /> }
-    else { return <Redirect to="/" /> }
-  }
-  return AuthRoute
-}
-
-export { authenticate, isAuthenticated, clearJWT }
+export { isAuthenticated, clearJWT }

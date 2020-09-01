@@ -3,22 +3,24 @@ import { Redirect } from 'react-router-dom'
 import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
-import { Card, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
-import { useAuth } from '../../Controllers/context/authenticate'
-import { signin } from '../../Controllers/user/authenticate-api'
+import { Card, ToggleButtonGroup, ToggleButton, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
+import { useAuthentify } from '../../Controllers/context/authenticate'
+import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
+import { read } from '../../Controllers/user/action-CRUD'
 import { cypher } from '../../Controllers/user/user-form-helper'
+import { useCookies } from 'react-cookie'
 
 const reducer = (state, action) => {
     switch (action.isLogged) {
         case true:
             return { isLogged: true,
                      hasError: false,
-                     error: '',
+                     error: null,
                      from: action.from,
                      user: action.user }
         case false:
             return { isLogged: false,
-                     hasError: true,
+                     hasError: action.hasError,
                      error: action.error,
                      from: state.from,
                      user: state.user}
@@ -34,36 +36,49 @@ const SignIn = (props) => {
     const [sign, dispatch] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
     const [form, setForm] = useState({})
-    const { data, setAuthTokens } = useAuth()
+    const { userData, setAuthUser } = useAuthentify()
+    const [selectIdentifier, setSelectIdentifier] = useState('Email')
     const location = useLocation()
+    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
+        console.log('Location is', location)
         setLoad(!submit)
     }, [submit] )
 
     const getError = (error) => { 
-        dispatch({isLogged: false, error: error})
+        console.log("FAILED to signed in")
+        dispatch({isLogged: false, error: error, hasError: true})
         setSubmit(false) }
-    const getLoggedUser = (who, token) => {
-        dispatch({from: location.state.from, user: who, isLogged: true})
+    const getLoggedUser = (data) => {
+        console.log("OK, signed in for ", data.user.username)
+        const go_to = (location.state) ? location.state.from : '/profile'
+        dispatch({from: go_to, user: data.user.username, isLogged: true})
+        setAuthUser( data ) 
         setSubmit(false)
-        setAuthTokens({token: token, username: who.username}) 
+    }
+    const getSetupPassword = () => {
+
     }
     const handleChange = name => e => {
         if (!submit && name !== '') { setForm({...form, [name]: e.target.value}) }
+    }
+    const forgetPassword = () => {
+        setupPassword(form.username).then(response => {
+            (response.error) ? getError(response.error) : getSetupPassword() } )
     }
     const clickSubmit = (e) => {
         e.preventDefault()
         setSubmit(true)
         const hashed_password = (form.password) ? cypher(form.password) : ''
-        signin(form.username, form.email, hashed_password)
-            .then( (data) => (data.error) 
-                                ? getError(data.error) 
-                                : getLoggedUser(data.user, data.token) )
-            .catch((error) => { getError(error) } )
+        const id = (selectIdentifier == 'Email') ? form.email : form.username
+        signin(id, selectIdentifier, hashed_password)
+            .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
+            .catch(error => { getError(error) } )
     }
-    const closeModal = () => { setHasError(false) }
+    const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
+    const switchIdentifier = (status) => { setSelectIdentifier(status) }
 
     if (load) {
         if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
@@ -87,20 +102,29 @@ const SignIn = (props) => {
                     <Card.Subtitle className='mb-2 text-muted' />
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
                     <Form>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Your email of this account</Form.Label>
-                        <Form.Control type='email' placeholder='enter email' 
-                                      onChange={handleChange('email')}
-                                      defaultValue={form.email} />
-                        <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
-                    </Form.Group>
-                    <Form.Group controlId="formBasicText">
-                        <Form.Label>OR, your username</Form.Label>
-                        <Form.Control type='text' placeholder='username'
-                                      onChange={handleChange('username')}
-                                      defaultValue={form.username} />
-                        <Form.Text className="text-muted">he is unique there...</Form.Text>
-                    </Form.Group>
+                        <span>Select identifier</span>
+                        <ToggleButtonGroup name='IdentifierSelector' value={selectIdentifier}
+                                           onChange={switchIdentifier} 
+                                           size='sm' 
+                                           aria-label="identifier selector">
+                            <ToggleButton value='Email' variant="secondary">Email</ToggleButton>
+                            <ToggleButton value='Username' variant="secondary">Username</ToggleButton>
+                        </ToggleButtonGroup>
+                        { (selectIdentifier == 'Email') ?
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Your email</Form.Label>
+                                <Form.Control type='email' placeholder='enter email' 
+                                            onChange={handleChange('email')}
+                                            defaultValue={form.email} />
+                                <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
+                            </Form.Group> 
+                        : <Form.Group controlId="formBasicText">
+                                <Form.Label>Your username</Form.Label>
+                                <Form.Control type='text' placeholder='username'
+                                            onChange={handleChange('username')}
+                                            defaultValue={form.username} />
+                                <Form.Text className="text-muted">he is unique there...</Form.Text>
+                            </Form.Group> }
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Your password</Form.Label>
                         <Form.Control type='password' placeholder='password' 
@@ -113,6 +137,7 @@ const SignIn = (props) => {
                                 onClick={clickSubmit}/></Button>
                     </Card.Link>
                     <Card.Link href='/signup'>I don't have an account</Card.Link>
+                    <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
                 </Card.Body>
             </Card> </> 
         ) }

@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose'
+import mongoose, { Schema, model } from 'mongoose'
+import { RoleSchema } from './role.model'
 import Crypto from 'crypto'
 
 /* Schema for document user for collection "users" */
@@ -43,11 +44,14 @@ const UserSchema = new Schema({
         type: String,
         trim: true
     },
-    role: {
-        type: String,
-        default: 'Reader',
-        enum: ["Reader", "Writer", "Admin"],
+/*     role_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role",
         required: 'Role is required'
+    }, */
+    role: {
+        type: RoleSchema,
+        default: () => ({name:"Reader"})
     },
     hashed_password: {
         type: String,
@@ -84,11 +88,14 @@ UserSchema.methods = {
         return Math.round(new Date().valueOf() * Math.random()) + '' }
 }
 
-UserSchema.options.toJSON = {
+UserSchema.options.toJSON = {   // return only what is required for safety reason
     transform: function(doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
+        delete ret.salt;
+        delete ret.hashed_password;
+        delete ret.ticket;
         return ret;
     }
 };

@@ -1,0 +1,19 @@
+{
+    "Role": {
+        "admin": {
+            "name": "Admin",
+            "color": "danger",
+            "description": "Admin has full super power there. He can manage everything in the web site."
+        },
+        "reader": {
+            "name": "Reader",
+            "color": "primary",
+            "description": "Reader can read articles and subjects for subscribed users"
+        },
+        "redactor": {
+            "name": "Redactor",
+            "color": "warning",
+            "description": "Redactor role user can write articles on subjects"
+        }
+    }
+}

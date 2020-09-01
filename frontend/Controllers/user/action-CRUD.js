@@ -1,9 +1,12 @@
 import { cypher } from './user-form-helper'
+import { get } from 'mongoose'
 
-const create = async (user) => {
+const create = async (user, role_id) => {
+    console.log("Create new user with role", role_id)
     const newUser = { username: user.username,
                       email: user.email,
-                      password: cypher(user.pass1) }
+                      password: cypher(user.pass1), 
+                      role_id: role_id }
     let response = await fetch('/api/users', {
             method: 'POST',
             headers: { 'Accept': 'application/json',
@@ -31,12 +34,12 @@ const list = async (signal) => {
     } catch(error) { console.log('Failed to show users list: ' + error) }
 }
 
-const read = async (username, signal) => {
+const read = async () => {
     try {
-        const url = `/api/users/${username}`
+        const url = `/api/users/user`
         let response = await fetch(url, {
             method: 'GET',
-            signal: signal } )
+            credentials: 'include' } )
         return await response.json()
     } catch(error) { console.log('Failed to show user: ' + error) }
 }
@@ -64,4 +67,16 @@ const remove = async (params, credentials) => {
     } catch(error) { console.log('Failed to remove user: ' + error) }
 }
 
-export { create, list, read, update, remove, validateAccount }
+const getRoleID = async (role_name) => {
+    console.log("FETCH for Role with name:", role_name)
+    try {
+        const url = `/api/roles/${role_name}`
+        let response = await fetch(url, {
+            method: get,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}
+        })
+        return await response.json()
+    } catch (error) { console.log('FAILED', error); return {error: error}; }
+}
+
+export { create, list, read, update, remove, validateAccount, getRoleID }

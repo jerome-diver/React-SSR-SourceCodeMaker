@@ -56,7 +56,7 @@ const FormContact = (props) => {
   )
 }
 
-const Contacts = (props) => {
+const Contact = (props) => {
   
   let [show, setShow] = useState(false)   // show modal dialog form to send message
   let [data, setData] = useState({})      // get server JSON content of in charge user's coordinates
@@ -116,4 +116,4 @@ const Contacts = (props) => {
   }
 }
 
-export default Contacts
+export default Contact

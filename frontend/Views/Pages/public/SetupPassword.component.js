@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Redirect } from 'react-router-dom'
-import {validatePassword } from '../../../Controllers/user/authenticate-api'
-import { Modal, Alert, Jumbotron, Spinner, Badge, Button } from 'react-bootstrap'
+import { Modal, Alert, Spinner, Button } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
-const Validate = (props) => {
-    const { username, ticket } = useParams()
+const SetupPassword = (props) => {
+    const { id, ticket } = useParams()
     let [load, setLoad] = useState(false)               // Spinner if load is false
-    let [validated, setValidated] = useState(false)     // Validation returned true
     let [error, setError] = useState('')                // error process return
     let [show, setShow] = useState(false)               // show Modal dialog box
     let [redirect, setRedirect] = useState('')          // redirection after
 
     useEffect( () => {
-        console.log("Searching to FETCH validation for", username)
-        validatePassword(username, ticket)
-            .then(response =>  {
-                if(response) {
-                    setValidated(response.validated)
-                    if (response.error) { setError(response.error) }
-                    setShow(true)
-                } else { setValidated(false) }
-                setLoad(true)
-            })
+        fetch(`/api/users/setup_password/${id}/${ticket}`)
+        .then((response) => response.json() )
+        .then((transaction) => {
+            if(transaction) {
+                setSetupPassword(transaction.validated)
+                if (transaction.error) { setError(transaction.error) }
+                setShow(true)
+            } else { setSetupPasswordd(false) }
+            setLoad(true)
+        })
     }, [] )
 
     const handleClose = () => { setShow(false) }
@@ -57,9 +55,9 @@ const Validate = (props) => {
             return (
                 <>
                     <Alert variant='danger'>
-                        <h3>Validation for {username} failed</h3>
+                        <h3>Setup new password failed</h3>
                         <hr/>
-                        <p>Validation status: {validated}</p>
+                        <p>Error status:</p>
                         <p>{error}</p>
                     </Alert>
                 </>
@@ -77,4 +75,5 @@ const Validate = (props) => {
     }
 }
 
-export default Validate
+export default SetupPassword
+

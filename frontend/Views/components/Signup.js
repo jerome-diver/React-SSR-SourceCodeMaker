@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import { create, validateAccount } from '../../Controllers/user/action-api'
+import { create, validateAccount, getRoleID } from '../../Controllers/user/action-CRUD'
 import { checkPassword } from '../../Controllers/user/user-form-helper'
 
 const SignUp = (props) => {
@@ -37,35 +37,38 @@ const SignUp = (props) => {
             if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
             if (passwordValidated) {
                 setSubmit(true)
-                create(user)
-                    .then((response) => {
-                        if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
-                        else { 
-                          Swal.fire({ 
-                                title: 'Singup process success', 
-                                html:  htmlNewUser,
-                                icon:  'warning',
-                                showCancelButton: true,
-                                cancelButtonText: "go Home",
-                                confirmButtonText: "Send email with link to validate" } )
-                            .then((result) => { 
-                                if (result.value) {
-                                    console.log("START TO SEND EMAIL PROCESS")
-                                    validateAccount(user.username) 
-                                        .then((response) => { 
-                                            console.log('GET BACK: ', response.sent, response.error)
-                                            if(response.sent) {
-                                                Swal.fire({ title: 'Email as been sent', 
-                                                            html: htmlEmailSent, 
-                                                            icon: 'success',
-                                                            showCancelButton: true,
-                                                            cancelButtonText: "go Home",
-                                                            confirmButtonText: 'Sign in'} )
-                                                       .then((result) => { 
-                                                           if (result.value) { setRedirect('/signin') } else {setRedirect(location.state.from) } } )
-                                            } else { Swal.fire('Failed to send email', error, 'error') } } )
-                                } else { setRedirect(location.state.from) } } ) }
-                        setSubmit(false) } )
+                getRoleID('Reader').then(response =>{
+                    console.log("Role ID:", response.role.id)
+                    create(user, response.role.id)
+                        .then((response) => {
+                            if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
+                            else { 
+                            Swal.fire({ 
+                                    title: 'Singup process success', 
+                                    html:  htmlNewUser,
+                                    icon:  'warning',
+                                    showCancelButton: true,
+                                    cancelButtonText: "go Home",
+                                    confirmButtonText: "Send email with link to validate" } )
+                                .then((result) => { 
+                                    if (result.value) {
+                                        console.log("START TO SEND EMAIL PROCESS")
+                                        validateAccount(user.username) 
+                                            .then((response) => { 
+                                                console.log('GET BACK: ', response.sent, response.error)
+                                                if(response.sent) {
+                                                    Swal.fire({ title: 'Email as been sent', 
+                                                                html: htmlEmailSent, 
+                                                                icon: 'success',
+                                                                showCancelButton: true,
+                                                                cancelButtonText: "go Home",
+                                                                confirmButtonText: 'Sign in'} )
+                                                        .then((result) => { 
+                                                            if (result.value) { setRedirect('/signin') } else {setRedirect(location.state.from) } } )
+                                                } else { Swal.fire('Failed to send email', error, 'error') } } )
+                                    } else { setRedirect(location.state.from) } } ) }
+                            setSubmit(false) } )
+                            }).catch(error => { console.log("Failed to find Role Reader ID")})
             } else { Swal.fire('Password request failed', message, 'error') } 
         } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }
     }
