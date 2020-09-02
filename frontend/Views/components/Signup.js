@@ -9,7 +9,7 @@ import { create, validateAccount, getRoleID } from '../../Controllers/user/actio
 import { checkPassword } from '../../Controllers/user/user-form-helper'
 
 const SignUp = (props) => {
-    const [user, setUserSession] = useState({ username: "", email: '', pass1: '', pass2: ''})
+    const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
     const [submit, setSubmit] = useState(false)
     const [redirect, setRedirect] = useState('')
@@ -23,7 +23,7 @@ const SignUp = (props) => {
     }, [submit] )
     
     const handleChange = name => event => { 
-        setUserSession({...user, [name]: event.target.value}) }
+        setUser({...user, [name]: event.target.value}) }
 
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
