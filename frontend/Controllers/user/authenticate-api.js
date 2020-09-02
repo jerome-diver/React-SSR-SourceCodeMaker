@@ -48,4 +48,14 @@ const validatePassword = async (username, ticket) => {
     } catch (error) { console.log('Failed to FETCH Validation'); return {error: error}; }
 }
 
-export { signin, signout, setupPassword, validatePassword }
+const validateAccount = async (username) => {
+    console.log("Start to send email with validation link inside for ", username)
+    let response = await fetch(`/api/validate`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify( {username: username} ) } )
+    return response.json() 
+}
+
+export { signin, signout, setupPassword, validatePassword, validateAccount }

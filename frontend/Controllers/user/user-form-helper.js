@@ -6,18 +6,6 @@ const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
 }
 
-/*
-const  validationResult = (req, res, next) => {
-    try {
-      validationResult(req).throw()
-      if (req.body.email) { req.body.email = req.body.email.toLowerCase() }
-      return next()
-    } catch (err) {
-      return this.handleError(res, this.buildErrObject(422, err.array()))
-   }
-}
-*/
-
  const checkPassword = (password) => {
     var checkChar = {
         countEnough: (password.length >= 8),
@@ -32,12 +20,12 @@ const  validationResult = (req, res, next) => {
 const validatePassword = (password) => {
     var passwordValidated = true
     var message = "<h6>need:</h6>"
-    const check = checkPassword(password)
-    if (!check.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
-    if (!check.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
-    if (!check.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
-    if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
-    if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
+    const check_char = checkPassword(password)
+    if (!check_char.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
+    if (!check_char.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
+    if (!check_char.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
+    if (!check_char.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
+    if (!check_char.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
     return [ message, passwordValidated ]
 }
 

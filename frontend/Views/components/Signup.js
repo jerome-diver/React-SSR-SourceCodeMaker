@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import { create, validateAccount, getRoleID } from '../../Controllers/user/action-CRUD'
 import { validatePassword } from '../../Controllers/user/user-form-helper'
+import { validateAccount } from '../../Controllers/user/authenticate-api'
+import { create } from '../../Controllers/user/action-CRUD'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -58,7 +59,7 @@ const SignUp = (props) => {
                         if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
                         else sendEmailLinkToValidate()
                         setSubmit(false) } )
-                    .catch(error => fireError(error.name, error.message) )
+                    .catch(error => fireError(error.name, error.message))
             } else fireError('Password validation failed', message)
         } else fireError('Password request failed', 'Not the same password confirmed')
     }

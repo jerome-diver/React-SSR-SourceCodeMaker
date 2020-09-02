@@ -8,22 +8,12 @@ const create = async (user) => {
                       password: cypher(user.pass1) }
     try {
         let response = await fetch('/api/users', {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                        'Content-Type': 'application/json' },
-                body: JSON.stringify(newUser) } )
+            method: 'POST',
+            headers: { 'Accept': 'application/json',
+                    'Content-Type': 'application/json' },
+            body: JSON.stringify(newUser) } )
         return response.json()
     } catch(error) { return { error: error }}
-}
-
-const validateAccount = async (username) => {
-    console.log("Start to send email with validation link inside for ", username)
-    let response = await fetch(`/api/validate`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json',
-                   'Content-Type': 'application/json' },
-        body: JSON.stringify( {username: username} ) } )
-    return response.json() 
 }
 
 const list = async (signal) => {
@@ -80,4 +70,4 @@ const getRoleID = async (role_name) => {
     } catch (error) { return {error: error} }
 }
 
-export { create, list, read, update, remove, validateAccount, getRoleID }
+export { create, list, read, update, remove, getRoleID }
