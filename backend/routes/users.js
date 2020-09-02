@@ -46,8 +46,7 @@ router.post('/', jsonParser, (req, res) => {
     User.create( { // Record to MongoDB 
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password,
-        role_id: req.body.role_id },
+        password: req.body.password },
       (error, u) => {
         if (error) { res.json({accepted: false, error: error.message}) }
         else { res.json( {error: '', accepted: true} ) } } )
