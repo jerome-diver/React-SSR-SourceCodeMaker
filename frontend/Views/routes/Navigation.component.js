@@ -12,8 +12,7 @@ const reducer = (state, action) => {
     case undefined:
       return { user: action.user, username: '', role: '' }
     default:
-      return { isLogged: action.user,
-               username: action.user.username,
+      return { username: action.user.username,
                role: action.user.role.name }
   }
 }
@@ -69,7 +68,7 @@ const UserLoggedEntries = (props) => {
 const Navigation = (props) => {
 
     const { getUser, setUserSession } = useAuthenticate()
-    const [ user, dispatch ] = useReducer(reducer, {isLogged: false, username: '', role: ''})
+    const [ user, dispatch ] = useReducer(reducer, {username: '', role: ''})
 
   useEffect( () => {
     dispatch({user: getUser()})

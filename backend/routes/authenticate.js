@@ -51,7 +51,7 @@ router.post('/signout', jsonParser, (req, res) => {
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
     if (user_id == decoded.id) res.clearCookie('token')
     else return res.status(400).json({error: "unknown user rejected"})
-    return res.status('200').json({message: 'signed out'})
+    return res.status('200').json(true)
 } )
 
 router.post('/authorized', jsonParser, (req, res) => {
