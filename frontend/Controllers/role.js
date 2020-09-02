@@ -6,7 +6,7 @@ const createRole = async (role) => {
             body: role
         })
         return response.json()
-    } catch(error) { return {error: error}}
+    } catch(error) { return JSON.stringify({error: error})}
 }
 
 const getRoles = async () => {
@@ -16,7 +16,7 @@ const getRoles = async () => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         } )
         return response.json()
-} catch(error) { return {error: error} }
+} catch(error) { return JSON.stringify({error: error}) }
 }
 
 const updateRole = async (id, updatedRole) => {
@@ -28,7 +28,7 @@ const updateRole = async (id, updatedRole) => {
             body: updatedRole
         })
         return response.json()
-    } catch(error) { return {error: error}}
+    } catch(error) { return JSON.stringify({error: error})}
 }
 
 const deleteRole = async (id, admin) => {
@@ -40,7 +40,7 @@ const deleteRole = async (id, admin) => {
             body: admin
         })
         return response.json()
-    } catch(error) { return {error: error}}
+    } catch(error) { return JSON.stringify({error: error})}
 }
 
 export { getRoles, createRole, updateRole, deleteRole }

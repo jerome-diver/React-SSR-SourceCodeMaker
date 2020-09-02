@@ -5,7 +5,7 @@ export const RoleSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Role name is required',
+        default: 'Reader',
         minLength: 4,
         maxLength: 16,
         unique: 'Role name already exists'
@@ -13,13 +13,12 @@ export const RoleSchema = new Schema({
     color: {
         type: String,
         enum: ['success', 'light', 'dark', 'primary', 'warning', 'danger', 'info', 'secondary'],
-        required: true,
         default: 'primary'
     },
     description: {
         type: String,
         trim: true,
-        required: 'Role description is required',
+        required: 'Role description is required'
     }
 })
 

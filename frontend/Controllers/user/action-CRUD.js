@@ -13,7 +13,7 @@ const create = async (user) => {
                     'Content-Type': 'application/json' },
             body: JSON.stringify(newUser) } )
         return response.json()
-    } catch(error) { return { error: error }}
+    } catch(error) { return JSON.stringify({error: error}) }
 }
 
 const list = async (signal) => {
@@ -22,7 +22,7 @@ const list = async (signal) => {
             method: 'GET',
             signal: signal } )
         return await response.json()
-    } catch(error) { console.log('Failed to show users list: ' + error) }
+    } catch(error) { return{error: error} }
 }
 
 const read = async () => {
@@ -32,7 +32,7 @@ const read = async () => {
             method: 'GET',
             credentials: 'include' } )
         return await response.json()
-    } catch(error) { console.log('Failed to show user: ' + error) }
+    } catch(error) { return JSON.stringify({error: error}) }
 }
 
 const update = async (params, credentials, user) => {
@@ -44,7 +44,7 @@ const update = async (params, credentials, user) => {
                        'Authorization': 'Bearer ' + credentials.t },
             body: JSON.stringify(user) } )
         return await response.json()
-    } catch(error) { console.log('Failed to update user: ' + error) }
+    } catch(error) { return{error: error} }
 }
 
 const remove = async (params, credentials) => {
@@ -55,7 +55,7 @@ const remove = async (params, credentials) => {
                        'Content-Type': 'application/json',
                        'Authorization': 'Bearer ' + credentials.t } } )
         return await response.json()
-    } catch(error) { console.log('Failed to remove user: ' + error) }
+    } catch(error) { return{error: error} }
 }
 
 const getRoleID = async (role_name) => {
@@ -67,7 +67,7 @@ const getRoleID = async (role_name) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}
         })
         return await response.json()
-    } catch (error) { return {error: error} }
+    } catch (error) { return{error: error} }
 }
 
 export { create, list, read, update, remove, getRoleID }

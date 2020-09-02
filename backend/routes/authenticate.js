@@ -39,10 +39,14 @@ router.post('/signin', jsonParser, (req, res) => {
                                 console.log("Failed to create token", err.message)
                                 return res.status('401').json( { error: err.message } ) }
                         } )
-                    } else { return res.status('401').json( { error: "User account not valid" } ) }
-                } else { return res.status(401).json({error: "user authentication failed"}) }
-            } else { return res.status('401').json( { error: 'User not found or password wrong' } ) }
-        } else { return res.status('401').json( { error: err.message } ) } } )
+                    } else { return res.status('401').json( { 
+                        error: {name: "Validity error", 
+                                message: "User account not valid"} } ) }
+                } else { return res.status(401).json({error: { name: "Authentictae error", 
+                                                               message: "user authentication failed" } }) }
+            } else { return res.status('401').json( { error: { name: "Data entry error",
+                                                               message: 'User not found or password wrong' } } ) }
+        } else { return res.status('401').json( { error: err } ) } } )
 } )
 
 /* POST to sign out user with token to ask */
@@ -50,7 +54,8 @@ router.post('/signout', jsonParser, (req, res) => {
     const user_id = req.body.id
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
     if (user_id == decoded.id) res.clearCookie('token')
-    else return res.status(400).json({error: "unknown user rejected"})
+    else return res.status(400).json({error: {name: "Rejected error", 
+                                              message: "unknown user rejected" } } )
     return res.status('200').json(true)
 } )
 

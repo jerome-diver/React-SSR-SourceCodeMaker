@@ -7,7 +7,7 @@ const signin = async (identifier, type, hp, signal) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(data) } )
         return response.json()
-    } catch(error) { return { error: `Fetch error: ${error}` }.json() }
+    } catch(error) { return JSON.stringify({error: error}) }
 }
 
 const signout = async (id, signal) => {
@@ -21,7 +21,7 @@ const signout = async (id, signal) => {
             body: JSON.stringify({id: id})
         } )
         return await response.json()
-    } catch(error) { return { error: `Fetch error: ${error}` }.json() }
+    } catch(error) { return JSON.stringify({error: error}) }
 }
 
 const setupPassword = async (username) => {
@@ -33,7 +33,7 @@ const setupPassword = async (username) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         } )
         return await response.json()
-    } catch(error) { return { error: `Fetch error: ${error}` } }
+    } catch(error) { return JSON.stringify({error: error}) }
 }
 
 const validatePassword = async (username, ticket) => {
@@ -45,17 +45,19 @@ const validatePassword = async (username, ticket) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         } )
         return await response.json()
-    } catch (error) { console.log('Failed to FETCH Validation'); return {error: error}; }
+    } catch (error) { return{error: error} }
 }
 
 const validateAccount = async (username) => {
     console.log("Start to send email with validation link inside for ", username)
-    let response = await fetch(`/api/validate`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json',
-                   'Content-Type': 'application/json' },
-        body: JSON.stringify( {username: username} ) } )
-    return response.json() 
+    try {
+        let response = await fetch(`/api/validate`, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json',
+                    'Content-Type': 'application/json' },
+            body: JSON.stringify( {username: username} ) } )
+        return response.json() 
+    } catch(error) { return{error: error} }
 }
 
 export { signin, signout, setupPassword, validatePassword, validateAccount }

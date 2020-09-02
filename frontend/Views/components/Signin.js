@@ -6,7 +6,6 @@ import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { Card, ToggleButtonGroup, ToggleButton, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
-import { read } from '../../Controllers/user/action-CRUD'
 import { cypher } from '../../Controllers/user/user-form-helper'
 
 const reducer = (state, action) => {
@@ -83,10 +82,10 @@ const SignIn = (props) => {
             <>  
               <Modal show={sign.hasError}>
                   <Modal.Header closeButton>
-                      <Modal.Title>Failed to login</Modal.Title>
+                      <Modal.Title>Failed to login with {sign.error.name}</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                      <Alert variant='error'>{sign.error}</Alert>
+                      <Alert variant='error'>{sign.error.message}</Alert>
                   </Modal.Body>
                   <Modal.Footer>
                       <Button onClick={closeModal}>OK</Button>

@@ -36,7 +36,8 @@ const SignUp = (props) => {
                         .then(response => { 
                             console.log('GET BACK: ', response.sent, response.error)
                             if(response.sent) emailHasBeenSent()
-                            else Swal.fire('Failed to send email', error, 'error') } )
+                            else fireError('Failed to send email', response.error) } )
+                        .catch(error => fireError(error.name, error.message))
                 } else { setRedirect(location.state.from) } } ) 
     }
     const emailHasBeenSent = () => {
@@ -54,9 +55,10 @@ const SignUp = (props) => {
             const [ message, passwordValidated ] = validatePassword(user.pass1)
             if (passwordValidated) {
                 setSubmit(true)
-                create(user, response.role.id)
+                create(user)
                     .then(response => {
-                        if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
+                        if (response.error) fireError(response.error.name, response.error.message)
+                        else if (!response.accepted) fireError('Signup Failed', 'User rejected')
                         else sendEmailLinkToValidate()
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
@@ -77,12 +79,16 @@ const SignUp = (props) => {
                     <Form>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Your email of this account</Form.Label>
-                        <Form.Control type='email' placeholder='enter email' onChange={handleChange('email')} />
+                        <Form.Control type='email' placeholder='enter email'
+                                      defaultValue={user.email}
+                                      onChange={handleChange('email')} />
                         <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formBasicText">
                         <Form.Label>AND your username</Form.Label>
-                        <Form.Control type='text' placeholder='username' onChange={handleChange('username')} />
+                        <Form.Control type='text' placeholder='username' 
+                                      defaultValue={user.username}
+                                      onChange={handleChange('username')} />
                         <Form.Text className="text-muted">he is unique there...</Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
