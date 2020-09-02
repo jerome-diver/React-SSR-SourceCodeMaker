@@ -6,7 +6,7 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { create, validateAccount, getRoleID } from '../../Controllers/user/action-CRUD'
-import { checkPassword } from '../../Controllers/user/user-form-helper'
+import { validatePassword } from '../../Controllers/user/user-form-helper'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -24,53 +24,43 @@ const SignUp = (props) => {
     
     const handleChange = name => event => { 
         setUser({...user, [name]: event.target.value}) }
+    const sendEmailLinkToValidate = () => {
+        Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
+                    showCancelButton: true, cancelButtonText: "go Home",
+                    confirmButtonText: "Send email with link to validate" } )
+            .then((result) => { 
+                if (result.value) {
+                    console.log("START TO SEND EMAIL PROCESS")
+                    validateAccount(user.username) 
+                        .then(response => { 
+                            console.log('GET BACK: ', response.sent, response.error)
+                            if(response.sent) emailHasBeenSent()
+                            else Swal.fire('Failed to send email', error, 'error') } )
+                } else { setRedirect(location.state.from) } } ) 
+    }
+    const emailHasBeenSent = () => {
+        Swal.fire({ title: 'Email as been sent', html: htmlEmailSent, icon: 'success',
+                    showCancelButton: true, cancelButtonText: "go Home",
+                    confirmButtonText: 'Sign in'} )
+            .then((result) => { 
+                if (result.value) setRedirect('/signin') 
+                else setRedirect(location.state.from) } )
+    }
+    const fireError = (title, text) => Swal.fire(title, text, 'error')
 
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
-            var passwordValidated = true
-            var message = "<h6>need:</h6>"
-            const check = checkPassword(user.pass1)
-            if (!check.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
-            if (!check.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
-            if (!check.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
-            if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
-            if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
+            const [ message, passwordValidated ] = validatePassword(user.pass1)
             if (passwordValidated) {
                 setSubmit(true)
-                getRoleID('Reader').then(response =>{
-                    console.log("Role ID:", response.role.id)
-                    create(user, response.role.id)
-                        .then((response) => {
-                            if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
-                            else { 
-                            Swal.fire({ 
-                                    title: 'Singup process success', 
-                                    html:  htmlNewUser,
-                                    icon:  'warning',
-                                    showCancelButton: true,
-                                    cancelButtonText: "go Home",
-                                    confirmButtonText: "Send email with link to validate" } )
-                                .then((result) => { 
-                                    if (result.value) {
-                                        console.log("START TO SEND EMAIL PROCESS")
-                                        validateAccount(user.username) 
-                                            .then((response) => { 
-                                                console.log('GET BACK: ', response.sent, response.error)
-                                                if(response.sent) {
-                                                    Swal.fire({ title: 'Email as been sent', 
-                                                                html: htmlEmailSent, 
-                                                                icon: 'success',
-                                                                showCancelButton: true,
-                                                                cancelButtonText: "go Home",
-                                                                confirmButtonText: 'Sign in'} )
-                                                        .then((result) => { 
-                                                            if (result.value) { setRedirect('/signin') } else {setRedirect(location.state.from) } } )
-                                                } else { Swal.fire('Failed to send email', error, 'error') } } )
-                                    } else { setRedirect(location.state.from) } } ) }
-                            setSubmit(false) } )
-                            }).catch(error => { console.log("Failed to find Role Reader ID")})
-            } else { Swal.fire('Password request failed', message, 'error') } 
-        } else { Swal.fire('Password request failed', 'Not the same password confirmed', 'error') }
+                create(user, response.role.id)
+                    .then(response => {
+                        if (!response.accepted) { Swal.fire('Signup Failed', response.error, 'error') }
+                        else sendEmailLinkToValidate()
+                        setSubmit(false) } )
+                    .catch(error => fireError(error.name, error.message) )
+            } else fireError('Password validation failed', message)
+        } else fireError('Password request failed', 'Not the same password confirmed')
     }
 
     const renderRedirect = () => { if (redirect !== '') { return <Redirect to={redirect}/> } }
@@ -90,7 +80,7 @@ const SignUp = (props) => {
                         <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formBasicText">
-                        <Form.Label>OR, your username</Form.Label>
+                        <Form.Label>AND your username</Form.Label>
                         <Form.Control type='text' placeholder='username' onChange={handleChange('username')} />
                         <Form.Text className="text-muted">he is unique there...</Form.Text>
                     </Form.Group>

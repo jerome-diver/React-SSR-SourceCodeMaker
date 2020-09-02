@@ -1,18 +1,19 @@
 import { cypher } from './user-form-helper'
 import { get } from 'mongoose'
 
-const create = async (user, role_id) => {
-    console.log("Create new user with role", role_id)
+const create = async (user) => {
+    console.log("Create new user with default role")
     const newUser = { username: user.username,
                       email: user.email,
-                      password: cypher(user.pass1), 
-                      role_id: role_id }
-    let response = await fetch('/api/users', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json',
-                       'Content-Type': 'application/json' },
-            body: JSON.stringify(newUser) } )
-    return response.json()
+                      password: cypher(user.pass1) }
+    try {
+        let response = await fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json',
+                        'Content-Type': 'application/json' },
+                body: JSON.stringify(newUser) } )
+        return response.json()
+    } catch(error) { return { error: error }}
 }
 
 const validateAccount = async (username) => {
@@ -76,7 +77,7 @@ const getRoleID = async (role_name) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}
         })
         return await response.json()
-    } catch (error) { console.log('FAILED', error); return {error: error}; }
+    } catch (error) { return {error: error} }
 }
 
 export { create, list, read, update, remove, validateAccount, getRoleID }

@@ -29,6 +29,18 @@ const  validationResult = (req, res, next) => {
     return checkChar
 }
 
+const validatePassword = (password) => {
+    var passwordValidated = true
+    var message = "<h6>need:</h6>"
+    const check = checkPassword(password)
+    if (!check.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
+    if (!check.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
+    if (!check.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
+    if (!check.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
+    if (!check.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
+    return [ message, passwordValidated ]
+}
+
 const checkNewUser = [
     check('username')
       .exists()
@@ -114,4 +126,5 @@ const checkDeleteItem = [
     }
 ]
 
-export {cypher, checkPassword, checkNewUser, checkUpdateUser, checkGetItem, checkDeleteItem}
+export {cypher, checkPassword, validatePassword, checkNewUser, checkUpdateUser, 
+        checkGetItem, checkDeleteItem}

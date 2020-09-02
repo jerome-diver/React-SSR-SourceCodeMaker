@@ -8,10 +8,11 @@ import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
 
 const Profile = (props) => {
+    const { getUser, setUserSession } = useAuthenticate()
     const [ loaded, setLoaded ] = useState(false)
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
-    const [ user, setUser ] = useState(undefined)
-    const { getUser, setUserSession } = useAuthenticate()
+    const [ user, setUser ] = useState(getUser())
+    const [ userNotChanged, setUserNotChanged ] = useState(true)
 
     useEffect( () => {
         console.log("Effect from Profile")
@@ -21,21 +22,26 @@ const Profile = (props) => {
         setLoaded(true)
     }, [] )
   
-    const editProfile = (e) => {
+    const clickSubmit = (e) => {
         e.preventDefault()
-        console.log("EDIT PROFILE FOR: ", user.username)
-    } 
-    const clickSubmit = () => { }
+        // check entries validation (parser)
+        // if ok, update user
+        // else open dialog to show error entries or forbid things
+     }
     const editUserRole = () => { }
+    const compare = () => {
+        // check differences between actual entries and existing user datas
+        // and content of passwords (validate or not)
+        return false 
+    }
     const handleChange = name => event => { 
+        setUserNotChanged(compare())
         setUser({...user, [name]: event.target.value}) }
     const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
         {(user.role.name === "Admin") ? 'Change role' : 'Only admin can modify role'}
     </Tooltip>
     )
-
-
 
     if (loaded && user) {
         return (
@@ -63,7 +69,7 @@ const Profile = (props) => {
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Your email</Form.Label>
                         <Form.Control type='email' placeholder={user.email} onChange={handleChange('email')} />
-                        <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
+                        <Form.Text className='text-muted'>If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.</Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formBasicText">
                         <Form.Label>Your username</Form.Label>
@@ -72,11 +78,11 @@ const Profile = (props) => {
                     </Form.Group>
                     <Form.Group controlId="formBasicFirstName">
                         <Form.Label>Your first name</Form.Label>
-                        <Form.Control type='email' placeholder={user.first_name} onChange={handleChange('email')} />
+                        <Form.Control type='email' placeholder={user.first_name} onChange={handleChange('first_name')} />
                     </Form.Group>
                     <Form.Group controlId="formBasicSecondName">
                         <Form.Label>Your second name</Form.Label>
-                        <Form.Control type='text' placeholder={user.second_name} onChange={handleChange('username')} />
+                        <Form.Control type='text' placeholder={user.second_name} onChange={handleChange('second_name')} />
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Your password</Form.Label>
@@ -90,7 +96,11 @@ const Profile = (props) => {
                         </Form.Group>
                     </Form>
                     <Card.Link>
-                        <Button type='submit' onClick={clickSubmit} variant="warning"><FontAwesomeIcon icon={faUserCheck} /> Apply</Button>
+                        <Button type='submit' onClick={clickSubmit} 
+                                variant="warning"
+                                disabled={userNotChanged}>
+                            <FontAwesomeIcon icon={faUserCheck} /> Apply
+                        </Button>
                     </Card.Link>
                 </Card.Body>
             </Card>
