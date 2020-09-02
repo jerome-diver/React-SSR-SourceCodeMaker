@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Jumbotron, Card, Form, Spinner, Badge, Button, Alert } from 'react-bootstrap'
+import { Jumbotron, Card, Form, Spinner, Badge, Tooltip,
+         Button, Alert, OverlayTrigger } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus, faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
@@ -25,15 +26,31 @@ const Profile = (props) => {
         console.log("EDIT PROFILE FOR: ", user.username)
     } 
     const clickSubmit = () => { }
+    const editUserRole = () => { }
     const handleChange = name => event => { 
         setUser({...user, [name]: event.target.value}) }
+    const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+        {(user.role.name === "Admin") ? 'Change role' : 'Only admin can modify role'}
+    </Tooltip>
+    )
+
 
 
     if (loaded && user) {
         return (
             <>
             <Jumbotron>
-                <h4><FontAwesomeIcon icon={faUserEdit} /> {user.username} <Badge pill variant={user.role.color}>{user.role.name}</Badge></h4>
+                <h4>
+                    <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
+                    <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                        <Button disabled={(user.role.name !== "Admin")}
+                                onClick={editUserRole} 
+                                size='sm' variant={`outline-${user.role.color}`}>
+                            {user.role.name}
+                        </Button>
+                    </OverlayTrigger>
+                </h4>
                 <hr/>
             <Card id='editUser'>
                 <Card.Body>
@@ -73,7 +90,7 @@ const Profile = (props) => {
                         </Form.Group>
                     </Form>
                     <Card.Link>
-                        <Button type='submit' onClick={clickSubmit}><FontAwesomeIcon icon={faUserCheck} /></Button>
+                        <Button type='submit' onClick={clickSubmit} variant="warning"><FontAwesomeIcon icon={faUserCheck} /> Apply</Button>
                     </Card.Link>
                 </Card.Body>
             </Card>
