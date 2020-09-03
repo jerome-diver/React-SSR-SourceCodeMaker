@@ -22,31 +22,34 @@ router.post('/signin', jsonParser, (req, res) => {
     const id = constructIdentifier(req.body)
     if (id === {}) { res.json({error: 'You have to provide an email or a username'}) }
     User.findOne(id, (err, user) => {
-        if (!err) { 
-            if (user) {
-                console.log("I found a user in DB to authenticate")
-                if(user.authenticate(req.body.password)) {
-                    console.log("And user signin provide a correct password")
-                    if (user.validated) {
-                        console.log("And his account is valid")
-                        jwt.sign({ id: user.id },process.env.JWT_SECRET, (err, token) => {
-                            if (!err) {
-                                console.log("The token created is", token)
-                                res.cookie('token', token, { httpOnly: true })
-                                //res.cookie('user', { username: user.username, role: role.name })
-                                return res.status('200').json( { user: user.toJSON() })
-                            } else { 
-                                console.log("Failed to create token", err.message)
-                                return res.status('401').json( { error: err.message } ) }
-                        } )
-                    } else { return res.status('401').json( { 
-                        error: {name: "Validity error", 
-                                message: "User account not valid"} } ) }
-                } else { return res.status(401).json({error: { name: "Authentictae error", 
-                                                               message: "user authentication failed" } }) }
-            } else { return res.status('401').json( { error: { name: "Data entry error",
-                                                               message: 'User not found or password wrong' } } ) }
-        } else { return res.status('401').json( { error: err } ) } } )
+        if (err) return res.status(401).json( { error: err } )
+        if (!user) return res.status(401).json( { error: { name: "Data entry error",
+                                                           message: 'User not found or password wrong' } } )
+        let _user = user.toJSON()
+        console.log("We find the user:", _user)
+        if(!user.authenticate(req.body.password)) return res.status(403).json({
+                                                error: { name: "Authentictae error", 
+                                                         message: "user authentication failed" } })
+        console.log("And user signin provide a correct password")
+        if (!user.validated) return res.status(403).json( { 
+                                    error: {name: "Validity error", 
+                                            message: "User account not valid"} } )
+        console.log("And this account is valid")
+        jwt.sign({ id: _user.id },process.env.JWT_SECRET, (er, token) => {
+            if (err) return res.status(401).json( { error: er } )
+            console.log("The token created is", token)
+            res.cookie('token', token, { httpOnly: true })
+            // Get role from user.role_id & add it to _user
+            Role.findOne({_id: _user.role_id}, (error, role) => {
+                if (error) return res.status(400).json({error: error})
+                console.log("Get role:", role)
+                _user = { ..._user, role: role.toJSON() }
+                delete _user.role_id
+                console.log('User now is:', _user)
+                return res.status('200').json( { user: _user })
+            } )
+        } )
+    } )
 } )
 
 /* POST to sign out user with token to ask */

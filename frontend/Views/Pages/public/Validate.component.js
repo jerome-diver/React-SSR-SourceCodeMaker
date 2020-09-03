@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Redirect } from 'react-router-dom'
-import {validatePassword } from '../../../Controllers/user/authenticate-api'
-import { Modal, Alert, Jumbotron, Spinner, Badge, Button } from 'react-bootstrap'
+import { validatePassword } from '../../../Controllers/user/authenticate-api'
+import { Modal, Alert, Spinner, Button } from 'react-bootstrap'
 import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
-    const { username, ticket } = useParams()
+    const { username, token, ticket } = useParams()
     let [load, setLoad] = useState(false)               // Spinner if load is false
     let [validated, setValidated] = useState(false)     // Validation returned true
     let [error, setError] = useState('')                // error process return
@@ -15,13 +15,13 @@ const Validate = (props) => {
 
     useEffect( () => {
         console.log("Searching to FETCH validation for", username)
-        validatePassword(username, ticket)
+        validatePassword(token, ticket)
             .then(response =>  {
                 if(response) {
                     setValidated(response.validated)
-                    if (response.error) { setError(response.error) }
+                    if (response.error) setError(response.error)
                     setShow(true)
-                } else { setValidated(false) }
+                } else setValidated(false)
                 setLoad(true)
             })
     }, [] )

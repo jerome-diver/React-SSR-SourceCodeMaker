@@ -63,6 +63,9 @@ const SignIn = (props) => {
         setupPassword(form.username).then(response => {
             (response.error) ? getError(response.error) : getSetupPassword() } )
     }
+    const sendValidationAgain = () => { 
+        //
+    }
     const clickSubmit = (e) => {
         e.preventDefault()
         setSubmit(true)
@@ -133,6 +136,7 @@ const SignIn = (props) => {
                     </Card.Link>
                     <Card.Link href='/signup'>I don't have an account</Card.Link>
                     <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
+                    <Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link>
                 </Card.Body>
             </Card> </> 
         ) }

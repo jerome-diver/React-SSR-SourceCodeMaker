@@ -4,8 +4,9 @@ import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
-import Swal from 'sweetalert2'
-import { validatePassword } from '../../Controllers/user/user-form-helper'
+//import Swal from 'sweetalert2'
+import { fireError, validatePassword, 
+         sendEmailLinkToValidate, emailHasBeenSent } from '../../Controllers/user/user-form-helper'
 import { validateAccount } from '../../Controllers/user/authenticate-api'
 import { create } from '../../Controllers/user/action-CRUD'
 
@@ -16,8 +17,8 @@ const SignUp = (props) => {
     const [redirect, setRedirect] = useState('')
     const location = useLocation()
     
-    const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
-    const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
+/*     const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
+    const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>" */
 
     useEffect( () => {
         setLoad(!submit)
@@ -25,7 +26,19 @@ const SignUp = (props) => {
     
     const handleChange = name => event => { 
         setUser({...user, [name]: event.target.value}) }
-    const sendEmailLinkToValidate = () => {
+
+    const emailSentSuccess = () => {
+        validateAccount(user.username) 
+            .then(response => { 
+                console.log('GET BACK: ', response.sent, response.error)
+                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                else fireError('Failed to send email', response.error) } )
+            .catch(error => fireError(error.name, error.message))
+    }
+    const emailFailed = () => { setRedirect(location.state.from) }
+    const emailSuccess = () => { setRedirect('/signin') }
+
+/*     const sendEmailLinkToValidate = () => {
         Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
                     showCancelButton: true, cancelButtonText: "go Home",
                     confirmButtonText: "Send email with link to validate" } )
@@ -39,8 +52,8 @@ const SignUp = (props) => {
                             else fireError('Failed to send email', response.error) } )
                         .catch(error => fireError(error.name, error.message))
                 } else { setRedirect(location.state.from) } } ) 
-    }
-    const emailHasBeenSent = () => {
+    } */
+/*     const emailHasBeenSent = () => {
         Swal.fire({ title: 'Email as been sent', html: htmlEmailSent, icon: 'success',
                     showCancelButton: true, cancelButtonText: "go Home",
                     confirmButtonText: 'Sign in'} )
@@ -48,7 +61,7 @@ const SignUp = (props) => {
                 if (result.value) setRedirect('/signin') 
                 else setRedirect(location.state.from) } )
     }
-    const fireError = (title, text) => Swal.fire(title, text, 'error')
+    const fireError = (title, text) => Swal.fire(title, text, 'error') */
 
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
@@ -59,7 +72,7 @@ const SignUp = (props) => {
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
                         else if (!response.accepted) fireError('Signup Failed', 'User rejected')
-                        else sendEmailLinkToValidate()
+                        else sendEmailLinkToValidate(emailSentSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError('Password validation failed', message)

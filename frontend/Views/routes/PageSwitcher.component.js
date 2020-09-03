@@ -25,7 +25,7 @@ const PageSwitcher = (props) => {
         <Route path="/signin" render={(props) => <Sign {...props} action="in" />} />
         <Route path="/signup" render={(props) => <Sign {...props} action="up" />}/>
         <PrivateRoute path="/signout" component={(props) => <Sign {...props} action="out" />}/>
-        <Route path="/validate/:token" component={Validate}/>
+        <Route path="/validate/:username/:token/:ticket" component={Validate}/>
         <Route path="/setup_password/:id/:ticket'" component={SetupPassword}/>
       </Switch>
   )

@@ -17,10 +17,9 @@ export const RoleSchema = new Schema({
     },
     description: {
         type: String,
-        trim: true,
-        required: 'Role description is required'
+        trim: true
     }
-})
+}, { collection: 'roles' })
 
 
 RoleSchema.options.toJSON = {

@@ -36,13 +36,17 @@ const setupPassword = async (username) => {
     } catch(error) { return JSON.stringify({error: error}) }
 }
 
-const validatePassword = async (username, ticket) => {
+const validatePassword = async (token, ticket) => {
     try {
-        const url = `/api/validate/${username}/${ticket}`
+        const url = `/api/validate/${ticket}`
         let response = await fetch(url, {
-            method: 'GET',
+            method: 'POST',
             credentials: 'include',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            headers: {  'Accept': 'application/json', 
+                        'Content-Type': 'application/json',
+                       // 'Authorization': `Bearer ${token}`
+                     },
+            body: JSON.stringify({token: token})
         } )
         return await response.json()
     } catch (error) { return{error: error} }
@@ -53,8 +57,7 @@ const validateAccount = async (username) => {
     try {
         let response = await fetch(`/api/validate`, {
             method: 'POST',
-            headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json' },
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify( {username: username} ) } )
         return response.json() 
     } catch(error) { return{error: error} }

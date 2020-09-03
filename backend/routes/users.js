@@ -4,8 +4,10 @@ const bodyParser = require('body-parser')
 import moment from 'moment'
 import { db } from '../controllers/database'
 import User from '../models/user.model'
+import Role from '../models/role.model'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
+import { queries } from '@testing-library/react'
 require('dotenv').config('../../')
 
 const decodeJWT = (token) => {
@@ -54,13 +56,19 @@ const formatMongooseError = (error) => {
 }
 
 router.post('/', jsonParser, (req, res) => {
-    User.create( { // Record to MongoDB 
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password },
-      (error, u) => {
-        if (error) { res.json({accepted: false, error: formatMongooseError(error)}) }
-        else { res.json( {accepted: true} ) } } )
+    Role.findOne({name: 'Reader'}, (err, role) => {  // find Role.id for Reader
+        console.log("GET role id:", role.id)
+        const user = new User( { // Record to MongoDB 
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+            role_id: role.id })
+        user.save()
+        //    (error, user) => {
+                console.log("CREATED:", user)
+        //        if (error) { res.json({accepted: false, error: formatMongooseError(error)}) }
+                res.json( {accepted: true} ) } )
+   // })
 } )
 
 /* PUT update user */

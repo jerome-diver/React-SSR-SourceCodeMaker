@@ -7,32 +7,31 @@ import User from '../models/user.model'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 
-const decodeJWT = (token) => {
-    jwt.decode(token, (error, decoded) => {
-        if (error) return { error: error } 
-        else return decoded
-    })
-}
+const jsonParser = bodyParser.json()
 
 /* GET validated user answer token */
-router.get('/:token', (req, res) => {
-    console.log("API search a user with from token decoded user.id, then update to be validated if not expired")
-    const token = decodeJWT(req.params.token)
-    const user_id = (!token.error) ? token.user_id : null
-    if (!user_id) return res.status('401').send({ error: token.error})
-    if (token.valid_util <= moment().valueOf()) return res.status('401').send({error: 'validation date expired'})
-    User.findOneAndUpdate(
-        { id: user_id },
-        { validated: true },
-        { new: true }, 
-        (error, result) => {
-            if (error) { return res.json( {error: error, validated: false} ) }
-            else { return res.json( { error: null, validated: result.validated } ) }
+router.post('/:ticket', jsonParser, (req, res) => {
+    console.log("API search a user with from token decoded user_id, then update to be validated if not expired")
+    const secret = process.env.JWT_SECRET
+    const ticket = req.params.ticket
+    jwt.verify(req.body.token, secret, (error, decoded) => {
+        if(error) return res.status(400).json({error: error})
+        if (decoded.valid_util <= moment().valueOf()) 
+            return res.status('401').send(
+                {error: { name: 'expiry error', message: 'validation date expired' } } )
+        console.log("TOKEN user_id is", decoded.user_id)
+        console.log("ticket params is ", ticket)
+        User.findOneAndUpdate( { _id: decoded.user_id, ticket: ticket }, 
+                               { validated: true },
+                               {new: true},
+                               (error, user) => { 
+             if (error) return res.status(400).json({error: error})
+            return res.json( { validated: true } )
         } )
+    } ) 
 } )
 
 /* POST to send email to validate new user */
-const jsonParser = bodyParser.json()
 
 router.post('/', jsonParser, (req, res) => {
     const username = req.body.username
@@ -44,8 +43,10 @@ router.post('/', jsonParser, (req, res) => {
             console.log('Find user: ', user)
             const date_start = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            const ticket = user.ticket
+            const username = user.username
             const token = jwt.sign({ user_id: user.id, valid_until: date_end },process.env.JWT_SECRET)
-            const validation_link = `http:/localhost:3000/validate/${token}`
+            const validation_link = `http:/localhost:3000/validate/${username}/${token}/${ticket}`
             /* send an email to ask confirmation */
             res.app.mailer.send('send_email_to_user', {
                 to: user.email,

@@ -1,5 +1,4 @@
 import mongoose, { Schema, model } from 'mongoose'
-import Role, { RoleSchema } from './role.model'
 import Crypto from 'crypto'
 
 /* Schema for document user for collection "users" */
@@ -44,19 +43,10 @@ const UserSchema = new Schema({
         type: String,
         trim: true
     },
-/*     role_id: {
+    role_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role",
         required: 'Role is required'
-    }, */
-    role: {
-        type: RoleSchema,
-        set: (value) => {
-            if(!value) {
-                return Role.findOne({name: "Reader"})
-            }
-        }
-        //default: () => ({})
     },
     hashed_password: {
         type: String,

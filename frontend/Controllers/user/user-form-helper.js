@@ -1,5 +1,6 @@
 import Crypto from 'crypto'
 import validator from 'validator'
+import Swal from 'sweetalert2'
 import { check, validationResult } from 'express-validator'
 
 const cypher = (password) => {
@@ -114,5 +115,23 @@ const checkDeleteItem = [
     }
 ]
 
+const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
+const sendEmailLinkToValidate = (success, failed) => {
+    Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
+                showCancelButton: true, cancelButtonText: "go Home",
+                confirmButtonText: "Send email with link to validate" } )
+        .then(result => (result.value) ? success() : failed() ) 
+}
+
+const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
+const emailHasBeenSent = (success, failed) => {
+    Swal.fire({ title: 'Email as been sent', html: htmlEmailSent, icon: 'success',
+                showCancelButton: true, cancelButtonText: "go Home",
+                confirmButtonText: 'Sign in'} )
+        .then(result => (result.value) ? success() : failed() )
+}
+
+const fireError = (title, text) => Swal.fire(title, text, 'error')
+
 export {cypher, checkPassword, validatePassword, checkNewUser, checkUpdateUser, 
-        checkGetItem, checkDeleteItem}
+        checkGetItem, checkDeleteItem, sendEmailLinkToValidate, fireError, emailHasBeenSent}
