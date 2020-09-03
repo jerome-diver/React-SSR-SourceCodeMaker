@@ -4,11 +4,11 @@ import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
-//import Swal from 'sweetalert2'
 import { fireError, validatePassword, 
          sendEmailLinkToValidate, emailHasBeenSent } from '../../Controllers/user/user-form-helper'
 import { validateAccount } from '../../Controllers/user/authenticate-api'
 import { create } from '../../Controllers/user/action-CRUD'
+import { useCookies } from 'react-cookie'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -16,10 +16,8 @@ const SignUp = (props) => {
     const [submit, setSubmit] = useState(false)
     const [redirect, setRedirect] = useState('')
     const location = useLocation()
+    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
     
-/*     const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
-    const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>" */
-
     useEffect( () => {
         setLoad(!submit)
     }, [submit] )
@@ -38,31 +36,6 @@ const SignUp = (props) => {
     const emailFailed = () => { setRedirect(location.state.from) }
     const emailSuccess = () => { setRedirect('/signin') }
 
-/*     const sendEmailLinkToValidate = () => {
-        Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
-                    showCancelButton: true, cancelButtonText: "go Home",
-                    confirmButtonText: "Send email with link to validate" } )
-            .then((result) => { 
-                if (result.value) {
-                    console.log("START TO SEND EMAIL PROCESS")
-                    validateAccount(user.username) 
-                        .then(response => { 
-                            console.log('GET BACK: ', response.sent, response.error)
-                            if(response.sent) emailHasBeenSent()
-                            else fireError('Failed to send email', response.error) } )
-                        .catch(error => fireError(error.name, error.message))
-                } else { setRedirect(location.state.from) } } ) 
-    } */
-/*     const emailHasBeenSent = () => {
-        Swal.fire({ title: 'Email as been sent', html: htmlEmailSent, icon: 'success',
-                    showCancelButton: true, cancelButtonText: "go Home",
-                    confirmButtonText: 'Sign in'} )
-            .then((result) => { 
-                if (result.value) setRedirect('/signin') 
-                else setRedirect(location.state.from) } )
-    }
-    const fireError = (title, text) => Swal.fire(title, text, 'error') */
-
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
             const [ message, passwordValidated ] = validatePassword(user.pass1)
@@ -79,7 +52,10 @@ const SignUp = (props) => {
         } else fireError('Password request failed', 'Not the same password confirmed')
     }
 
-    const renderRedirect = () => { if (redirect !== '') { return <Redirect to={redirect}/> } }
+    const renderRedirect = () => { 
+        if (redirect !== '') { return <Redirect to={redirect}/> }
+        if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> }
+    }
 
     if (load) {
         return (

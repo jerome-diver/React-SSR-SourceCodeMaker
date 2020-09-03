@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { Card, ToggleButtonGroup, ToggleButton, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
+import { useCookies } from 'react-cookie'
 import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
 import { cypher } from '../../Controllers/user/user-form-helper'
 
@@ -35,6 +36,7 @@ const SignIn = (props) => {
     const { getUser, setUserSession } = useAuthenticate()
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
+    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -77,6 +79,7 @@ const SignIn = (props) => {
     }
     const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const switchIdentifier = (status) => { setSelectIdentifier(status) }
+    const renderRedirect = () => { if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> } }
 
     if (loaded) {
         if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
@@ -95,6 +98,7 @@ const SignIn = (props) => {
                   </Modal.Footer>
               </Modal>
               <Card id='sign'>
+              {renderRedirect()}
                 <Card.Body>
                     <Card.Title><FontAwesomeIcon icon={ faUserCheck } /> Sign in</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted' />
