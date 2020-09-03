@@ -104,7 +104,7 @@ const SignIn = (props) => {
                     <Card.Subtitle className='mb-2 text-muted' />
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
                     <Form>
-                        <span>Select identifier</span>
+                        <span>Your </span>
                         <ToggleButtonGroup name='IdentifierSelector' value={selectIdentifier}
                                            onChange={switchIdentifier} 
                                            size='sm' 
@@ -114,14 +114,14 @@ const SignIn = (props) => {
                         </ToggleButtonGroup>
                         { (selectIdentifier == 'Email') ?
                             <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Your email</Form.Label>
+{/*                                 <Form.Label>Your email</Form.Label> */}
                                 <Form.Control type='email' placeholder='enter email' 
                                               onChange={handleChange('email')}
                                               defaultValue={form.email} />
                                 <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                             </Form.Group> 
                         : <Form.Group controlId="formBasicText">
-                                <Form.Label>Your username</Form.Label>
+{/*                                 <Form.Label>Your username</Form.Label> */}
                                 <Form.Control type='text' placeholder='username'
                                               onChange={handleChange('username')}
                                               defaultValue={form.username} />
@@ -136,9 +136,10 @@ const SignIn = (props) => {
                     </Form>
                     <Card.Link>
                         <Button type='submit'><FontAwesomeIcon icon={ faUserCheck }
-                                onClick={clickSubmit}/></Button>
+                                onClick={clickSubmit}/>Submit</Button>
                     </Card.Link>
                     <Card.Link href='/signup'>I don't have an account</Card.Link>
+                    <hr/>
                     <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
                     <Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link>
                 </Card.Body>
