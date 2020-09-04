@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom'
 import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
-import { Card, ToggleButtonGroup, ToggleButton, Button, Form, Spinner, Alert, Modal } from 'react-bootstrap'
+import { Card, ToggleButtonGroup, ToggleButton, Button, 
+         Collapse, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useCookies } from 'react-cookie'
 import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
@@ -37,6 +38,7 @@ const SignIn = (props) => {
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
+    const [ collapse, setCollapse ] = useState(false)
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -80,6 +82,7 @@ const SignIn = (props) => {
     const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const switchIdentifier = (status) => { setSelectIdentifier(status) }
     const renderRedirect = () => { if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> } }
+    const toggle = () => { setCollapse(!collapse)}
 
     if (loaded) {
         if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
@@ -99,9 +102,10 @@ const SignIn = (props) => {
               </Modal>
               <Card id='sign'>
               {renderRedirect()}
+                <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> Sign in</h2></Card.Header>
                 <Card.Body>
-                    <Card.Title><FontAwesomeIcon icon={ faUserCheck } /> Sign in</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted' />
+                    <Card.Title>Authenticate yourself to connect</Card.Title>
+                    <Card.Subtitle className='mb-2 text-muted'>your user role will give you some limited power</Card.Subtitle> 
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
                     <Form>
                         <span>Your </span>
@@ -114,7 +118,6 @@ const SignIn = (props) => {
                         </ToggleButtonGroup>
                         { (selectIdentifier == 'Email') ?
                             <Form.Group controlId="formBasicEmail">
-{/*                                 <Form.Label>Your email</Form.Label> */}
                                 <Form.Control type='email' placeholder='enter email' 
                                               onChange={handleChange('email')}
                                               defaultValue={form.email} />
@@ -134,16 +137,21 @@ const SignIn = (props) => {
                         <Form.Text className='text-muted'>please, you should provide your password</Form.Text>
                     </Form.Group>
                     </Form>
-                    <Card.Link>
+                </Card.Body>
+                <Card.Footer>
                         <Button type='submit' onClick={clickSubmit}>
                             <FontAwesomeIcon icon={ faUserCheck }/> Submit
                         </Button>
-                    </Card.Link>
-                    <Card.Link href='/signup'>I don't have an account</Card.Link>
+                    <Card.Link href='/signup'> I don't have an account</Card.Link>
                     <hr/>
-                    <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
-                    <Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link>
-                </Card.Body>
+                    <Card.Link href="#" onClick={toggle}>I have a problem to fix</Card.Link>
+                    <Collapse in={collapse}>
+                        <div>
+                        <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
+                        <Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link></div>
+                    </Collapse>
+                    
+                </Card.Footer>
             </Card> </> 
         ) }
   } else {

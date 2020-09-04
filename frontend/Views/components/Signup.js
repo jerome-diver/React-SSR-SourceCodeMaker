@@ -61,8 +61,9 @@ const SignUp = (props) => {
         return (
             <Card id='sign'>
             {renderRedirect()}
+                <Card.Header><h2><FontAwesomeIcon icon={faUserPlus} /> Sign up</h2></Card.Header>
                 <Card.Body>
-                    <Card.Title><FontAwesomeIcon icon={faUserPlus} /> Sign up</Card.Title>
+                    <Card.Title>Create your account</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted' />
                     <Card.Text>After to register, you will have to check your email box and validate your account by click on the contained link to confirm.</Card.Text>
                     <Form>
@@ -82,20 +83,24 @@ const SignUp = (props) => {
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Your password</Form.Label>
-                        <Form.Control type='password' placeholder='password' onChange={handleChange('pass1')} />
-                        <Form.Text className='text-muted'>total of 8 chars minimum, include: 1 or more number and special chars</Form.Text>
+                        <Form.Control type='password' placeholder='password' onChange={handleChange('pass1')}/>
+                        <Form.Text className='text-muted'>total of 8 chars minimum, include 1 or more [number, low cap, high cap and special char]</Form.Text>
                     </Form.Group>
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Confirm your password</Form.Label>
                             <Form.Control type='password' placeholder='password again' onChange={handleChange('pass2')} />
-                            <Form.Text className='text-muted'>hit  again, you can not copy/paste</Form.Text>
+                            <Form.Text className='text-muted'>control the first entry by enter the same password again</Form.Text>
                         </Form.Group>
                     </Form>
+                </Card.Body>
+                <Card.Footer>
                     <Card.Link>
-                        <Button type='submit' onClick={clickSubmit}><FontAwesomeIcon icon={faUserPlus} /></Button>
+                        <Button type='submit' onClick={clickSubmit}>
+                            <FontAwesomeIcon icon={faUserPlus} /> Create
+                        </Button>
                     </Card.Link>
                     <Card.Link href='/signin'>I already have an account</Card.Link>
-                </Card.Body>
+                </Card.Footer>
             </Card>
         )
     } else {
