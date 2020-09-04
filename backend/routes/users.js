@@ -89,33 +89,27 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 /* DELETE delete user */
 
 /* POST to reset password by new email to access new password setup */
-
 router.post('/reset_password/:username', jsonParser, (req, res) => {
     User.findOne({username: req.params.username}, 
         (err, user) => { 
-            if (err) { return res.json({error: err}) }
-            else {
-                if(!user) { return res.json( {error: { name: "Users collection error",
-                                                       message: "User doesn't exist" } } ) }
-                else {
-                    const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-                    const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
-                    const url = 'http:/localhost:3000/setup_password'
-                    const setup_password_link = `${url}/${user.id}/${user.ticket}`
-                    res.app.mailer.send('send_email_to_user', {
-                        to: user.email,
-                        subject: 'Confirm your want to rest your password',
-                        title: 'Source Code Maker, reset password process',
-                        content_title: "Reset your password for Source Maker Code web site",
-                        introduction: `The ${date_now}, you forget your password and then you would like to reset this one and setup a new one on my Source Maker Code web site.`,
-                        text: `You should confirm you want to setup a new password before the ${date_end} (local server UTC time) by clicking the next link.`,
-                        link_validate: setup_password_link,
-                        validation_text: 'Click this link to setup a new password'
-                    }, (error) => {
-                        if (error) { return res.json( {error: error, sent: false} ) }
-                        else { return res.json( { sent: true } ) } } )
-                }
-            }
+            if (err) { return res.status(400).json({error: err}) }
+            if(!user) { return res.status(400).json( {error: { name: "Users collection error",
+                                                               message: "User doesn't exist" } } ) }
+            const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            const url = 'http:/localhost:3000/setup_password'
+            const setup_password_link = `${url}/${user.id}/${user.ticket}`
+            res.app.mailer.send('send_email_to_user', {
+                to: user.email,
+                subject: 'Confirm your want to rest your password',
+                title: 'Source Code Maker, reset password process',
+                content_title: "Reset your password for Source Maker Code web site",
+                introduction: `The ${date_now}, you forget your password and then you would like to reset this one and setup a new one on my Source Maker Code web site.`,
+                text: `You should confirm you want to setup a new password before the ${date_end} (local server UTC time) by clicking the next link.`,
+                link_validate: setup_password_link,
+                validation_text: 'Click this link to setup a new password'
+            }, (error) => { return (error) ? res.json({error: error, sent: false}) 
+                                           : res.status(400).json({sent: true})    } )
     } )
 } )
 
