@@ -1,4 +1,4 @@
-const signin = async (identifier, type, hp, signal) => {
+const signin = async (identifier, type, hp) => {
     try {
         const data = (type === 'Email') ? {email: identifier, password: hp} : {username: identifier, password: hp}
         let response = await fetch('/api/auth/signin/', {

@@ -135,8 +135,9 @@ const SignIn = (props) => {
                     </Form.Group>
                     </Form>
                     <Card.Link>
-                        <Button type='submit'><FontAwesomeIcon icon={ faUserCheck }
-                                onClick={clickSubmit}/>Submit</Button>
+                        <Button type='submit' onClick={clickSubmit}>
+                            <FontAwesomeIcon icon={ faUserCheck }/> Submit
+                        </Button>
                     </Card.Link>
                     <Card.Link href='/signup'>I don't have an account</Card.Link>
                     <hr/>

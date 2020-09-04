@@ -73,10 +73,11 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
             role_id: role.id })
         user.save((err) => {
             if (err) {
+                console.log("GetERROR:", JSON.stringify(err))
                 let message = ''
-                if (!err.errors.isEmpty) {
+                if (err.errors) {
                     err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
-                } else return res.status(400).json({error: {name: error.name, message: error.message}})
+                } else return res.status(400).json({error: {name: err.name, message: err.code}})
                 return res.status(400).json({error: {name: 'DB internal validation', message: message}})
             }
         })

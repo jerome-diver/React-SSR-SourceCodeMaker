@@ -45,8 +45,9 @@ const UserSchema = new Schema({
     },
     role_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Role",
-        required: 'Role is required'
+      //  ref: "Role",
+        required: 'Role is required',
+        unique: false
     },
     hashed_password: {
         type: String,
