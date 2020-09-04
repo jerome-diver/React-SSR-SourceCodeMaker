@@ -1,7 +1,5 @@
 import Crypto from 'crypto'
-import validator from 'validator'
 import Swal from 'sweetalert2'
-import { check, validationResult } from 'express-validator'
 
 const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
@@ -30,91 +28,6 @@ const validatePassword = (password) => {
     return [ message, passwordValidated ]
 }
 
-const checkNewUser = [
-    check('username')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    check('email')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY')
-      .isEmail()
-      .withMessage('EMAIL_IS_NOT_VALID'),
-    check('password')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY')
-      .isLength({ min: 8 })
-      .withMessage('PASSWORD_TOO_SHORT_MIN_8'),
-    (req, res, next) => {
-      validationResult(req, res, next)
-    }
-]
-  
-  /**
-   * Validates update item request
-   */
- const checkUpdateUser = [
-    check('username')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    check('email')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    check('id')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    (req, res, next) => {
-      validationResult(req, res, next)
-    }
-]
-  
-  /**
-   * Validates get item request
-   */
-const checkGetItem = [
-    check('id')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    (req, res, next) => {
-      validationResult(req, res, next)
-    }
-]
-  
-  /**
-   * Validates delete item request
-   */
-const checkDeleteItem = [
-    check('id')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-    (req, res, next) => {
-      validationResult(req, res, next)
-    }
-]
-
 const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
 const sendEmailLinkToValidate = (success, failed) => {
     Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
@@ -133,5 +46,4 @@ const emailHasBeenSent = (success, failed) => {
 
 const fireError = (title, text) => Swal.fire(title, text, 'error')
 
-export {cypher, checkPassword, validatePassword, checkNewUser, checkUpdateUser, 
-        checkGetItem, checkDeleteItem, sendEmailLinkToValidate, fireError, emailHasBeenSent}
+export {cypher, checkPassword, validatePassword, sendEmailLinkToValidate, fireError, emailHasBeenSent}

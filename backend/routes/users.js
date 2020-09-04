@@ -7,7 +7,8 @@ import User from '../models/user.model'
 import Role from '../models/role.model'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
-import { queries } from '@testing-library/react'
+import { checkNewUser } from '../helpers/sanitizer'
+import { validationResult } from 'express-validator'
 require('dotenv').config('../../')
 
 const decodeJWT = (token) => {
@@ -55,20 +56,32 @@ const formatMongooseError = (error) => {
     return error
 }
 
-router.post('/', jsonParser, (req, res) => {
+router.post('/', jsonParser, checkNewUser, (req, res) => {
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty) {
+        let message = ''
+        validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
+        return status(400).json({error: {name: 'Validation entry failed', message: message} } )
+    }
     Role.findOne({name: 'Reader'}, (err, role) => {  // find Role.id for Reader
+        if (err) return res.status(400).json({ error: err })
         console.log("GET role id:", role.id)
         const user = new User( { // Record to MongoDB 
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
             role_id: role.id })
-        user.save()
-        //    (error, user) => {
-                console.log("CREATED:", user)
-        //        if (error) { res.json({accepted: false, error: formatMongooseError(error)}) }
-                res.json( {accepted: true} ) } )
-   // })
+        user.save((err) => {
+            if (err) {
+                let message = ''
+                if (!err.errors.isEmpty) {
+                    err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
+                } else return res.status(400).json({error: {name: error.name, message: error.message}})
+                return res.status(400).json({error: {name: 'DB internal validation', message: message}})
+            }
+        })
+        console.log("CREATED:", user)
+        res.json( {accepted: true} ) } )
 } )
 
 /* PUT update user */
