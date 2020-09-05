@@ -7,8 +7,10 @@ import { Card, ToggleButtonGroup, ToggleButton, Button,
          Collapse, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useCookies } from 'react-cookie'
-import { signin, setupPassword } from '../../Controllers/user/authenticate-api'
+import { signin, setupPassword, validateAccount } from '../../Controllers/user/authenticate-api'
 import { cypher } from '../../Controllers/user/user-form-helper'
+import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
+import validator from 'validator'
 
 const reducer = (state, action) => {
     switch (action.isLogged) {
@@ -28,7 +30,6 @@ const reducer = (state, action) => {
 }
 
 const SignIn = (props) => {
-
     const [ loaded, setLoaded ] = useState(false)
     const [ submit, setSubmit ] = useState(false)
     const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
@@ -38,7 +39,6 @@ const SignIn = (props) => {
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const [ collapse, setCollapse ] = useState(false)
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -54,21 +54,11 @@ const SignIn = (props) => {
         console.log("OK, signed in for ", data.user.username)
         const go_to = (location.state) ? location.state.from : '/profile'
         dispatch({from: go_to, isLogged: true})
-        setUserSession( data ) 
+        setUserSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
         setSubmit(false)
-    }
-    const getSetupPassword = () => {
-
     }
     const handleChange = name => e => {
         if (!submit && name !== '') { setForm({...form, [name]: e.target.value}) }
-    }
-    const forgetPassword = () => {
-        setupPassword(form.username).then(response => {
-            (response.error) ? getError(response.error) : getSetupPassword() } )
-    }
-    const sendValidationAgain = () => { 
-        //
     }
     const clickSubmit = (e) => {
         e.preventDefault()
@@ -81,8 +71,7 @@ const SignIn = (props) => {
     }
     const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const switchIdentifier = (status) => { setSelectIdentifier(status) }
-    const renderRedirect = () => { if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> } }
-    const toggle = () => { setCollapse(!collapse)}
+    const renderRedirect = () => { if (cookies.session && cookies.session.user) return <Redirect to='/' /> }
 
     if (loaded) {
         if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
@@ -124,7 +113,6 @@ const SignIn = (props) => {
                                 <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                             </Form.Group> 
                         : <Form.Group controlId="formBasicText">
-{/*                                 <Form.Label>Your username</Form.Label> */}
                                 <Form.Control type='text' placeholder='username'
                                               onChange={handleChange('username')}
                                               defaultValue={form.username} />
@@ -139,18 +127,10 @@ const SignIn = (props) => {
                     </Form>
                 </Card.Body>
                 <Card.Footer>
-                        <Button type='submit' onClick={clickSubmit}>
-                            <FontAwesomeIcon icon={ faUserCheck }/> Submit
-                        </Button>
-                    <Card.Link href='/signup'> I don't have an account</Card.Link>
-                    <hr/>
-                    <Card.Link href="#" onClick={toggle}>I have a problem to fix</Card.Link>
-                    <Collapse in={collapse}>
-                        <div>
-                        <Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>
-                        <Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link></div>
-                    </Collapse>
-                    
+                    <Button type='submit' onClick={clickSubmit}>
+                        <FontAwesomeIcon icon={ faUserCheck }/> Submit
+                    </Button>
+                    <FixProblem username={form.username} email={form.email} password={form.password} />
                 </Card.Footer>
             </Card> </> 
         ) }
@@ -164,6 +144,46 @@ const SignIn = (props) => {
           </>
       )
   }
+}
+
+const FixProblem = (props) => {
+    const { username, email, password } = props
+    const [redirect, setRedirect] = useState('')
+    const [ collapse, setCollapse ] = useState(false)
+
+    const toggle = () => { setCollapse(!collapse)}
+    const forgetPassword = () => {
+        setupPassword(form.username).then(response => {
+            (response.error) ? getError(response.error) : getSetupPassword() } )
+    }
+    const sendValidationAgain = () => { 
+        validateAccount()
+            .then(response => { 
+                console.log('GET BACK: ', response.sent, response.error)
+                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                else fireError('Failed to send email', response.error) } )
+            .catch(error => fireError(error.name, error.message))
+    }
+    const emailFailed = () => { setRedirect(location.state.from) }
+    const emailSuccess = () => { setRedirect('/signin') }
+
+    if (username || (email && validator.isEmail(email))) {
+        if (redirect != '') { return ( <Redirect to={redirect} /> )}
+        return (
+            <>
+                <hr/>
+                <Card.Link href="#" onClick={toggle}>I have a problem to fix</Card.Link>
+                <Collapse in={collapse}>
+                    <div>
+                        { (password && validatePassword(password)[1]) ?
+                            (<Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link>) :
+                            (<Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>) }
+                    </div>
+                </Collapse>
+            </>
+        )
+    }
+    return ( <> <hr/><Card.Link href='/signup'> I don't have an account</Card.Link> </> )
 }
 
 export default SignIn

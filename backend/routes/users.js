@@ -102,7 +102,7 @@ router.post('/reset_password/:username', jsonParser, (req, res) => {
             const setup_password_link = `${url}/${user.id}/${user.ticket}`
             res.app.mailer.send('send_email_to_user', {
                 to: user.email,
-                subject: 'Confirm your want to rest your password',
+                subject: 'Confirm your want to reset your password',
                 title: 'Source Code Maker, reset password process',
                 content_title: "Reset your password for Source Maker Code web site",
                 introduction: `The ${date_now}, you forget your password and then you would like to reset this one and setup a new one on my Source Maker Code web site.`,

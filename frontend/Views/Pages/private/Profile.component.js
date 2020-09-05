@@ -30,7 +30,7 @@ const Profile = (props) => {
      }
     const editUserRole = () => { }
     const compare = () => {
-        // check differences between actual entries and existing user datas
+        // check differences between actual entries and existing user data
         // and content of passwords (validate or not)
         return false 
     }
