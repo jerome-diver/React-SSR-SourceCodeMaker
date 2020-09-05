@@ -57,9 +57,7 @@ const SignIn = (props) => {
         setUserSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
         setSubmit(false)
     }
-    const handleChange = name => e => {
-        if (!submit && name !== '') { setForm({...form, [name]: e.target.value}) }
-    }
+    const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
     const clickSubmit = (e) => {
         e.preventDefault()
         setSubmit(true)
@@ -148,7 +146,7 @@ const SignIn = (props) => {
 
 const FixProblem = (props) => {
     const { username, email, password } = props
-    const [redirect, setRedirect] = useState('')
+    const [ redirect, setRedirect ] = useState('')
     const [ collapse, setCollapse ] = useState(false)
 
     const toggle = () => { setCollapse(!collapse)}
@@ -157,7 +155,7 @@ const FixProblem = (props) => {
             (response.error) ? getError(response.error) : getSetupPassword() } )
     }
     const sendValidationAgain = () => { 
-        validateAccount()
+        validateAccount(username)
             .then(response => { 
                 console.log('GET BACK: ', response.sent, response.error)
                 if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
