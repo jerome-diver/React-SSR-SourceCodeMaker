@@ -2,8 +2,8 @@ import React, { useEffect, useState, useReducer } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserCheck } from '@fortawesome/free-solid-svg-icons'
-import { Card, ToggleButtonGroup, ToggleButton, Button, 
+import { faUserCheck, faMailBulk, faKey } from '@fortawesome/free-solid-svg-icons'
+import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
          Collapse, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useCookies } from 'react-cookie'
@@ -71,22 +71,29 @@ const SignIn = (props) => {
 
     const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const clickSubmit = (e) => {
-        e.preventDefault()
-        setSubmit(true)
-        const hashed_password = (form.password) ? cypher(form.password) : ''
-        const id = (selectIdentifier == 'Email') ? form.email : form.username
-        signin(id, selectIdentifier, hashed_password)
-            .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
-            .catch(error => { getError(error) } )
+        const form_to_submit = e.currentTarget;
+        if (form_to_submit.checkValidity() === false) {
+            console.log("I'm in form_submit condition space")
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            e.preventDefault()
+            setSubmit(true)
+            const hashed_password = (form.password) ? cypher(form.password) : ''
+            const id = (selectIdentifier == 'Email') ? form.email : form.username
+            signin(id, selectIdentifier, hashed_password)
+                .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
+                .catch(error => { getError(error) } )
+        }
     }
     const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
     const switchIdentifier = (status) => { 
         setSelectIdentifier(status) 
     }
-    const renderRedirect = () => { if (cookies.session && cookies.session.user) return <Redirect to='/' /> }
 
     if (loaded) {
-        if(sign.isLogged) { return ( <> <Redirect to={sign.from}/> </> ) } 
+        if (sign.isLogged) return (<> <Redirect to={sign.from}/> </>)
+        if (cookies.session && cookies.session.user) return (<> <Redirect to='/' /> </>)
         else {
           return (
             <>  
@@ -102,39 +109,27 @@ const SignIn = (props) => {
                   </Modal.Footer>
               </Modal>
               <Card id='sign'>
-              {renderRedirect()}
                 <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> Sign in</h2></Card.Header>
                 <Card.Body>
                     <Card.Title>Authenticate yourself to connect</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted'>your user role will give you some limited power</Card.Subtitle> 
+                    <Card.Subtitle className='mb-2 text-muted'>your user role will give you some magic power (but only there)</Card.Subtitle> 
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
                     <Form>
-                        <span>Your </span>
-                        <ToggleButtonGroup name='IdentifierSelector' value={selectIdentifier}
-                                           onChange={switchIdentifier} 
-                                           size='sm' 
-                                           aria-label="identifier selector">
-                            <ToggleButton value='Email' variant="secondary">Email</ToggleButton>
-                            <ToggleButton value='Username' variant="secondary">Username</ToggleButton>
-                        </ToggleButtonGroup>
-                        { (selectIdentifier == 'Email') ?
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Control type='email' placeholder='enter email' name='formEmail'
-                                              onChange={handleChange('email')}
-                                              value={form.email} />
-                                <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
-                            </Form.Group> 
-                        : <Form.Group controlId="formBasicText">
-                                <Form.Control type='text' placeholder='username' name="formUsername"
-                                              onChange={handleChange('username')}
-                                              value={form.username} />
-                                <Form.Text className="text-muted">he is unique there...</Form.Text>
-                            </Form.Group> }
+                    <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
+                                         selection={selectIdentifier} handleChange={handleChange} />
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Your password</Form.Label>
-                        <Form.Control type='password' placeholder='password' 
-                                      onChange={handleChange('password')} />
-                        <Form.Text className='text-muted'>please, you should provide your password</Form.Text>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroupPrepend">
+                                    <FontAwesomeIcon icon={ faKey }/>
+                                </InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control type='password' placeholder='password' 
+                                        onChange={handleChange('password')} />
+                            <Form.Control.Feedback type="invalid">Please choose a valid password.</Form.Control.Feedback>
+                        </InputGroup>
+                        <Form.Text className='text-muted'>You should provide your password</Form.Text>
                     </Form.Group>
                     </Form>
                 </Card.Body>
@@ -156,6 +151,57 @@ const SignIn = (props) => {
           </>
       )
   }
+}
+
+const FormIdEntrySelector = (props) => {
+    const { email, username, selection, handleChange, switcher } = props
+    const selectedEntry = () => {
+        switch (selection) {
+            case 'Email':
+                return (
+                    <Form.Group controlId="formBasicEmail">
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroupPrepend">
+                                    <FontAwesomeIcon icon={ faMailBulk }/>
+                                </InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control type='email' placeholder='enter email' name='formEmail'
+                                            onChange={handleChange('email')}
+                                            value={email} />
+                            <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
+                        </InputGroup>
+                        <Form.Text className="text-muted">I will never share with no one, i hate scammers.</Form.Text>
+                    </Form.Group> 
+                )
+            case 'Username':
+                return (
+                    <Form.Group controlId="formBasicText">
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control type='text' placeholder='username' name="formUsername"
+                                            onChange={handleChange('username')}
+                                            value={username}/>
+                            <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
+                        </InputGroup>
+                        <Form.Text className="text-muted">he is unique there...</Form.Text>
+                    </Form.Group>
+                )
+        }
+    }
+
+    return (<>
+                <span>Your </span>
+                <ToggleButtonGroup name='IdentifierSelector' value={selection}
+                                   onChange={switcher} 
+                                   size='sm' aria-label="identifier selector">
+                    <ToggleButton value='Email' variant="secondary">Email</ToggleButton>
+                    <ToggleButton value='Username' variant="secondary">Username</ToggleButton>
+                </ToggleButtonGroup>
+                { selectedEntry() }
+    </>)
 }
 
 const FixProblem = (props) => {

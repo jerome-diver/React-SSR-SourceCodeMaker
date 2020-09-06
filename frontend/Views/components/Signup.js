@@ -64,7 +64,9 @@ const SignUp = (props) => {
                 <Card.Header><h2><FontAwesomeIcon icon={faUserPlus} /> Sign up</h2></Card.Header>
                 <Card.Body>
                     <Card.Title>Create your account</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted' />
+                    <Card.Subtitle className='mb-2 text-muted'>
+                        Come on, let's try to be a wonderful user there in this fantastic web site...
+                    </Card.Subtitle> 
                     <Card.Text>After to register, you will have to check your email box and validate your account by click on the contained link to confirm.</Card.Text>
                     <Form>
                     <Form.Group controlId="formBasicEmail">
