@@ -26,11 +26,11 @@ const signout = async (id, signal) => {
 
 const setupPassword = async (username) => {
     try {
-        const url = '/api/users/reset_password/' + username
-        let response = await fetch(url, {
+        let response = await fetch('/api/users/reset_password', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({username: username})
         } )
         return await response.json()
     } catch(error) { return JSON.stringify({error: error}) }

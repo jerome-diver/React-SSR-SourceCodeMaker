@@ -34,7 +34,7 @@ const SignIn = (props) => {
     const [ submit, setSubmit ] = useState(false)
     const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
-    const [ form, setForm ] = useState({})
+    const [ form, setForm ] = useState({email:'', username: '', password: ''})
     const { getUser, setUserSession } = useAuthenticate()
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
@@ -44,7 +44,8 @@ const SignIn = (props) => {
         console.log("UseEffect of Signin Page component call")
         console.log('Location is', location)
         setLoaded(!submit)
-    }, [submit] )
+        focusOnSelectedIdEntry()    // put the cursor at the end of the input entry of selected one
+    }, [submit, selectIdentifier] )
 
     const getError = (error) => { 
         console.log("FAILED to signed in")
@@ -57,7 +58,18 @@ const SignIn = (props) => {
         setUserSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
         setSubmit(false)
     }
-    const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
+    const focusOnSelectedIdEntry = () => {  // this has to be call AFTER to React refresh view (call it from useEffect)
+        const usernameButton = document.querySelector("input[value='Username']")
+        const emailButton = document.querySelector("input[value='Email']")
+        if(usernameButton && usernameButton.checked) { 
+            const usernameInput = document.querySelector("input[name='formUsername']")
+            usernameInput.focus() }
+        if(emailButton && emailButton.checked) { 
+            const emailInput = document.querySelector("input[name='formEmail']")
+            emailInput.focus() }
+    }
+
+    const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
     const clickSubmit = (e) => {
         e.preventDefault()
         setSubmit(true)
@@ -67,8 +79,10 @@ const SignIn = (props) => {
             .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
             .catch(error => { getError(error) } )
     }
-    const closeModal = () => { dispatch({isLogged: false, error: '', hasError: false}) }
-    const switchIdentifier = (status) => { setSelectIdentifier(status) }
+    const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
+    const switchIdentifier = (status) => { 
+        setSelectIdentifier(status) 
+    }
     const renderRedirect = () => { if (cookies.session && cookies.session.user) return <Redirect to='/' /> }
 
     if (loaded) {
@@ -105,15 +119,15 @@ const SignIn = (props) => {
                         </ToggleButtonGroup>
                         { (selectIdentifier == 'Email') ?
                             <Form.Group controlId="formBasicEmail">
-                                <Form.Control type='email' placeholder='enter email' 
+                                <Form.Control type='email' placeholder='enter email' name='formEmail'
                                               onChange={handleChange('email')}
-                                              defaultValue={form.email} />
+                                              value={form.email} />
                                 <Form.Text className='text-muted'>I will never share your email with anyone else.</Form.Text>
                             </Form.Group> 
                         : <Form.Group controlId="formBasicText">
-                                <Form.Control type='text' placeholder='username'
+                                <Form.Control type='text' placeholder='username' name="formUsername"
                                               onChange={handleChange('username')}
-                                              defaultValue={form.username} />
+                                              value={form.username} />
                                 <Form.Text className="text-muted">he is unique there...</Form.Text>
                             </Form.Group> }
                     <Form.Group controlId="formBasicPassword">
@@ -150,6 +164,7 @@ const FixProblem = (props) => {
     const [ collapse, setCollapse ] = useState(false)
 
     const toggle = () => { setCollapse(!collapse)}
+    const getSetupPassword = () => { }
     const forgetPassword = () => {
         setupPassword(form.username).then(response => {
             (response.error) ? getError(response.error) : getSetupPassword() } )

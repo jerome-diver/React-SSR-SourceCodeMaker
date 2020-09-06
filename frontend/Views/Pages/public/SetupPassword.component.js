@@ -12,7 +12,7 @@ const SetupPassword = (props) => {
     let [redirect, setRedirect] = useState('')          // redirection after
 
     useEffect( () => {
-        fetch(`/api/users/setup_password/${id}/${ticket}`)
+        fetch(`/api/users/setup_password/${id}/${ticket}`)  // !!! should call a user-form-helper to set new password after to get new one
         .then((response) => response.json() )
         .then((transaction) => {
             if(transaction) {

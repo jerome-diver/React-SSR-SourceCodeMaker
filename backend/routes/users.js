@@ -90,8 +90,8 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 /* DELETE delete user */
 
 /* POST to reset password by new email to access new password setup */
-router.post('/reset_password/:username', jsonParser, (req, res) => {
-    User.findOne({username: req.params.username}, 
+router.post('/reset_password', jsonParser, (req, res) => {
+    User.findOne({username: req.body.username}, 
         (err, user) => { 
             if (err) { return res.status(400).json({error: err}) }
             if(!user) { return res.status(400).json( {error: { name: "Users collection error",
