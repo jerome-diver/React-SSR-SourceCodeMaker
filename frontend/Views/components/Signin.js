@@ -39,6 +39,7 @@ const SignIn = (props) => {
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
+    const [ validated, setValidated ] = useState(false)
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -85,6 +86,7 @@ const SignIn = (props) => {
                 .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
                 .catch(error => { getError(error) } )
         }
+        setValidated(true)
     }
     const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
     const switchIdentifier = (status) => { 
@@ -114,23 +116,23 @@ const SignIn = (props) => {
                     <Card.Title>Authenticate yourself to connect</Card.Title>
                     <Card.Subtitle className='mb-2 text-muted'>your user role will give you some magic power (but only there)</Card.Subtitle> 
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
-                    <Form>
-                    <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
-                                         selection={selectIdentifier} handleChange={handleChange} />
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Your password</Form.Label>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="inputGroupPrepend">
-                                    <FontAwesomeIcon icon={ faKey }/>
-                                </InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control type='password' placeholder='password' 
-                                        onChange={handleChange('password')} />
-                            <Form.Control.Feedback type="invalid">Please choose a valid password.</Form.Control.Feedback>
-                        </InputGroup>
-                        <Form.Text className='text-muted'>You should provide your password</Form.Text>
-                    </Form.Group>
+                    <Form noValidate validated={validated}>
+                        <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
+                                            selection={selectIdentifier} handleChange={handleChange} />
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Your password</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text id="inputGroupPrepend">
+                                        <FontAwesomeIcon icon={ faKey }/>
+                                    </InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <Form.Control type='password' placeholder='password' 
+                                            onChange={handleChange('password')} />
+                                <Form.Control.Feedback type="invalid">Please choose a valid password.</Form.Control.Feedback>
+                            </InputGroup>
+                            <Form.Text className='text-muted'>You should provide your password</Form.Text>
+                        </Form.Group>
                     </Form>
                 </Card.Body>
                 <Card.Footer>
