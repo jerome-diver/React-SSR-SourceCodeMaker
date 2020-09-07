@@ -76,4 +76,4 @@ const validateAccount = async (username) => {
     } catch(error) { return{error: error} }
 }
 
-export { signin, signout, setupPassword, validatePassword, validateAccount }
+export { signin, signout, setupPassword, validatePassword, validateAccount, updatePassword }

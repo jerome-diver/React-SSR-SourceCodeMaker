@@ -11,36 +11,44 @@ import { faKey } from '@fortawesome/free-solid-svg-icons'
 const SetupPassword = (props) => {
     const { id, ticket } = useParams()
     const [ load, setLoad ] = useState(false)               // Spinner if load is false
-    const [ error, setError ] = useState('')                // error process return
+    const [ error, setError ] = useState(undefined)                // error process return
     const [ show, setShow ] = useState(false)               // show Modal dialog box
     const [ redirect, setRedirect ] = useState('')          // redirection after
     const [ validated, setValidated ] = useState(false)
     const [ form, setForm ] = useState({password: '', confirmed_password: ''})
+    const [ status, setStatus ] = useState('')
 
     useEffect( () => {
         console.log("---SetupPassword component--- useEffect enter")
+        setLoad(true)
     }, [] )
 
     const handleClose = () => { setShow(false) }
-    const handleSubmit = () => {
-        if (form.password == form.confirmed_password) {
-            updatePassword(id, ticket, form.password)  // !!! should call a user-form-helper to set new password after to get new one
-            .then((response) => {
-                if(response.error) {
-                    setStatus('Failed')
-                 }
-                if(response) {
-                    setSetupPassword(transaction.validated)
-                    if (transaction.error) { setError(transaction.error) }
-                    setShow(true)
-                } else { setSetupPasswordd(false) }
-                setLoad(true)
-            })
-        } else fireError('password error', 'Password confirmed is not the same as password to setup')
+    const handleSubmit = (e) => {
+        const form_to_submit = e.currentTarget;
+        if (form_to_submit.checkValidity() === false) {
+            console.log("I'm in form_submit condition space")
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            e.preventDefault()
+            if (form.password == form.confirmed_password) {
+                updatePassword(id, ticket, form.password)  // !!! should call a user-form-helper to set new password after to get new one
+                .then((response) => {
+                    if(response.error) {
+                        setError(response.error)
+                        setStatus('Failed')
+                    } else setStatus("Success")
+                })
+            } else {
+                setError({error: { name: 'Failed ti setup password', 
+                                   message: 'Password confirmed is not the same as password to setup'}})
+                setStatus('Failed') }
+            setShow(true)
+        }
+        setValidated(true)
     }
     const handleChange = name => e => { if (!submit && name !== '') setForm({...form, [name]: e.target.value}) }
-    const goHome = () => { setRedirect('/') }
-    const signIn = () => { setRedirect('/signin') }
 
     let title, content, buttonLeftText, buttonLeftAction, buttonRightText, buttonRightAction
     if (redirect !== '') return <Redirect to={redirect}/> 
@@ -62,7 +70,7 @@ const SetupPassword = (props) => {
                 buttonRightAction = () => { return (<> <Redirect to='/signin' /> </>) }
                 break
             case 'Failed':
-                title = "Failed to setup password"
+                title = error.name
                 content = () => {
                     return (<>
                         <Alert variant='danger'>
