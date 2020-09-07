@@ -36,9 +36,8 @@ const sendEmailLinkToValidate = (success, failed) => {
         .then(result => (result.value) ? success() : failed() ) 
 }
 
-const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
-const emailHasBeenSent = (success, failed) => {
-    Swal.fire({ title: 'Email as been sent', html: htmlEmailSent, icon: 'success',
+const emailHasBeenSent = (success, failed, html_text) => {
+    Swal.fire({ title: 'Email as been sent', html: html_text, icon: 'success',
                 showCancelButton: true, cancelButtonText: "go Home",
                 confirmButtonText: 'Sign in'} )
         .then(result => (result.value) ? success() : failed() )

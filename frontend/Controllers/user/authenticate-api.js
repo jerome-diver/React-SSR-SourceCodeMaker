@@ -1,3 +1,5 @@
+import { cypher } from './user-form-helper'
+
 const signin = async (identifier, type, hp) => {
     try {
         const data = (type === 'Email') ? {email: identifier, password: hp} : {username: identifier, password: hp}
@@ -34,6 +36,17 @@ const setupPassword = async (username) => {
         } )
         return await response.json()
     } catch(error) { return JSON.stringify({error: error}) }
+}
+
+const updatePassword = async (id, ticket, password) => {
+    try {
+        let response = await fetch(`/api/users/setup_password/${id}/${ticket}`, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({password: cypher(password)})
+        } )
+        return response.json()
+    } catch (error) { return JSON.stringify({error: error}) }
 }
 
 const validatePassword = async (token, ticket) => {

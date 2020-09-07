@@ -212,21 +212,22 @@ const FixProblem = (props) => {
     const [ collapse, setCollapse ] = useState(false)
 
     const toggle = () => { setCollapse(!collapse)}
-    const getSetupPassword = () => { }
     const forgetPassword = () => {
+        const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on reset password link to setup a new one.</p></div>"
         setupPassword(form.username).then(response => {
-            (response.error) ? getError(response.error) : getSetupPassword() } )
+            (response.error) ? getError(response.error) : emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent) } )
     }
     const sendValidationAgain = () => { 
+        const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
         validateAccount(username)
             .then(response => { 
                 console.log('GET BACK: ', response.sent, response.error)
-                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                if(response.sent) emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent)
                 else fireError('Failed to send email', response.error) } )
             .catch(error => fireError(error.name, error.message))
     }
-    const emailFailed = () => { setRedirect(location.state.from) }
-    const emailSuccess = () => { setRedirect('/signin') }
+    const emailValidateFailed = () => { setRedirect(location.state.from) }
+    const emailValidateSuccess = () => { setRedirect('/signin') }
 
     if (username || (email && validator.isEmail(email))) {
         if (redirect != '') { return ( <Redirect to={redirect} /> )}

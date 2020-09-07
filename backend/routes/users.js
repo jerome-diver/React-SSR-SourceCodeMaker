@@ -109,9 +109,24 @@ router.post('/reset_password', jsonParser, (req, res) => {
                 text: `You should confirm you want to setup a new password before the ${date_end} (local server UTC time) by clicking the next link.`,
                 link_validate: setup_password_link,
                 validation_text: 'Click this link to setup a new password'
-            }, (error) => { return (error) ? res.json({error: error, sent: false}) 
+            }, (error) => { return (error) ? res.status(400).json({error: error, sent: false}) 
                                            : res.status(400).json({sent: true})    } )
     } )
 } )
+
+/* SETUP PASSWORD */
+router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
+    const password = req.body.password
+    User.findOneAndUpdate({id: req.params.id, 
+                           ticket: req.params.ticket, 
+                           validated: true},
+                          {password: password},
+                          {new: true},
+                          (err, user) => {
+            if (err) return res.status(400).json({error: {name: 'Failed to update on database',
+                                                          message: err}})
+            return res.status(200).json({username: user.username})
+    })
+})
 
 module.exports = router
