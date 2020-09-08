@@ -25,7 +25,8 @@ const validatePassword = (password) => {
     if (!check_char.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
     if (!check_char.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
     if (!check_char.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
-    return [ message, passwordValidated ]
+    const error = (!passwordValidated) ? {name: 'Password format failed', message: message} : undefined
+    return [ error, passwordValidated ]
 }
 
 const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"

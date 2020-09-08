@@ -1,8 +1,10 @@
 import { cypher } from './user-form-helper'
 
-const signin = async (identifier, type, hp) => {
+const signin = async (identifier, type, password) => {
+    console.log('--- signin with', identifier, type, password)
     try {
-        const data = (type === 'Email') ? {email: identifier, password: hp} : {username: identifier, password: hp}
+        const hpasswd = cypher(password)
+        const data = (type === 'Email') ? {email: identifier, password: hpasswd} : {username: identifier, password: hpasswd}
         let response = await fetch('/api/auth/signin/', {
             method: 'POST',
             credentials: 'include',

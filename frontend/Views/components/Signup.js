@@ -38,7 +38,7 @@ const SignUp = (props) => {
 
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
-            const [ message, passwordValidated ] = validatePassword(user.pass1)
+            const [ error, passwordValidated ] = validatePassword(user.pass1)
             if (passwordValidated) {
                 setSubmit(true)
                 create(user)
@@ -48,7 +48,7 @@ const SignUp = (props) => {
                         else sendEmailLinkToValidate(emailSentSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
-            } else fireError('Password validation failed', message)
+            } else fireError(error.name, error.message)
         } else fireError('Password request failed', 'Not the same password confirmed')
     }
 

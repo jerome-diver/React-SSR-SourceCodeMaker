@@ -29,14 +29,11 @@ router.get('/', (req, res) => {
 router.get('/user', (req, res) => {
     const token = req.cookies.token
     const user_id = decodeJWT(token)
-    console.log("Found user id:", user_id)
     if (user_id.error) return res.status(401).json({error: user_id.error})
     User.findOne({_id: user_id}, (err, user) => { 
-        console.log("Searching for user")
         if (err) { return res.status(404).json({error: error}) } 
         else { 
             Role.findOne({_id: user.role_id}, (err, role) => {
-                console.log("Searching for role")
                 if (err) { return res.status(401).json({ error: err }) }
                 return res.status('200').json( { user: user.toJSON(), role: role.toJSON() })
             } )
@@ -65,7 +62,6 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
     }
     Role.findOne({name: 'Reader'}, (err, role) => {  // find Role.id for Reader
         if (err) return res.status(400).json({ error: err })
-        console.log("GET role id:", role.id)
         const user = new User( { // Record to MongoDB 
             username: req.body.username,
             email: req.body.email,
@@ -73,7 +69,6 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
             role_id: role.id })
         user.save((err) => {
             if (err) {
-                console.log("GetERROR:", JSON.stringify(err))
                 let message = ''
                 if (err.errors) {
                     err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
@@ -81,7 +76,6 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
                 return res.status(400).json({error: {name: 'DB internal validation', message: message}})
             }
         })
-        console.log("CREATED:", user)
         res.json( {accepted: true} ) } )
 } )
 
@@ -117,14 +111,18 @@ router.post('/reset_password', jsonParser, (req, res) => {
 /* SETUP PASSWORD */
 router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
     const password = req.body.password
-    User.findOneAndUpdate({id: req.params.id, 
-                           ticket: req.params.ticket, 
-                           validated: true},
-                          {password: password},
-                          {new: true},
-                          (err, user) => {
+    const id = req.params.id
+    const ticket = req.params.ticket
+    User.findOne({_id: id, 
+                  ticket: ticket, 
+                  validated: true}, (err, user) => {
             if (err) return res.status(400).json({error: {name: 'Failed to update on database',
                                                           message: err}})
+            user.password = password
+            user.save(err => {
+                if (err) return res.status(400).json({error: {name: 'Failed to update on database',
+                                                            message: err}})
+            })
             return res.status(200).json({username: user.username})
     })
 })

@@ -8,7 +8,6 @@ import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useCookies } from 'react-cookie'
 import { signin, setupPassword, validateAccount } from '../../Controllers/user/authenticate-api'
-import { cypher } from '../../Controllers/user/user-form-helper'
 import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
 import validator from 'validator'
 
@@ -80,9 +79,8 @@ const SignIn = (props) => {
         } else {
             e.preventDefault()
             setSubmit(true)
-            const hashed_password = (form.password) ? cypher(form.password) : ''
             const id = (selectIdentifier == 'Email') ? form.email : form.username
-            signin(id, selectIdentifier, hashed_password)
+            signin(id, selectIdentifier, form.password)
                 .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
                 .catch(error => { getError(error) } )
         }
@@ -118,7 +116,7 @@ const SignIn = (props) => {
                     <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
                     <Form noValidate validated={validated}>
                         <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
-                                            selection={selectIdentifier} handleChange={handleChange} />
+                                             selection={selectIdentifier} handleChange={handleChange} />
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Your password</Form.Label>
                             <InputGroup>
@@ -128,7 +126,7 @@ const SignIn = (props) => {
                                     </InputGroup.Text>
                                 </InputGroup.Prepend>
                                 <Form.Control type='password' placeholder='password' 
-                                            onChange={handleChange('password')} />
+                                              onChange={handleChange('password')} />
                                 <Form.Control.Feedback type="invalid">Please choose a valid password.</Form.Control.Feedback>
                             </InputGroup>
                             <Form.Text className='text-muted'>You should provide your password</Form.Text>
@@ -214,7 +212,7 @@ const FixProblem = (props) => {
     const toggle = () => { setCollapse(!collapse)}
     const forgetPassword = () => {
         const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on reset password link to setup a new one.</p></div>"
-        setupPassword(form.username).then(response => {
+        setupPassword(username).then(response => {
             (response.error) ? getError(response.error) : emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent) } )
     }
     const sendValidationAgain = () => { 
@@ -229,8 +227,8 @@ const FixProblem = (props) => {
     const emailValidateFailed = () => { setRedirect(location.state.from) }
     const emailValidateSuccess = () => { setRedirect('/signin') }
 
+    if (redirect != '') { return ( <Redirect to={redirect} /> )}
     if (username || (email && validator.isEmail(email))) {
-        if (redirect != '') { return ( <Redirect to={redirect} /> )}
         return (
             <>
                 <hr/>
