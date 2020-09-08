@@ -15,7 +15,8 @@ router.post('/:ticket', jsonParser, (req, res) => {
     const secret = process.env.JWT_SECRET
     const ticket = req.params.ticket
     jwt.verify(req.body.token, secret, (error, decoded) => {
-        if(error) return res.status(400).json({error: error})
+        if(error) return res.status(400).json(
+            {error: {name: 'token is wrong', message: error}})
         if (decoded.valid_util <= moment().valueOf()) 
             return res.status('401').send(
                 {error: { name: 'expiry error', message: 'validation date expired' } } )
@@ -25,7 +26,7 @@ router.post('/:ticket', jsonParser, (req, res) => {
                                { validated: true },
                                {new: true},
                                (error, user) => { 
-             if (error) return res.status(400).json({error: error})
+             if (error) return res.status(400).json({error: {name: 'User update failed', message: error}})
             return res.json( { validated: true } )
         } )
     } ) 
@@ -40,6 +41,8 @@ router.post('/', jsonParser, (req, res) => {
             console.log("User doesn't exist: ", err)
             res.json( { error: err, accepted: false } )
         } else {
+            if (user.validated) { return res.status(400).json({error: {name: 'Acount validation error', 
+                                                                       message: 'Your account is allready validated'}})}
             console.log('Find user: ', user)
             const date_start = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
@@ -58,8 +61,9 @@ router.post('/', jsonParser, (req, res) => {
                 link_validate: validation_link,
                 validation_text: 'Click this link to valid your account'
             }, (error) => {
-                if (error) { return res.json( {error: error, sent: false} ) }
-                else { return res.json( { error: '', sent: true } ) } } )
+                if (error) { return res.status(400).json( 
+                    {error: {name: 'Email failed', message: error}, sent: false} ) }
+                else { return res.status(200).json( { error: undefined, sent: true } ) } } )
     } } )
 } )
 

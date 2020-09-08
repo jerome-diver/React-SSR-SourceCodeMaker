@@ -221,7 +221,7 @@ const FixProblem = (props) => {
             .then(response => { 
                 console.log('GET BACK: ', response.sent, response.error)
                 if(response.sent) emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent)
-                else fireError('Failed to send email', response.error) } )
+                else fireError(response.error.name, response.error.message) } )
             .catch(error => fireError(error.name, error.message))
     }
     const emailValidateFailed = () => { setRedirect(location.state.from) }
