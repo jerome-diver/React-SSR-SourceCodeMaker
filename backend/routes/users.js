@@ -21,7 +21,7 @@ const decodeJWT = (token) => {
 /* GET users listing. */
 router.get('/', (req, res) => {
     User.find({}, (err, o) => {
-        if (err) return res.status(400).json({error: err})
+        if (err) return res.status(401).json({error: err})
         res.json(o.map((u) => { return u.toJSON() })) })
 })
 
@@ -29,9 +29,9 @@ router.get('/', (req, res) => {
 router.get('/user', (req, res) => {
     const token = req.cookies.token
     const user_id = decodeJWT(token)
-    if (user_id.error) return res.status(401).json({error: user_id.error})
+    if (user_id.error) return res.status(403).json({error: user_id.error})
     User.findOne({_id: user_id}, (err, user) => { 
-        if (err) { return res.status(404).json({error: error}) } 
+        if (err) { return res.status(401).json({error: error}) } 
         else { 
             Role.findOne({_id: user.role_id}, (err, role) => {
                 if (err) { return res.status(401).json({ error: err }) }
@@ -58,7 +58,7 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
     if (!validationErrors.isEmpty) {
         let message = ''
         validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
-        return status(400).json({error: {name: 'Validation entry failed', message: message} } )
+        return status(403).json({error: {name: 'Validation entry failed', message: message} } )
     }
     Role.findOne({name: 'Reader'}, (err, role) => {  // find Role.id for Reader
         if (err) return res.status(400).json({ error: err })
@@ -72,11 +72,11 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
                 let message = ''
                 if (err.errors) {
                     err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
-                } else return res.status(400).json({error: {name: err.name, message: err.code}})
-                return res.status(400).json({error: {name: 'DB internal validation', message: message}})
+                } else return res.status(401).json({error: {name: err.name, message: err.code}})
+                return res.status(401).json({error: {name: 'DB internal validation', message: message}})
             }
         })
-        res.json( {accepted: true} ) } )
+        res.status(201).json( {accepted: true} ) } )
 } )
 
 /* PUT update user */
@@ -87,8 +87,8 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 router.post('/reset_password', jsonParser, (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
-            if (err) { return res.status(400).json({error: err}) }
-            if(!user) { return res.status(400).json( {error: { name: "Users collection error",
+            if (err) { return res.status(401).json({error: err}) }
+            if(!user) { return res.status(401).json( {error: { name: "Users collection error",
                                                                message: "User doesn't exist" } } ) }
             const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
@@ -103,8 +103,8 @@ router.post('/reset_password', jsonParser, (req, res) => {
                 text: `You should confirm you want to setup a new password before the ${date_end} (local server UTC time) by clicking the next link.`,
                 link_validate: setup_password_link,
                 validation_text: 'Click this link to setup a new password'
-            }, (error) => { return (error) ? res.status(400).json({error: error, sent: false}) 
-                                           : res.status(400).json({sent: true})    } )
+            }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
+                                           : res.status(200).json({sent: true})    } )
     } )
 } )
 
@@ -116,14 +116,14 @@ router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
     User.findOne({_id: id, 
                   ticket: ticket, 
                   validated: true}, (err, user) => {
-            if (err) return res.status(400).json({error: {name: 'Failed to update on database',
+            if (err) return res.status(401).json({error: {name: 'Failed to update on database',
                                                           message: err}})
             user.password = password
             user.save(err => {
-                if (err) return res.status(400).json({error: {name: 'Failed to update on database',
+                if (err) return res.status(401).json({error: {name: 'Failed to update on database',
                                                             message: err}})
             })
-            return res.status(200).json({username: user.username})
+            return res.status(201).json({username: user.username})
     })
 })
 
