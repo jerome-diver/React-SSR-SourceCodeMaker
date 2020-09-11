@@ -13,7 +13,7 @@ const reducer = (state, action) => {
       return { user: action.user, username: '', role: '' }
     default:
       return { username: action.user.username,
-               role: action.user.role.name }
+               role: action.role.name }
   }
 }
 
@@ -67,11 +67,11 @@ const UserLoggedEntries = (props) => {
 
 const Navigation = (props) => {
 
-    const { getUser, setUserSession } = useAuthenticate()
-    const [ user, dispatch ] = useReducer(reducer, {username: '', role: ''})
+    const { getUser, getRole } = useAuthenticate()
+    const [ session, dispatch ] = useReducer(reducer, {username: '', role: ''})
 
   useEffect( () => {
-    dispatch({user: getUser()})
+    dispatch({user: getUser(), role: getRole()})
   }, [getUser()] )
 
   return (
@@ -88,8 +88,8 @@ const Navigation = (props) => {
             <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
               <FontAwesomeIcon icon={faAddressCard}/> Contact</Nav.Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
-              <UserLoggedEntries username={user.username} 
-                                 role={user.role} />
+              <UserLoggedEntries username={session.username} 
+                                 role={session.role} />
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

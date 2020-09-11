@@ -7,7 +7,7 @@ import User from '../models/user.model'
 import Role from '../models/role.model'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
-import { checkNewUser } from '../helpers/sanitizer'
+import { checkNewUser, checkUpdateUser } from '../helpers/sanitizer'
 import { validationResult } from 'express-validator'
 require('dotenv').config('../../')
 
@@ -28,6 +28,7 @@ router.get('/', (req, res) => {
 /* GET user profile. */
 router.get('/user', (req, res) => {
     const token = req.cookies.token
+    console.log('THE TOKEN', token)
     const user_id = decodeJWT(token)
     if (user_id.error) return res.status(403).json({error: user_id.error})
     User.findOne({_id: user_id}, (err, user) => { 
@@ -80,6 +81,32 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 } )
 
 /* PUT update user */
+
+router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty) {
+        let message = ''
+        validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
+        return status(403).json({error: {name: 'Validation entry failed', message: message} } )
+    }
+    const user_form = req.body.user
+    const user_id = req.params.id
+    const password = req.body.password
+    User.findOne({_id: user_id, password: password}, (err, user) => {
+        if (err) return res.status(400).json({error: {name: 'Password failed', message: err}})
+    })
+    User.findOneAndUpdate({_id: user_id},
+                          user_form,
+                          {new: true}, (err, user) => {
+        if (err) return res.status(400).json({error: {name: 'Failed to update collection User', message: err}})
+        else { 
+            Role.findOne({_id: user.role_id}, (err, role) => {
+                if (err) { return res.status(401).json({ error: err }) }
+                return res.status('200').json( { user: user.toJSON(), role: role.toJSON() })
+            } )
+        }
+     })
+})
 
 /* DELETE delete user */
 

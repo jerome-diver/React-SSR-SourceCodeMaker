@@ -22,8 +22,7 @@ const SignUp = (props) => {
         setLoad(!submit)
     }, [submit] )
     
-    const handleChange = name => event => { 
-        setUser({...user, [name]: event.target.value}) }
+    const handleChange = name => event => { setUser({...user, [name]: event.target.value}) }
 
     const emailSentSuccess = () => {
         validateAccount(user.username) 

@@ -43,10 +43,8 @@ router.post('/signin', jsonParser, (req, res) => {
             Role.findOne({_id: _user.role_id}, (error, role) => {
                 if (error) return res.status(400).json({error: error})
                 console.log("Get role:", role)
-                _user = { ..._user, role: role.toJSON() }
                 delete _user.role_id
-                console.log('User now is:', _user)
-                return res.status('200').json( { user: _user })
+                return res.status(200).json( { user: _user, role: role.toJSON() })
             } )
         } )
     } )

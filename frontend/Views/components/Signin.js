@@ -31,14 +31,14 @@ const reducer = (state, action) => {
 const SignIn = (props) => {
     const [ loaded, setLoaded ] = useState(false)
     const [ submit, setSubmit ] = useState(false)
+    const [ validated, setValidated ] = useState(false)
+    const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
+    const [ form, setForm ] = useState({email:'', username: '', password: ''})
     const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
-    const [ form, setForm ] = useState({email:'', username: '', password: ''})
-    const { getUser, setUserSession } = useAuthenticate()
-    const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
+    const { setSession } = useAuthenticate()
     const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const [ validated, setValidated ] = useState(false)
   
     useEffect( () => {
         console.log("UseEffect of Signin Page component call")
@@ -55,7 +55,7 @@ const SignIn = (props) => {
         console.log("OK, signed in for ", data.user.username)
         const go_to = (location.state) ? location.state.from : '/profile'
         dispatch({from: go_to, isLogged: true})
-        setUserSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
+        setSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
         setSubmit(false)
     }
     const focusOnSelectedIdEntry = () => {  // this has to be call AFTER to React refresh view (call it from useEffect)
@@ -236,7 +236,7 @@ const FixProblem = (props) => {
                 <Collapse in={collapse}>
                     <div>
                         { (password && validatePassword(password)[1]) ?
-                            (<Card.Link href='#' onClick={sendValidationAgain}>Send an other validation</Card.Link>) :
+                            (<Card.Link href='#' onClick={sendValidationAgain}>Send validation</Card.Link>) :
                             (<Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>) }
                     </div>
                 </Collapse>

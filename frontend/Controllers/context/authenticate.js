@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react'
 const jwt = require('jsonwebtoken')
 
-
 export const AuthenticateContext = createContext();
 
 export function useAuthenticate() {

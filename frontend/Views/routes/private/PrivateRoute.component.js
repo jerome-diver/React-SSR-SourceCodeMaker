@@ -13,33 +13,36 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
     const [ access, setAccess ] = useState(false)
     const [ loaded, setLoaded ] = useState(false)
     const [ error, setError ] = useState('')
-    const { getUser, setUserSession } = useAuthenticate()
+    const [ redirect, setRedirect ] = useState('')
+    const { getUser } = useAuthenticate()
 
     useEffect(() => {
         const user = getUser()
-        console.log('Reload PrivateRoute hook with', user)
-        if(!loaded) {
+        console.log("--- PrivateRouter useEffect entry point, user is", user)
+        if (!user) setError('Undefined user, you need to be logged in.')
+        else if (!loaded) {
             if(user) isAuthenticated(user.id)
                     .then(response => {
                         setAccess(response.authorized)
                         setLoaded(true) } )
-                    .catch(error => setError(error) )
-        }
+                    .catch(error => setError(error) ) }
     }, [])
 
     const closeModal = () => { setError('') }
+    const goHome = () => { setRedirect('/'); }
 
     if (loaded) {
         console.log("Get access ?", access)
         return (
             <Route {...rest} render={ 
-            (props) => (access) ? 
-                    ( <Component {...props} /> ) :
-                    ( <Redirect to={{ pathname: '/signin', 
-                                      state: { from: props.location, 
-                                               error: 'Failed to authenticate Token'} }} /> )
+                (props) => (access) ? 
+                        ( <Component {...props} /> ) :
+                        ( <Redirect to={{ pathname: '/signin', 
+                                        state: { from: props.location, 
+                                                 error: 'Failed to authenticate Token'} }} /> )
             } /> )
     } else {
+        if (redirect !== '') { return ( <Redirect to={redirect} /> )}
         return (
             <>
                 <Modal show={(error != '')}>
@@ -51,6 +54,7 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={closeModal}>OK</Button>
+                        <Button onClick={goHome}>Go Home</Button>
                     </Modal.Footer>
                 </Modal>
                 <Alert variant='info'>

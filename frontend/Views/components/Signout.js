@@ -13,7 +13,7 @@ const reducer = (state, action) => {
 const SignOut = (props) => {
         console.log("--- Start SignOut ---")
 
-    const { getUser, setUserSession } = useAuthenticate()
+    const { getUser, setSession } = useAuthenticate()
     const [ state, dispatch ] = useReducer(reducer, { loggedOut: false, loaded: false })
 
     useEffect( () => {
@@ -27,7 +27,7 @@ const SignOut = (props) => {
         if (user) {
             signout(user.id, signal).then(result => {
                 if (result.error) dispatch({error: result.error, loggedOut: false, loaded: true}) 
-                else if (result == true) setUserSession(0)
+                else if (result == true) setSession(0)
                 else dispatch({loaded: true, loggedOut: false, error: 'LogOut rejected'}) } )
         } else { dispatch({loaded: true, loggedOut: true, error: ''}) }
     }

@@ -10,7 +10,7 @@ const create = async (user) => {
         let response = await fetch('/api/users', {
             method: 'POST',
             headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json' },
+                       'Content-Type': 'application/json' },
             body: JSON.stringify(newUser) } )
         return response.json()
     } catch(error) { return JSON.stringify({error: error}) }
@@ -35,14 +35,14 @@ const read = async () => {
     } catch(error) { return JSON.stringify({error: error}) }
 }
 
-const update = async (params, credentials, user) => {
+const update = async (user, password, id) => {
     try {
-        let response = await fetch('/api/users/' + params.id, {
+        let response = await fetch('/api/users/' + id, {
             method: 'PUT',
             headers: { 'Accept': 'application/json',
-                       'Content-Type': 'application/json',
-                       'Authorization': 'Bearer ' + credentials.t },
-            body: JSON.stringify(user) } )
+                       'Content-Type': 'application/json' },
+            credential: 'include',
+            body: JSON.stringify({user: user, password: password}) } )
         return await response.json()
     } catch(error) { return{error: error} }
 }
