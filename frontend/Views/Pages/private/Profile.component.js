@@ -81,9 +81,14 @@ const Profile = (props) => {
     const handleChange = name => event => { 
         setUserNotChanged(compare())
         setUser( { form: {...user.form, [name]: event.target.value} } ) }
-    const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
+    const roleTooltip = (props) => (
+        <Tooltip id="role-tooltip" {...props}>
             {(role.name === "Admin") ? 'Change role' : 'Only admin can modify role'}
+        </Tooltip>
+    )
+    const changeEmailTooltip = (props) => (
+        <Tooltip id="email-tooltip" {...props}>
+            If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.
         </Tooltip>
     )
 
@@ -104,7 +109,7 @@ const Profile = (props) => {
             <Jumbotron>
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
-                    <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                    <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
                         <Button disabled={(role.name !== "Admin")}
                                 onClick={editUserRole} 
                                 size='sm' variant={`outline-${role.color}`}>
@@ -122,7 +127,11 @@ const Profile = (props) => {
                             <Card.Subtitle className='mb-2 text-muted' />
                             <Card.Text>You can edit your profile there but you will have then to indicate your password and confirm it to apply.</Card.Text>
                             <Form.Group controlId="formEmail">
-                                <Form.Label>Your email</Form.Label>
+                                <Form.Label>
+                                    <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changeEmailTooltip}>
+                                        <Button size='sm' variant='outline-light' >Your email</Button>
+                                    </OverlayTrigger>
+                                </Form.Label>
                                 <Form.Control type='email' readOnly={true} defaultValue={user.session.email} onChange={handleChange('email')} />
                                 <Form.Text className='text-muted'>If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.</Form.Text>
                             </Form.Group>
