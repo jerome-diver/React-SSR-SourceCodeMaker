@@ -49,9 +49,8 @@ const Profile = (props) => {
 
     useEffect( () => {
         console.log("--- Profile.component useEffect:", error, user)
-        if (!user.session) {
-            setUser({session: clean_user})
-            setAccountState(accountEnabled(clean_user.validated)) }
+        if (!user.session) setUser({session: clean_user})
+        setAccountState(accountEnabled(clean_user.validated)) 
         setLoaded(true)
     }, [user, error] )
   
@@ -124,21 +123,21 @@ const Profile = (props) => {
                             <Card.Text>You can edit your profile there but you will have then to indicate your password and confirm it to apply.</Card.Text>
                             <Form.Group controlId="formEmail">
                                 <Form.Label>Your email</Form.Label>
-                                <Form.Control type='email' placeholder={user.session.email} onChange={handleChange('email')} />
+                                <Form.Control type='email' readOnly={true} defaultValue={user.session.email} onChange={handleChange('email')} />
                                 <Form.Text className='text-muted'>If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formText">
                                 <Form.Label>Your username</Form.Label>
-                                <Form.Control type='text' placeholder={user.session.username} onChange={handleChange('username')} />
+                                <Form.Control type='text' defaultValue={user.session.username} onChange={handleChange('username')} />
                                 <Form.Text className="text-muted">he is unique there...</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formFirstName">
                                 <Form.Label>Your first name</Form.Label>
-                                <Form.Control type='text' placeholder={user.session.first_name} onChange={handleChange('first_name')} />
+                                <Form.Control type='text' defaultValue={user.session.first_name} onChange={handleChange('first_name')} />
                             </Form.Group>
                             <Form.Group controlId="formSecondName">
                                 <Form.Label>Your second name</Form.Label>
-                                <Form.Control type='text' placeholder={user.session.second_name} onChange={handleChange('second_name')} />
+                                <Form.Control type='text' defaultValue={user.session.second_name} onChange={handleChange('second_name')} />
                             </Form.Group>
                             <Form.Group controlId="formPassword">
                                 <Form.Label>Your password</Form.Label>
