@@ -39,20 +39,21 @@ const prepareCleanUser = (clean_user) => {
 
 const Profile = (props) => {
     console.log("--- Profile.component start function point")
+    const { userProfile, userRole } = props
     const { getUser, getRole, setSession } = useAuthenticate()
-    const clean_user = washUser(getUser())
     const [ role, setRole ] = useState(getRole())
     const [ validated, setValidated ] = useState(false)
-    const [ user, setUser ] = useReducer(userReducer, { session: clean_user, form: clean_user})
+    const [ user, setUser ] = useReducer(userReducer, { session: washUser(getUser()), form: washUser(userProfile)})
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
     const [ userNotChanged, setUserNotChanged ] = useState(true)
     const [ loaded, setLoaded ] = useState(false)
     const [ message, setMessage ] = useReducer(messageReducer, { message: {}, state: false })
 
     useEffect( () => {
+        const clean_user = washUser(getUser())
         console.log("--- Profile.component useEffect:", message, user)
         if (!user.session) setUser({session: clean_user})
-        setAccountState(accountEnabled(clean_user.validated)) 
+        setAccountState(accountEnabled(user.form.validated)) 
         setLoaded(true)
     }, [user, message] )
   
@@ -121,8 +122,8 @@ const Profile = (props) => {
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
                         <Button disabled={(role.name !== "Admin")}
                                 onClick={editUserRole} 
-                                size='sm' variant={`outline-${role.color}`}>
-                            {role.name}
+                                size='sm' variant={`outline-${userRole.color}`}>
+                            {userRole.name}
                         </Button>
                     </OverlayTrigger>
                 </h4>
