@@ -9,6 +9,7 @@ import '../../../stylesheet/users.sass'
 import { validatePassword } from '../../../Controllers/user/user-form-helper'
 import { update } from '../../../Controllers/user/action-CRUD'
 import { cypher } from '../../../Controllers/user/user-form-helper'
+import parse from 'html-react-parser'
 
 const userReducer = (state, action) => {
     return { 
@@ -16,7 +17,7 @@ const userReducer = (state, action) => {
         form: (action.form) ? action.form : state.form }
 }
 
-const errorReducer = (state, action) => {
+const messageReducer = (state, action) => {
     return {
         message: (action.message) ? action.message : state.message,
         state: (action.message) ? true : false
@@ -37,43 +38,56 @@ const prepareCleanUser = (clean_user) => {
 }
 
 const Profile = (props) => {
+    console.log("--- Profile.component start function point")
     const { getUser, getRole, setSession } = useAuthenticate()
-    console.log("--- Profile.component start function point", getRole())
     const clean_user = washUser(getUser())
     const [ role, setRole ] = useState(getRole())
+    const [ validated, setValidated ] = useState(false)
     const [ user, setUser ] = useReducer(userReducer, { session: clean_user, form: clean_user})
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
     const [ userNotChanged, setUserNotChanged ] = useState(true)
     const [ loaded, setLoaded ] = useState(false)
-    const [ error, setError ] = useReducer(errorReducer, { message: {}, state: false })
+    const [ message, setMessage ] = useReducer(messageReducer, { message: {}, state: false })
 
     useEffect( () => {
-        console.log("--- Profile.component useEffect:", error, user)
+        console.log("--- Profile.component useEffect:", message, user)
         if (!user.session) setUser({session: clean_user})
         setAccountState(accountEnabled(clean_user.validated)) 
         setLoaded(true)
-    }, [user, error] )
+    }, [user, message] )
   
-    const closeModal = () => { setError({}) }
     const clickSubmit = (e) => { // should update user if form entries are conform
-        e.preventDefault()
-        console.log("Submit clicked", error, user)
-        if (user.form.password) {
-            const [ haveError, validated ] = validatePassword(user.form.password)
-            if (haveError) setError( {message: haveError} )
-            else if (validated) {
-                const password = cypher(user.form.password)
-                const parsedUser = prepareCleanUser(user.form)
-                update(parsedUser, password, user.session.id)
-                    .then(response => {
-                        if (response.error) setError( {message: response.error} )
-                        else {
-                            setSession(response)
-                            setUser({session: washUser(response.user), form: washUser(response.user)}) }
-            } ) }
-        } else setError( {message: {name:'missing field', message: 'You have to inform a password to update something'} } )
+        setLoaded(false)
+        const form_to_submit = e.currentTarget;
+        if (form_to_submit.checkValidity() === false) {
+            console.log("I'm in form_submit condition space")
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            e.preventDefault()
+            console.log("Submit clicked", message, user)
+            if (user.form.password) {
+                const [ haveError, validated ] = validatePassword(user.form.password)
+                if (haveError) setMessage( {message: haveError} )
+                else if (validated) {
+                    const password = cypher(user.form.password)
+                    const parsedUser = prepareCleanUser(user.form)
+                    update(parsedUser, password, user.session.id)
+                        .then(response => {
+                            setLoaded(true)
+                            if (response.error) setMessage( {message: response.error} )
+                            else {
+                                setSession(response)
+                                setUser({session: washUser(response.user), form: washUser(response.user)})
+                                setMessage( {message: {name: 'Updated user', message: "User update success."}}) }
+                } ) }
+            } else setMessage( {message: {name:'missing field', message: 'You have to inform a password to update something'} } )
+        }
+        setValidated(true)
     }
-    const editUserRole = () => { }
+    const editUserRole = () => {  }
+    const changeEmail = () => {  }
+    const changePassword = () => {  }
     const compare = () => {  // check differences between actual entries and existing user data
         const user_formated = prepareCleanUser(user.form)
         return (user.session === user_formated)
@@ -88,24 +102,19 @@ const Profile = (props) => {
     )
     const changeEmailTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.
+            I will send an email with a link to this address and you will have 2 days to validate your choice by click on the link.
+        </Tooltip>
+    )
+    const changePasswordTooltip = (props) => (
+        <Tooltip id="email-tooltip" {...props}>
+            Change your password
         </Tooltip>
     )
 
     if (loaded && user.session) {
         return (
             <>
-            <Modal show={error.state}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Failed to login with {error.message.name}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Alert variant='error'>{error.message.message}</Alert>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeModal}>OK</Button>
-                </Modal.Footer>
-            </Modal>
+            <Messenger message={message} setMessage={setMessage} />
             <Jumbotron>
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
@@ -120,7 +129,7 @@ const Profile = (props) => {
                 <hr/>
                 <Card id='editUser'>
                     <Card.Body>
-                        <Form onSubmit={clickSubmit}>
+                        <Form onSubmit={clickSubmit} noValidate validated={validated}>
                             <Card.Title>
                                 <Badge variant={accountState.color}> account {accountState.status}</Badge>
                             </Card.Title>
@@ -129,28 +138,36 @@ const Profile = (props) => {
                             <Form.Group controlId="formEmail">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changeEmailTooltip}>
-                                        <Button size='sm' variant='outline-light' >Your email</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changeEmail} >Email</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
-                                <Form.Control type='email' readOnly={true} defaultValue={user.session.email} onChange={handleChange('email')} />
-                                <Form.Text className='text-muted'>If your email is modified, i will disable this account and send a 2 days valid confirmation email link for you to apply.</Form.Text>
+                                <Form.Control type='email' readOnly={true} defaultValue={user.form.email} onChange={handleChange('email')} />
+                                <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
+                                <Form.Text className='text-muted'>Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formText">
-                                <Form.Label>Your username</Form.Label>
-                                <Form.Control type='text' defaultValue={user.session.username} onChange={handleChange('username')} />
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type='text' defaultValue={user.form.username} onChange={handleChange('username')} />
+                                <Form.Control.Feedback type="invalid">Please choose a valid username.</Form.Control.Feedback>
                                 <Form.Text className="text-muted">he is unique there...</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formFirstName">
-                                <Form.Label>Your first name</Form.Label>
-                                <Form.Control type='text' defaultValue={user.session.first_name} onChange={handleChange('first_name')} />
+                                <Form.Label>First name</Form.Label>
+                                <Form.Control type='text' defaultValue={user.form.first_name} onChange={handleChange('first_name')} />
+                                <Form.Control.Feedback type="invalid">Please choose a valid family name.</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSecondName">
-                                <Form.Label>Your second name</Form.Label>
-                                <Form.Control type='text' defaultValue={user.session.second_name} onChange={handleChange('second_name')} />
+                                <Form.Label>Second name</Form.Label>
+                                <Form.Control type='text' defaultValue={user.form.second_name} onChange={handleChange('second_name')} />
                             </Form.Group>
                             <Form.Group controlId="formPassword">
-                                <Form.Label>Your password</Form.Label>
+                                <Form.Label>
+                                    <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changePasswordTooltip}>
+                                        <Button size='sm' variant='outline-light' onClick={changePassword} >Password</Button>
+                                    </OverlayTrigger>
+                                </Form.Label>
                                 <Form.Control type='password' placeholder='password' onChange={handleChange('password')} />
+                                <Form.Control.Feedback type="invalid">Please choose a valid second name.</Form.Control.Feedback>
                                 <Form.Text className='text-muted'>total of 8 chars minimum, include: 1 or more number and special chars</Form.Text>
                             </Form.Group>
                             <Card.Link>
@@ -164,15 +181,35 @@ const Profile = (props) => {
             </Jumbotron>
         </>)
     } else {
-        return (
-            <>
-                <Alert variant='info'>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
-                </Alert>
-            </>
-        )
+        return (<>
+            <Messenger message={message} setMessage={setMessage} />
+            <Alert variant='info'>
+                <Spinner animation='border' role='status'/>
+                <p>Loading...</p>
+            </Alert>
+        </>)
     }
 }
+
+const Messenger = (props) => {
+    const { message, setMessage } = props
+
+    const closeModal = () => { setMessage({}) }
+
+    return (<>
+            <Modal show={message.state}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Failed to login with {message.message.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Alert variant='error'>{parse(`${message.message.message}`)}</Alert>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={closeModal}>OK</Button>
+                </Modal.Footer>
+            </Modal>
+    </>)
+}
+
 
 export default Profile

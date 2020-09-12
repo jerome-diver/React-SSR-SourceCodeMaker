@@ -83,6 +83,9 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 /* PUT update user */
 
 router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
+    const token = req.cookies.token
+    console.log('THE TOKEN', token)
+    const user_session_id = decodeJWT(token)
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty) {
         let message = ''
