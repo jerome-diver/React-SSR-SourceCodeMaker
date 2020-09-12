@@ -29,9 +29,9 @@ router.get('/', (req, res) => {
 router.get('/user', (req, res) => {
     const token = req.cookies.token
     console.log('THE TOKEN', token)
-    const user_id = decodeJWT(token)
-    if (user_id.error) return res.status(403).json({error: user_id.error})
-    User.findOne({_id: user_id}, (err, user) => { 
+    const decoded_token = decodeJWT(token)
+    if (decoded_token.error) return res.status(403).json({error: decoded_token.error})
+    User.findOne({_id: decoded_token.id}, (err, user) => { 
         if (err) { return res.status(401).json({error: error}) } 
         else { 
             Role.findOne({_id: user.role_id}, (err, role) => {
@@ -83,32 +83,28 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 /* PUT update user */
 
 router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
-    const token = req.cookies.token
-    console.log('THE TOKEN', token)
-    const user_session_id = decodeJWT(token)
-    const validationErrors = validationResult(req)
-    if (!validationErrors.isEmpty) {
-        let message = ''
-        validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
-        return status(403).json({error: {name: 'Validation entry failed', message: message} } )
-    }
+    const decoded_token = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
     const user_form = req.body.user
     const user_id = req.params.id
     const password = req.body.password
-    User.findOne({_id: user_id, password: password}, (err, user) => {
-        if (err) return res.status(400).json({error: {name: 'Password failed', message: err}})
-    })
-    User.findOneAndUpdate({_id: user_id},
-                          user_form,
-                          {new: true}, (err, user) => {
-        if (err) return res.status(400).json({error: {name: 'Failed to update collection User', message: err}})
-        else { 
-            Role.findOne({_id: user.role_id}, (err, role) => {
-                if (err) { return res.status(401).json({ error: err }) }
-                return res.status('200').json( { user: user.toJSON(), role: role.toJSON() })
-            } )
-        }
-     })
+    if ((decoded_token.id == user_id) || (decoded_token.role_name === 'Admin')) {
+        const validationErrors = validationResult(req)
+        if (!validationErrors.isEmpty) {
+            let message = ''
+            validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
+            return status(403).json({error: {name: 'Validation entry failed', message: message} } ) }
+        User.findOne({_id: user_id, password: password}, (err, user) => {
+            if (err) return res.status(401).json({error: {name: 'Password failed', message: err}}) } )
+        User.findOneAndUpdate({_id: user_id},
+                            user_form,
+                            {new: true}, (err, user) => {
+            if (err) return res.status(400).json({error: {name: 'Failed to update collection User', message: err}})
+            else { 
+                Role.findOne({_id: user.role_id}, (err, role) => {
+                    if (err) { return res.status(401).json({ error: err }) }
+                    return res.status('200').json({user: user.toJSON(), role: role.toJSON()}) } ) } } )
+    } else return res.status(403).json({error: {name: 'Authorization failure', 
+                                                message:  'User is not admin or is not the owner'}})
 })
 
 /* DELETE delete user */

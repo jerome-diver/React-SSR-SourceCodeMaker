@@ -41,7 +41,7 @@ const update = async (user, password, id) => {
             method: 'PUT',
             headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' },
-            credential: 'include',
+            credentials: 'include',
             body: JSON.stringify({user: user, password: password}) } )
         return await response.json()
     } catch(error) { return{error: error} }

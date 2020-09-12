@@ -35,14 +35,14 @@ router.post('/signin', jsonParser, (req, res) => {
                                     error: {name: "Validity error", 
                                             message: "User account not valid"} } )
         console.log("And this account is valid")
-        jwt.sign({ id: _user.id },process.env.JWT_SECRET, (er, token) => {
-            if (err) return res.status(401).json( { error: er } )
-            console.log("The token created is", token)
-            res.cookie('token', token, { httpOnly: true })
-            // Get role from user.role_id & add it to _user
-            Role.findOne({_id: _user.role_id}, (error, role) => {
-                if (error) return res.status(400).json({error: error})
-                console.log("Get role:", role)
+        Role.findOne({_id: _user.role_id}, (error, role) => {
+            if (error) return res.status(400).json({error: error})
+            jwt.sign({ id: _user.id, role_name: role.name },
+                     process.env.JWT_SECRET, 
+                     (er, token) => {
+                if (err) return res.status(401).json( { error: er } )
+                console.log("The token created is", token)
+                res.cookie('token', token, { httpOnly: true })
                 delete _user.role_id
                 return res.status(200).json( { user: _user, role: role.toJSON() })
             } )
@@ -62,11 +62,11 @@ router.post('/signout', jsonParser, (req, res) => {
 
 router.post('/authorized', jsonParser, (req, res) => {
     const user = req.body
-    console.log("from /api/auth/authorized -- user id in JSON body passed:", user.id) 
+    console.log("--- server.router /api/auth/authorized -- user id in JSON body passed:", user.id) 
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
-    console.log("from /api/auth/authorized -- COOKIES token decoded is", decoded)
-    const authorized = (user.id == decoded.id)
-    console.log("from /api/auth/authorized -- is authorized (user.id == token.id) ?", authorized)
+    console.log("--- server.router /api/auth/authorized -- COOKIES token decoded is", decoded.id)
+    const authorized = (user.id === decoded.id)
+    console.log("--- server.router /api/auth/authorized -- is authorized (user.id == decoded.id) ?", authorized)
     //authorized is payload decode, then "id" should be the current user.id
     return res.status(200).json({authorized: authorized})
 })
