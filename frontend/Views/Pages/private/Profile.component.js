@@ -6,15 +6,15 @@ import { faUserPlus, faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
-import { validatePassword } from '../../../Controllers/user/user-form-helper'
+import { canChangeEmail, validatePassword, cypher } from '../../../Controllers/user/user-form-helper'
 import { update } from '../../../Controllers/user/action-CRUD'
-import { cypher } from '../../../Controllers/user/user-form-helper'
 import parse from 'html-react-parser'
 
 const userReducer = (state, action) => {
     return { 
         session: (action.session) ? action.session : state.session, 
-        form: (action.form) ? action.form : state.form }
+        form: (action.form) ? action.form : state.form ,
+        origin: (action.origin) ? action.origin : state.origin }
 }
 
 const messageReducer = (state, action) => {
@@ -43,19 +43,22 @@ const Profile = (props) => {
     const { getUser, getRole, setSession } = useAuthenticate()
     const [ role, setRole ] = useState(getRole())
     const [ validated, setValidated ] = useState(false)
-    const [ user, setUser ] = useReducer(userReducer, { session: washUser(getUser()), form: washUser(userProfile)})
+    const [ user, setUser ] = useReducer(userReducer, { session: washUser(getUser()), 
+                                                        form: washUser(userProfile), 
+                                                        origin: washUser(userProfile)})
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
     const [ userNotChanged, setUserNotChanged ] = useState(true)
     const [ loaded, setLoaded ] = useState(false)
+    const [ emailReadOnly, setEmailReadOnly ] = useState(false)
     const [ message, setMessage ] = useReducer(messageReducer, { message: {}, state: false })
 
     useEffect( () => {
+        console.log("--- Profile.component useEffect")
         const clean_user = washUser(getUser())
-        console.log("--- Profile.component useEffect:", message, user)
         if (!user.session) setUser({session: clean_user})
         setAccountState(accountEnabled(user.form.validated)) 
         setLoaded(true)
-    }, [user, message] )
+    }, [user] )
   
     const clickSubmit = (e) => { // should update user if form entries are conform
         setLoaded(false)
@@ -78,24 +81,39 @@ const Profile = (props) => {
                             setLoaded(true)
                             if (response.error) setMessage( {message: response.error} )
                             else {
-                                setSession(response)
+                                setMessage( {message: {name: 'Updated user', message: "User update success."}})
                                 setUser({session: washUser(response.user), form: washUser(response.user)})
-                                setMessage( {message: {name: 'Updated user', message: "User update success."}}) }
+                                setSession(response)
+                                 }
                 } ) }
             } else setMessage( {message: {name:'missing field', message: 'You have to inform a password to update something'} } )
         }
         setValidated(true)
     }
-    const editUserRole = () => {  }
-    const changeEmail = () => {  }
-    const changePassword = () => {  }
+    const editUserRole = (e) => { console.log("Edit user Role") }
+    const changeEmail = (e) => { canChangeEmail(editEmail, emailNoEdit) }
+    const editEmail = () => {
+        setEmailReadOnly(false)
+    }
+    const emailNoEdit = () => {
+        const emailInput = document.getElementById("formEmail")
+        emailInput.value = user.origin.email
+        emailInput.style.color = 'grey'
+        setUser({form: {...user.form, email: user.origin.email}})
+        setEmailReadOnly(true)
+    }
+    const changePassword = (e) => { 
+        console.log("Change password")
+     }
     const compare = () => {  // check differences between actual entries and existing user data
         const user_formated = prepareCleanUser(user.form)
         return (user.session === user_formated)
     }
     const handleChange = name => event => { 
         setUserNotChanged(compare())
-        setUser( { form: {...user.form, [name]: event.target.value} } ) }
+        if ((name === 'email') & (!emailReadOnly)) event.target.style.color = (event.target.value == user.session.email) ? 'black' : 'red'
+        setUser( { form: {...user.form, [name]: event.target.value} } )
+    }
     const roleTooltip = (props) => (
         <Tooltip id="role-tooltip" {...props}>
             {(role.name === "Admin") ? 'Change role' : 'Only admin can modify role'}
@@ -120,7 +138,7 @@ const Profile = (props) => {
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
-                        <Button disabled={(role.name !== "Admin")}
+                        <Button disabled={((role.name !== "Admin") && (user.session.username != userProfile.username))}
                                 onClick={editUserRole} 
                                 size='sm' variant={`outline-${userRole.color}`}>
                             {userRole.name}
@@ -139,10 +157,10 @@ const Profile = (props) => {
                             <Form.Group controlId="formEmail">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changeEmailTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changeEmail} >Email</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>Email</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
-                                <Form.Control type='email' readOnly={true} defaultValue={user.form.email} onChange={handleChange('email')} />
+                                <Form.Control type='email' readOnly={emailReadOnly} defaultValue={user.form.email} onChange={handleChange('email')} />
                                 <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
                                 <Form.Text className='text-muted'>Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
                             </Form.Group>
@@ -164,7 +182,7 @@ const Profile = (props) => {
                             <Form.Group controlId="formPassword">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changePasswordTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changePassword} >Password</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changePassword}>Password</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Control type='password' placeholder='password' onChange={handleChange('password')} />

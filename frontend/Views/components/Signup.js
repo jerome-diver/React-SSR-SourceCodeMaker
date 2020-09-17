@@ -27,7 +27,6 @@ const SignUp = (props) => {
     const emailSentSuccess = () => {
         validateAccount(user.username) 
             .then(response => { 
-                console.log('GET BACK: ', response.sent, response.error)
                 if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
                 else fireError('Failed to send email', response.error) } )
             .catch(error => fireError(error.name, error.message))

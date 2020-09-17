@@ -1,5 +1,6 @@
 import Crypto from 'crypto'
 import Swal from 'sweetalert2'
+import { unlock_email_text } from '../../Views/helpers/config'
 
 const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
@@ -44,6 +45,14 @@ const emailHasBeenSent = (success, failed, html_text) => {
         .then(result => (result.value) ? success() : failed() )
 }
 
+const canChangeEmail = (unlock, lock) => {
+    Swal.fire({ title: 'Process to change email', html: unlock_email_text, icon: 'warning',
+                showCancelButton: true, cancelButtonText: "Cancel email edit",
+                confirmButtonText: 'Unlock edit email'} )
+        .then(result => (result.value) ? unlock() : lock() )
+}
+
 const fireError = (title, text) => Swal.fire(title, text, 'error')
 
-export {cypher, checkPassword, validatePassword, sendEmailLinkToValidate, fireError, emailHasBeenSent}
+export { cypher, checkPassword, validatePassword, 
+         sendEmailLinkToValidate, fireError, emailHasBeenSent, canChangeEmail }
