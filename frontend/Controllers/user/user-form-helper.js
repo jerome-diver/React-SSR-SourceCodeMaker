@@ -1,6 +1,7 @@
 import Crypto from 'crypto'
 import Swal from 'sweetalert2'
 import { unlock_email_text } from '../../Views/helpers/config'
+import { validateAccount } from '../../Controllers/user/authenticate-api'
 
 const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
@@ -30,16 +31,22 @@ const validatePassword = (password) => {
     return [ error, passwordValidated ]
 }
 
-const htmlNewUser = "<div class='alert alert-info'><p>A new user has been created, but need a validation to be ready to use.</p>"
-const sendEmailLinkToValidate = (success, failed) => {
-    Swal.fire({ title: 'Singup process success', html:  htmlNewUser, icon:  'warning', 
+const sendEmailLinkToValidate = (username, htmlText, emailSuccess, emailFailed) => {    
+    const validation = (user_name) => {
+        validateAccount(user_name) 
+            .then(response => { 
+                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                else fireError('Failed to send email', response.error) } )
+            .catch(error => fireError(error.name, error.message))
+    }
+    Swal.fire({ title: 'Singup process success', html:  htmlText, icon:  'warning', 
                 showCancelButton: true, cancelButtonText: "go Home",
                 confirmButtonText: "Send email with link to validate" } )
-        .then(result => (result.value) ? success() : failed() ) 
+        .then(result => (result.value) ? validation(username) : emailFailed() ) 
 }
 
-const emailHasBeenSent = (success, failed, html_text) => {
-    Swal.fire({ title: 'Email as been sent', html: html_text, icon: 'success',
+const emailHasBeenSent = (success, failed, htmlText) => {
+    Swal.fire({ title: 'Email as been sent', html: htmlText, icon: 'success',
                 showCancelButton: true, cancelButtonText: "go Home",
                 confirmButtonText: 'Sign in'} )
         .then(result => (result.value) ? success() : failed() )

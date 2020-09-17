@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form, Spinner, Alert } from 'react-bootstrap'
 import { fireError, validatePassword, 
-         sendEmailLinkToValidate, emailHasBeenSent } from '../../Controllers/user/user-form-helper'
-import { validateAccount } from '../../Controllers/user/authenticate-api'
+         sendEmailLinkToValidate } from '../../Controllers/user/user-form-helper'
+import { html_new_user } from '../../Views/helpers/config'
 import { create } from '../../Controllers/user/action-CRUD'
 import { useCookies } from 'react-cookie'
 
@@ -23,17 +23,8 @@ const SignUp = (props) => {
     }, [submit] )
     
     const handleChange = name => event => { setUser({...user, [name]: event.target.value}) }
-
-    const emailSentSuccess = () => {
-        validateAccount(user.username) 
-            .then(response => { 
-                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
-                else fireError('Failed to send email', response.error) } )
-            .catch(error => fireError(error.name, error.message))
-    }
     const emailFailed = () => { setRedirect(location.state.from) }
     const emailSuccess = () => { setRedirect('/signin') }
-
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
             const [ error, passwordValidated ] = validatePassword(user.pass1)
@@ -43,13 +34,12 @@ const SignUp = (props) => {
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
                         else if (!response.accepted) fireError('Signup Failed', 'User rejected')
-                        else sendEmailLinkToValidate(emailSentSuccess, emailFailed)
+                        else sendEmailLinkToValidate(user.username, html_new_user, emailSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)
         } else fireError('Password request failed', 'Not the same password confirmed')
     }
-
     const renderRedirect = () => { 
         if (redirect !== '') { return <Redirect to={redirect}/> }
         if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> }
