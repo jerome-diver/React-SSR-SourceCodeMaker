@@ -138,7 +138,7 @@ const Profile = (props) => {
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
-                        <Button disabled={((role.name !== "Admin") && (user.session.username != userProfile.username))}
+                        <Button disabled={((role.name !== "Admin") || (user.session.username == userProfile.username))}
                                 onClick={editUserRole} 
                                 size='sm' variant={`outline-${userRole.color}`}>
                             {userRole.name}

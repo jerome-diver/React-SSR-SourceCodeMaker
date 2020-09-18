@@ -1,7 +1,7 @@
 import { cypher } from './user-form-helper'
 
 const signin = async (identifier, type, password) => {
-    console.log('--- signin with', identifier, type, password)
+    console.log('--- signin with', identifier, type)
     try {
         const hpasswd = cypher(password)
         const data = (type === 'Email') ? {email: identifier, password: hpasswd} : {username: identifier, password: hpasswd}

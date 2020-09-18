@@ -73,7 +73,6 @@ const SignIn = (props) => {
     const clickSubmit = (e) => {
         const form_to_submit = e.currentTarget;
         if (form_to_submit.checkValidity() === false) {
-            console.log("I'm in form_submit condition space")
             e.preventDefault();
             e.stopPropagation();
         } else {

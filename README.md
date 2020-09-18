@@ -23,6 +23,7 @@ This will also be a contact point to my freelance activity contact web site.
 * [Webpack-4](https://v4.webpack.js.org/) bundler tool
   * autoprefixer builder plugin for CSS facility
 * [dotenv](https://www.npmjs.com/package/dotenv) to use files ".env" to embed config and secrets (to not update on version server)
+* [i18next](https://www.i18next.com/) to get server side internationalization from translated entries
 
 ### Frontend (client side)
 
@@ -32,6 +33,8 @@ This will also be a contact point to my freelance activity contact web site.
 * Bootstrap-4 UI stylesheet framework with [react-bootstrap](https://react-bootstrap.github.io/)
 * Fontawesome fonts and icons with [@fontawesome/react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
 * [SweetAlert2](https://sweetalert2.github.io/) nice dialog modal customized
+* [ReactSVG](https://github.com/tanem/react-svg) print svg vector image files with React.js Component
+* [React-i18next](https://react.i18next.com/) to get internationalization from translated entries
 
 ## DevOps part
 

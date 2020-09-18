@@ -1,7 +1,7 @@
 import Crypto from 'crypto'
 import Swal from 'sweetalert2'
 import { unlock_email_text } from '../../Views/helpers/config'
-import { validateAccount } from '../../Controllers/user/authenticate-api'
+import { validateAccount, updateEmail, updatePassword } from '../../Controllers/user/authenticate-api'
 
 const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
@@ -31,18 +31,36 @@ const validatePassword = (password) => {
     return [ error, passwordValidated ]
 }
 
-const sendEmailLinkToValidate = (username, htmlText, emailSuccess, emailFailed) => {    
-    const validation = (user_name) => {
-        validateAccount(user_name) 
-            .then(response => { 
-                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
-                else fireError('Failed to send email', response.error) } )
-            .catch(error => fireError(error.name, error.message))
+const sendEmailLinkToValidate = (what, username, htmlText, emailSuccess, emailFailed) => {    
+    const validation = (user_name, type) => {
+        switch (type) {
+            case 'newAccount':
+                validateAccount(user_name) 
+                    .then(response => { 
+                        if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                        else fireError('Failed to send email', response.error) } )
+                    .catch(error => fireError(error.name, error.message))
+                break
+            case 'updateEmail':
+                updateEmail(user_name)
+                    .then(response => { 
+                        if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                        else fireError('Failed to send email', response.error) } )
+                    .catch(error => fireError(error.name, error.message))
+                break
+            case 'updatePassword':
+                updatePassword(user_name)
+                    .then(response => { 
+                        if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
+                        else fireError('Failed to send email', response.error) } )
+                    .catch(error => fireError(error.name, error.message))
+                break
+        }
     }
     Swal.fire({ title: 'Singup process success', html:  htmlText, icon:  'warning', 
                 showCancelButton: true, cancelButtonText: "go Home",
                 confirmButtonText: "Send email with link to validate" } )
-        .then(result => (result.value) ? validation(username) : emailFailed() ) 
+        .then(result => (result.value) ? validation(username, what) : emailFailed() ) 
 }
 
 const emailHasBeenSent = (success, failed, htmlText) => {

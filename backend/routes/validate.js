@@ -33,7 +33,6 @@ router.post('/:ticket', jsonParser, (req, res) => {
 } )
 
 /* POST to send email to validate new user */
-
 router.post('/', jsonParser, (req, res) => {
     const username = req.body.username
     User.findOne({username: username}, (err, user) => {
