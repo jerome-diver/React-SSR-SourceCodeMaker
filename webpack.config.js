@@ -22,17 +22,19 @@ var config = {
                             reloadAll: true }
                     } ,
                     'css-loader', 'sass-loader' ] },
-            {   test: /\.(png|jpe?g|gif|ico)$/i,
+            {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
+                exclude: [/node_modules/],
                 use: [ {
                     loader: 'file-loader',
                     options: {
-                        name: '[md5:hash:hex].[ext]',
+                        name: '[name].[ext]',
                         publicPath: '/img',
                         outputPath: 'img'
                     }
                 } ],
             },
             {   test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                exclude: [/img/],
                 use: [
                 {
                     loader: 'file-loader',

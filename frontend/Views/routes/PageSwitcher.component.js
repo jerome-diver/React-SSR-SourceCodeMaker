@@ -12,6 +12,7 @@ import Admin from '../Pages/private/Admin.component'
 import Profile from '../Pages/private/Profile.component'
 import Validate from '../Pages/public/Validate.component'
 import SetupPassword from '../Pages/public/SetupPassword.component'
+import SetupLanguage from '../Pages/public/SetupLanguage.component'
 
 const PageSwitcher = (props) => {
   const { getUser, getRole } = useAuthenticate()
@@ -29,6 +30,7 @@ const PageSwitcher = (props) => {
         <PrivateRoute path="/signout" component={(props) => <Sign {...props} action="out" />}/>
         <Route path="/validate/:username/:token/:ticket" component={Validate}/>
         <Route path="/setup_password/:id/:ticket" component={SetupPassword}/>
+        <Route path="/i18n/:lang" component={SetupLanguage}/>
       </Switch>
   )
 }
