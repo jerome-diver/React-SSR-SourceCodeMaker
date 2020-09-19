@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Navigation from './Views/routes/Navigation.component'
 import PageSwitcher from './Views/routes/PageSwitcher.component'
 import { useCookies } from 'react-cookie'
 import './stylesheet/menu.sass'
 import { AuthenticateContext } from './Controllers/context/authenticate'
-import { cookie } from 'express-validator'
 
 const App = (props) => {
   const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
@@ -21,7 +20,6 @@ const App = (props) => {
       console.log("Reset session cookie")
       removeCookies('session') }
   }
-
   const getUser = () => { if (cookies.session) return cookies.session.user }
   const getRole = () => { if (cookies.session) return cookies.session.role }
 

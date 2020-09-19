@@ -1,0 +1,26 @@
+{
+  "general": {
+    "loading": "Loading..."
+  },
+  "profile": {
+    "edit_profile_text": "You can edit your profile there but you will have then to indicate your password and confirm it to apply.",
+    "email_button": "eMail",
+    "email_button_tooltip": "Click to be able to modify email address, and read instructions to apply update process.",
+    "email_correct_error": "Please choose a valid email syntax",
+    "email_helper": "In case of email modification, youwill receipt an email in this mail box with a link to confirm within 2 days to apply update changed.",
+    "username_label": "Username",
+    "username_correct_error": "username should be unique and up to 3 chars long.",
+    "username_helper": "Your username can be used to login, then choose a nice one and write it on your private notebook.",
+    "first_name_label": "First name",
+    "first_name_correct_error": "Your first name should be acceptable.",
+    "second_name_label": "Second name",
+    "second_name_correct_error": "Your second name should be acceptable.",
+    "password_button": "Password",
+    "password_button_tooltip": "Click to be able to update your password, then follow instructions to apply update.",
+    "password_placeholder": "Write password there",
+    "password_helper": "Password doesn't print for safety reason. You can modify it by first click the button upper...",
+    "submit": "Apply update",
+    "account_enable": "Account enable",
+    "account_disable": "Account disable"
+  }
+}

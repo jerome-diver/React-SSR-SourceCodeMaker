@@ -6,6 +6,7 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faUserEdit, faAddressCard, faFolder, faHome, 
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
+import i18n from '../../../backend/i18n'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
@@ -27,13 +28,18 @@ const I18nSelector = (props) => {
 
     useEffect(() => {
       console.log("---I18nSelector useEffect loop for", flagSelected)
-    })
-
-    const titleFlag = () => {
-      return (
-        <img src={selected} height='20px' />
-      )
-    }
+      switch(flagSelected) {
+        case FlagFR:
+          i18n.changeLanguage('fr')
+          break
+        case FlagUK:
+          i18n.changeLanguage('en')
+          break
+        case FlagUS:
+          i18n.changeLanguage('us')
+          break
+      }
+    },[flagSelected])
 
     return (<>
         <NavDropdown title={<img src={flagSelected} height='20px' />} id="basic-nav-dropdown">

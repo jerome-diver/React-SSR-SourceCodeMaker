@@ -3,9 +3,11 @@ const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
+const i18nextMiddleware = require('i18next-express-middleware')
 require('dotenv').config('../')
 import { agenda, agenda_schedule } from './controllers/schedule'
 import { db, init_db } from './controllers/database'
+import i18n from './i18n'
 
 var app = express()
 //app.set('trust proxy', 1)   // NGINX proxy web server requirement
@@ -32,6 +34,7 @@ const validateEmailRouter = require('./routes/validate')
 const rolesRouter = require('./routes/roles')
 const authRouter = require('./routes/authenticate')
 
+app.use(i18nextMiddleware.handle(i18n))
 app.use(favicon("./backend/img/favicon.ico"))   // add icon on tab browser
 app.use(cookieParser())                         // parse Cookies to router
 app.set('views', 'backend/views')               // template views location

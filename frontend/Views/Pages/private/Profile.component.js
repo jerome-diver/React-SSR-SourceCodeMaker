@@ -9,6 +9,7 @@ import '../../../stylesheet/users.sass'
 import { canChangeEmail, validatePassword, cypher } from '../../../Controllers/user/user-form-helper'
 import { update } from '../../../Controllers/user/action-CRUD'
 import parse from 'html-react-parser'
+import { useTranslation } from 'react-i18next'
 
 const userReducer = (state, action) => {
     return { 
@@ -40,6 +41,7 @@ const prepareCleanUser = (clean_user) => {
 const Profile = (props) => {
     console.log("--- Profile.component start function point")
     const { userProfile, userRole } = props
+    const { t } = useTranslation()
     const { getUser, getRole, setSession } = useAuthenticate()
     const [ role, setRole ] = useState(getRole())
     const [ validated, setValidated ] = useState(false)
@@ -121,12 +123,12 @@ const Profile = (props) => {
     )
     const changeEmailTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            I will send an email with a link to this address and you will have 2 days to validate your choice by click on the link.
+            {t('profile.email_button_tooltip')}
         </Tooltip>
     )
     const changePasswordTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            Change your password
+            {t('profile.password_button_tooltip')}
         </Tooltip>
     )
 
@@ -150,48 +152,48 @@ const Profile = (props) => {
                     <Card.Body>
                         <Form onSubmit={clickSubmit} noValidate validated={validated}>
                             <Card.Title>
-                                <Badge variant={accountState.color}> account {accountState.status}</Badge>
+                                <Badge variant={accountState.color}>{accountState.status}</Badge>
                             </Card.Title>
                             <Card.Subtitle className='mb-2 text-muted' />
-                            <Card.Text>You can edit your profile there but you will have then to indicate your password and confirm it to apply.</Card.Text>
+                            <Card.Text>{t('profile.edit_profile_text')}</Card.Text>
                             <Form.Group controlId="formEmail">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changeEmailTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>Email</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>{t('profile.email_button')}</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Control type='email' readOnly={emailReadOnly} defaultValue={user.form.email} onChange={handleChange('email')} />
-                                <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
-                                <Form.Text className='text-muted'>Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
+                                <Form.Control.Feedback type="invalid">{t('profile.email_correct_error')}</Form.Control.Feedback>
+                                <Form.Text className='text-muted'>{t('profile.email_helper')} Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formText">
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>{t('profile.username_label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.username} onChange={handleChange('username')} />
-                                <Form.Control.Feedback type="invalid">Please choose a valid username.</Form.Control.Feedback>
-                                <Form.Text className="text-muted">he is unique there...</Form.Text>
+                                <Form.Control.Feedback type="invalid">{t('profile.username_correct_error')}</Form.Control.Feedback>
+                                <Form.Text className="text-muted">{t('profile.username_helper')}</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formFirstName">
-                                <Form.Label>First name</Form.Label>
+                                <Form.Label>{t('profile.first_name_label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.first_name} onChange={handleChange('first_name')} />
-                                <Form.Control.Feedback type="invalid">Please choose a valid family name.</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">{t('profile.first_name_correct_error')}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSecondName">
-                                <Form.Label>Second name</Form.Label>
+                                <Form.Label>{t('profile.second_name_label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.second_name} onChange={handleChange('second_name')} />
+                                <Form.Control.Feedback type="invalid">{t('profile.second_name_correct_error')}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formPassword">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changePasswordTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changePassword}>Password</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changePassword}>{t('profile.password_button')}</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
-                                <Form.Control type='password' placeholder='password' onChange={handleChange('password')} />
-                                <Form.Control.Feedback type="invalid">Please choose a valid second name.</Form.Control.Feedback>
-                                <Form.Text className='text-muted'>total of 8 chars minimum, include: 1 or more number and special chars</Form.Text>
+                                <Form.Control type='password' placeholder={t('profile.password_placeholder')} onChange={handleChange('password')} />
+                                <Form.Text className='text-muted'>{t('profile.password_helper')}</Form.Text>
                             </Form.Group>
                             <Card.Link>
                                 <Button type='submit' variant="warning" disabled={userNotChanged}>
-                                    <FontAwesomeIcon icon={faUserCheck} /> Apply
+                                    <FontAwesomeIcon icon={faUserCheck} /> {t('profile.submit')}
                                 </Button>
                             </Card.Link>
                         </Form>
@@ -204,7 +206,7 @@ const Profile = (props) => {
             <Messenger message={message} setMessage={setMessage} />
             <Alert variant='info'>
                 <Spinner animation='border' role='status'/>
-                <p>Loading...</p>
+                <p>{t('general.loading')}</p>
             </Alert>
         </>)
     }

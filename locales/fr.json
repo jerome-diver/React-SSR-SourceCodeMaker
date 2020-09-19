@@ -1,0 +1,26 @@
+{
+  "general": {
+    "loading": "Chargement..."
+  },
+  "profile": {
+    "edit_profile_text": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte.",
+    "email_button": "email",
+    "email_button_tooltip": "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
+    "email_correct_error": "Choisissez une adresse email avec une syntaxe correcte",
+    "email_helper": "SI vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir.",
+    "username_label": "Nom d'utilisateur",
+    "username_correct_error": "Le nom d'utilisateur doit être unique et comporter plus de 3 caractères.",
+    "username_helper": "Vôtre nom d'utilisateur sert aussi à vous connecter, trouvez en un original et notez-le en secret.",
+    "first_name_label": "Nom de famille",
+    "first_name_correct_error": "Vôtre nom de famille doit être acceptable.",
+    "second_name_label": "Prénom",
+    "second_name_correct_error": "Vôtre prénom doit être acceptable.",
+    "password_button": "Mot de passe",
+    "password_button_tooltip": "Cliquez pour pouvoir modifiez vôtre mot de passe, puis suivez les instuctions pour le mettre à jour.",
+    "password_placeholder": "Écrivez ici le mot de passe",
+    "password_helper": "Le mot de passe ne s'affiche pas, seul vous le connaissez. Vous pouvez le changer en cliquant sur le bouton du haut...",
+    "submit": "Validez la mise à jour",
+    "account_enable": "Compte actif",
+    "account_disable": "Compte inactif"
+  }
+}

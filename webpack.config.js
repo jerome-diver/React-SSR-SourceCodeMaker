@@ -22,6 +22,17 @@ var config = {
                             reloadAll: true }
                     } ,
                     'css-loader', 'sass-loader' ] },
+            {   test: /\.json$/,
+                exclude: [/node_modules/],
+                use: [ { 
+                  loader: 'file-loader',
+                  options: {
+                    name: '[name].[ext]',
+                    publicPath: '/locales',
+                    outputPath: 'locales'
+                  }
+                } ],
+            },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
                 exclude: [/node_modules/],
                 use: [ {
