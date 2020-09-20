@@ -11,11 +11,11 @@ import i18n from '../i18n'
 router.get('*', function(req, res) {
     const context = {}
     const appContent = renderToString(
-        <I18nextProvider i18n={i18n}>
-            <StaticRouter location={req.url} context={context}>
+        <StaticRouter location={req.url} context={context}>
+            <I18nextProvider i18n={i18n}>
                 <App />
-            </StaticRouter>
-        </I18nextProvider>
+            </I18nextProvider>
+        </StaticRouter>
         )
     if(context.url) {
         res.writeHead(301, { Location: context.url })

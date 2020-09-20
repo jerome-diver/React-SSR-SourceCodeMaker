@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { Suspense, lazy, useState, useEffect, useReducer } from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { NavLink, Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,7 +6,7 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faUserEdit, faAddressCard, faFolder, faHome, 
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
-import i18n from '../../../backend/i18n'
+import { useTranslation } from 'react-i18next'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
@@ -25,6 +25,7 @@ const reducer = (state, action) => {
 const I18nSelector = (props) => {
     const { selected } = props
     const [ flagSelected, setFlagSelected ] = useState(selected)
+    const { i18n } = useTranslation()
 
     useEffect(() => {
       console.log("---I18nSelector useEffect loop for", flagSelected)
@@ -52,49 +53,52 @@ const I18nSelector = (props) => {
 
 const UserRoleEntries = (props) => {
 
-  const { role } = props
+    const { role } = props
+    const { t } = useTranslation()
 
-  console.log("Sub-menu role, role is:", role)
-  
-  switch (role) {
-    case 'Admin':
-      return (
-        <>
-            <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserTie}/> Admin</NavLink>
-            <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
-        </>
-      )
-      break
-    default:
-      return (<></>)
-  }
+    console.log("Sub-menu role, role is:", role)
+    
+    switch (role) {
+      case 'Admin':
+        return (
+          <>
+              <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
+                <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.admin')}</NavLink>
+              <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
+                <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
+          </>
+        )
+        break
+      default:
+        return (<></>)
+    }
 }
 
 const UserLoggedEntries = (props) => {
-  const { username, role } = props
+
+    const { username, role } = props
+    const { t } = useTranslation()
   
-  console.log("Sub-menu users, username is:", username)
-  if (username) {
-    return (
-      <>
-        <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
-          <FontAwesomeIcon icon={faUserEdit}/> Profile</NavLink>
-        <UserRoleEntries role={role} />
-        <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
-          <FontAwesomeIcon icon={faUserTie}/> Sign out</NavLink>
-      </>
-    ) 
-  } else {
-    return (
-      <>
-        <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-          <FontAwesomeIcon icon={faSignInAlt}/> Sign in</NavLink>
-        <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-          <FontAwesomeIcon icon={faUserPlus}/> Sign up</NavLink>
-      </>
-    )
+    console.log("Sub-menu users, username is:", username)
+    if (username) {
+      return (
+        <>
+          <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.profile')}</NavLink>
+          <UserRoleEntries role={role} />
+          <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.signout')}</NavLink>
+        </>
+      ) 
+    } else {
+      return (
+        <>
+          <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.signin')}</NavLink>
+          <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.signup')}</NavLink>
+        </>
+      )
   }
 }
 
@@ -103,6 +107,7 @@ const Navigation = (props) => {
     const { getUser, getRole } = useAuthenticate()
     const [ session, dispatch ] = useReducer(reducer, {username: '', role: ''})
     const [ flagSelected, setFlagSelected ] = useState(FlagUK)
+    const { t } = useTranslation()
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole()})
@@ -110,25 +115,24 @@ const Navigation = (props) => {
 
   return (
     <>
-      <Navbar expand="lg" bg="dark" fg="light" fixed="top">
-        <Navbar.Brand href="">SourceCodeMaker</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
-              <FontAwesomeIcon icon={faHome}/> Home</Nav.Link>
-            <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
-              <FontAwesomeIcon icon={faFolder}/> Subjects</Nav.Link>
-            <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
-              <FontAwesomeIcon icon={faAddressCard}/> Contact</Nav.Link>
-            <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> Users</span>} id="basic-nav-dropdown">
-              <UserLoggedEntries username={session.username} 
-                                 role={session.role} />
-            </NavDropdown>
-            <I18nSelector selected={flagSelected} />
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+        <Navbar expand="lg" bg="dark" fg="light" fixed="top">
+          <Navbar.Brand href="">SourceCodeMaker</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
+                <FontAwesomeIcon icon={faHome}/> {t('nav_bar.home')}</Nav.Link>
+              <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
+                <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.subjects')}</Nav.Link>
+              <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
+                <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
+              <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user_main')}</span>} id="basic-nav-dropdown">
+                <UserLoggedEntries username={session.username} role={session.role} />
+              </NavDropdown>
+              <I18nSelector selected={flagSelected} />
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
     </>
   )
 }

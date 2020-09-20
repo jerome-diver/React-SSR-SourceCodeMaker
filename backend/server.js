@@ -34,6 +34,11 @@ const validateEmailRouter = require('./routes/validate')
 const rolesRouter = require('./routes/roles')
 const authRouter = require('./routes/authenticate')
 
+/* if (process.env.NODE_ENV !== 'production') {
+  const { applyServerHMR } = require('i18next-hmr/server');
+  applyServerHMR(i18n);
+} */
+
 app.use(i18nextMiddleware.handle(i18n))
 app.use(favicon("./backend/img/favicon.ico"))   // add icon on tab browser
 app.use(cookieParser())                         // parse Cookies to router

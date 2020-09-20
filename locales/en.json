@@ -22,5 +22,17 @@
     "submit": "Apply update",
     "account_enable": "Account enable",
     "account_disable": "Account disable"
+  },
+  "nav_bar": {
+    "home": "Home",
+    "subjects": "Subjects",
+    "contacts": "Contacts",
+    "user_main": "User",
+    "users_list": "Users list",
+    "profile": "Profile",
+    "signout": "Sign Out",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "admin": "Administrate"
   }
 }

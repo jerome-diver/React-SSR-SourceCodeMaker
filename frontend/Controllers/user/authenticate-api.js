@@ -78,4 +78,14 @@ const validateAccount = async (username) => {
     } catch(error) { return{error: error} }
 }
 
+const updateEmail = async (username) => {
+    try {
+        let response = await fetch('', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify( {username: username} ) } )
+        return response.json() 
+    } catch(error) { return{error: error} }
+}
+
 export { signin, signout, setupPassword, validatePassword, validateAccount, updatePassword }

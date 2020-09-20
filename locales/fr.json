@@ -22,5 +22,17 @@
     "submit": "Validez la mise à jour",
     "account_enable": "Compte actif",
     "account_disable": "Compte inactif"
+  },
+  "nav_bar": {
+    "home": "Accœuil",
+    "subjects": "Sujets",
+    "contacts": "Contacts",
+    "user_main": "Utilisateur",
+    "users_list": "Utilisateurs",
+    "profile": "Profile",
+    "signout": "Déconnexion",
+    "signin": "Connexion",
+    "signup": "S'enregistrer",
+    "admin": "Administration"
   }
 }
