@@ -2,6 +2,7 @@ import Crypto from 'crypto'
 import Swal from 'sweetalert2'
 import { unlock_email_text } from '../../Views/helpers/config'
 import { validateAccount, updateEmail, updatePassword } from '../../Controllers/user/authenticate-api'
+import i18n from '../../../backend/i18n'
 
 const cypher = (password) => {
     return Crypto.createHash('sha256').update(password).digest('hex')
@@ -71,9 +72,12 @@ const emailHasBeenSent = (success, failed, htmlText) => {
 }
 
 const canChangeEmail = (unlock, lock) => {
-    Swal.fire({ title: 'Process to change email', html: unlock_email_text, icon: 'warning',
-                showCancelButton: true, cancelButtonText: "Cancel email edit",
-                confirmButtonText: 'Unlock edit email'} )
+    Swal.fire({ title: i18n.t('fire_dialog.email_change_title'), 
+                html: i18n.t('fire_dialog.email_change_text'),
+                icon: 'warning',
+                showCancelButton: true, 
+                cancelButtonText: i18n.t('fire_dialog.email_change_button_cancel'),
+                confirmButtonText: i18n.t('fire_dialog.email_change_button_ok')} )
         .then(result => (result.value) ? unlock() : lock() )
 }
 

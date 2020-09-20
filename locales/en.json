@@ -21,7 +21,14 @@
     "password_helper": "Password doesn't print for safety reason. You can modify it by first click the button upper...",
     "submit": "Apply update",
     "account_enable": "Account enable",
-    "account_disable": "Account disable"
+    "account_disable": "Account disable",
+    "role_can_edit": "Edit role",
+    "role_can_not_edit": "Can not edit role",
+    "role_admin_only": "Administrator only can edit role",
+    "modal": {
+      "title_success": "Updated user",
+      "text_success": "Successfuly updated user"
+    }
   },
   "nav_bar": {
     "home": "Home",
@@ -34,5 +41,12 @@
     "signin": "Sign In",
     "signup": "Sign Up",
     "admin": "Administrate"
+  },
+  "fire_dialog": {
+    "email_change_text": "<p>You can edit email, but you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
+    "email_change_title": "Process to change email",
+    "email_change_button_ok": "Unlock edit mail",
+    "email_change_button_cancel": "Cancel email edit"
   }
+
 }

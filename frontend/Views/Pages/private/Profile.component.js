@@ -20,7 +20,7 @@ const userReducer = (state, action) => {
 
 const messageReducer = (state, action) => {
     return {
-        message: (action.message) ? action.message : state.message,
+        text: (action.message) ? action.message : state.message,
         state: (action.message) ? true : false
     }
 }
@@ -74,21 +74,22 @@ const Profile = (props) => {
             console.log("Submit clicked", message, user)
             if (user.form.password) {
                 const [ haveError, validated ] = validatePassword(user.form.password)
-                if (haveError) setMessage( {message: haveError} )
+                if (haveError) setMessage( {text: haveError} )
                 else if (validated) {
                     const password = cypher(user.form.password)
                     const parsedUser = prepareCleanUser(user.form)
                     update(parsedUser, password, user.session.id)
                         .then(response => {
                             setLoaded(true)
-                            if (response.error) setMessage( {message: response.error} )
+                            if (response.error) setMessage( {text: response.error} )
                             else {
-                                setMessage( {message: {name: 'Updated user', message: "User update success."}})
                                 setUser({session: washUser(response.user), form: washUser(response.user)})
                                 setSession(response)
-                                 }
+                                setMessage( {text: {name: t('profile.modal.title_success'), 
+                                                    message: t('profile.modal.text_success')}})
+                            }
                 } ) }
-            } else setMessage( {message: {name:'missing field', message: 'You have to inform a password to update something'} } )
+            } else setMessage( {text: {name:'missing field', message: 'You have to inform a password to update something'} } )
         }
         setValidated(true)
     }
@@ -118,7 +119,7 @@ const Profile = (props) => {
     }
     const roleTooltip = (props) => (
         <Tooltip id="role-tooltip" {...props}>
-            {(role.name === "Admin") ? 'Change role' : 'Only admin can modify role'}
+            {(role.name === "Admin") ? t('profile.role_can_edit') : t('profile.role_admin_only')}
         </Tooltip>
     )
     const changeEmailTooltip = (props) => (
@@ -220,10 +221,10 @@ const Messenger = (props) => {
     return (<>
             <Modal show={message.state}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Failed to login with {message.message.name}</Modal.Title>
+                    <Modal.Title>{message.text.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Alert variant='error'>{parse(`${message.message.message}`)}</Alert>
+                    <Alert variant='error'>{parse(`${message.text.message}`)}</Alert>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={closeModal}>OK</Button>
