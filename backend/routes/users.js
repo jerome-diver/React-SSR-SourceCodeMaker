@@ -81,7 +81,6 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
 } )
 
 /* PUT update user */
-
 router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
     const decoded_token = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
     const user_form = req.body.user

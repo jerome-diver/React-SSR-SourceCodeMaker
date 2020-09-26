@@ -1,6 +1,17 @@
 {
+  "head": {
+    "title": "Source Code Maker (infos)",
+    "meta": {
+      "name": "Source Code Maker (infos) by freelanc web site",
+      "content": "Let me show you example of my job's done and feel welcome to hire me up there."
+    }
+  },
   "general": {
     "loading": "Loading..."
+  },
+  "home": {
+    "title": "Description",
+    "content": "<p>Welcome to my web site.</p><p>My name is Jérôme Lanteri and i'm french dev freelance. This web site is build with Express.js backend simple framework and React.js frontend framework.</p><p>I can also build other backend code with Ruby (Rails-5 framework) or Python-3 (Flask or Django-3 framework). I can link them as you want with any ORM database (MySQL/MariaDB, Postgresql, MongoDB).</p><p> I can install your web site on a remote server for you on Nginx http server</p>"
   },
   "profile": {
     "edit_profile_text": "You can edit your profile there but you will have then to indicate your password and confirm it to apply.",
@@ -47,6 +58,24 @@
     "email_change_title": "Process to change email",
     "email_change_button_ok": "Unlock edit mail",
     "email_change_button_cancel": "Cancel email edit"
+  },
+  "sanitizer": {
+    "backend": {
+      "username_missing": "You have to use a username",
+      "username_empty": "Username field can not be empty",
+      "email_missing": "You should inform an email",
+      "email_empty": "The email field can not be empty",
+      "email_valid": "Email is not valid",
+      "password_missing": "You have to inform a password",
+      "password_minimum": "Password have to contain minimum 8 characters",
+      "password_number": "Password have to contain a least one number",
+      "password_special": "Password have to contain at least one of this special character: [\/)]}@?.!+-*]",
+      "id_missing": "ID is missing",
+      "id_empty": "ID is empty"
+    },
+    "frontend": {
+      "password_missing_title": "Missing field",
+      "password_missing_text": "Password have to be set."
+    }
   }
-
 }

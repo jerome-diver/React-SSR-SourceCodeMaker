@@ -1,28 +1,30 @@
-import { check, validationResult } from 'express-validator'
-import validator from 'validator'
+import { check } from 'express-validator'
+import { i18n } from '../i18n'
 
 const checkNewUser = [
     check('username')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.username_missing'))
       .not()
       .isEmpty()
-      .withMessage('IS_EMPTY'),
+      .withMessage(i18n.t('sanitizer.backend.username_empty')),
     check('email')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.email_missing'))
       .not()
       .isEmpty()
-      .withMessage('IS_EMPTY')
+      .withMessage(i18n.t('sanitizer.backend.email_empty'))
       .isEmail()
-      .withMessage('EMAIL_IS_NOT_VALID'),
+      .withMessage(i18n.t('sanitizer.backend.email_valid')),
     check('password')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.password_missing'))
       .isLength({ min: 8 })
-      .withMessage('PASSWORD_TOO_SHORT_MIN_8')
+      .withMessage(i18n.t('sanitizer.backend.password_minimum'))
       .matches(/\d/)
-      .withMessage('Password should have number inside')
+      .withMessage(i18n.t('sanitizer.backend.password_number'))
+      .matches(/[\/\\\.\@\!\:\;\,\+\-\*\}\]\)]/)
+      .withMessage(i18n.t('sanitizer.backend.password_special'))
 ]
   
   /**
@@ -31,22 +33,22 @@ const checkNewUser = [
  const checkUpdateUser = [
     check('username')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.username_missing'))
       .not()
       .isEmpty()
-      .withMessage('IS_EMPTY'),
+      .withMessage(i18n.t('sanitizer.backend.username_empty')),
     check('email')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.email_missing'))
       .not()
       .isEmpty()
-      .withMessage('IS_EMPTY'),
+      .withMessage(i18n.t('sanitizer.backend.email_empty')),
     check('id')
       .exists()
-      .withMessage('MISSING')
+      .withMessage(i18n.t('sanitizer.backend.id_missing'))
       .not()
       .isEmpty()
-      .withMessage('IS_EMPTY'),
+      .withMessage(i18n.t('sanitizer.backend.id_empty')),
 ]
   
   /**

@@ -20,8 +20,8 @@ const userReducer = (state, action) => {
 
 const messageReducer = (state, action) => {
     return {
-        text: (action.message) ? action.message : state.message,
-        state: (action.message) ? true : false
+        text: (action.text) ? action.text : state.text,
+        state: (action.text) ? true : false
     }
 }
 
@@ -52,7 +52,7 @@ const Profile = (props) => {
     const [ userNotChanged, setUserNotChanged ] = useState(true)
     const [ loaded, setLoaded ] = useState(false)
     const [ emailReadOnly, setEmailReadOnly ] = useState(false)
-    const [ message, setMessage ] = useReducer(messageReducer, { message: {}, state: false })
+    const [ message, setMessage ] = useReducer(messageReducer, { text: {}, state: false })
 
     useEffect( () => {
         console.log("--- Profile.component useEffect")
@@ -60,7 +60,7 @@ const Profile = (props) => {
         if (!user.session) setUser({session: clean_user})
         setAccountState(accountEnabled(user.form.validated)) 
         setLoaded(true)
-    }, [user] )
+    }, [user, message] )
   
     const clickSubmit = (e) => { // should update user if form entries are conform
         setLoaded(false)
@@ -89,7 +89,8 @@ const Profile = (props) => {
                                                     message: t('profile.modal.text_success')}})
                             }
                 } ) }
-            } else setMessage( {text: {name:'missing field', message: 'You have to inform a password to update something'} } )
+            } else setMessage( {text: {name:t('sanitizer.frontend.password_missing_title'), 
+                                       message: t('sanitizer.frontend.password_missing_text')} } )
         }
         setValidated(true)
     }

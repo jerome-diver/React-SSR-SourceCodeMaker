@@ -1,6 +1,17 @@
 {
+  "head": {
+    "title": "SourceCode Maker (infos)",
+    "meta": {
+      "name": "Source Code Maker (infos) mon site auto-entrepreneur",
+      "content": "Voici un exemple de ce que je peux faire pour vous et donnez moi un travail, cela sera ma mission dans les jours à venir."
+    }
+  },
   "general": {
     "loading": "Chargement..."
+  },
+  "home": {
+    "title": "Description",
+    "content": "<p>Bienvenue sur mon site web.</p><p>Mon nom est Jérôme Lanteri, je suis un informaticien français en status d'auto-entrepreneur (micro-entreprise).</p><p>Mon site est construit avec du code Javascript et avec un serveur Express et un code côté client avec React.</p><p>Je peux aussi construire un site avec du code Python (Django ou Flask) ou du code Ruby (RubyOnRails).i</p><p>Les bases de données peuvent être MySQL ou Postgresql ou MongoDB. Je peux aussi installer le code du site sur un serveur distant (que je peux commander et installer pour vous, mais aussi maintenir) avec un serveur HTTP Nginx.</p><p>Et bien d'autres choses, il suffit de demander.</p>"
   },
   "profile": {
     "edit_profile_text": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte.",
@@ -32,7 +43,7 @@
     }
   },
   "nav_bar": {
-    "home": "Accœuil",
+    "home": "Acceuil",
     "subjects": "Sujets",
     "contacts": "Contacts",
     "user_main": "Utilisateur",
@@ -48,5 +59,24 @@
     "email_change_title": "Protocole pour changer d'email",
     "email_change_button_ok": "Permettre l'édition",
     "email_change_button_cancel": "Annuler l'édition"
+  },
+  "sanitizer": {
+    "backend": {
+      "username_missing": "Vous devez indiquer un nom d'utilisateur",
+      "username_empty": "Le champ utilisateur est vide, c'est inacceptable",
+      "email_missing": "Vous devez indiquer un email",
+      "email_empty": "Le champ d'email est vide, c'est inacceptable",
+      "email_valid": "Le champ d'email n'est pas valide",
+      "password_missing": "Vous devez indiquer un mot de passe",
+      "password_minimum": "Le mot de passe doit comporter au moins 8 caractères.",
+      "password_number": "Le mot de passe doit comporter au moins un chiffre.",
+      "password_special": "Le mot de passe doit comporter au moins un des caractères spéciaux: [\/)]}@?.!+-*]",
+      "id_missing": "Il n'existe aucun ID",
+      "id_empty": "L'ID est vide"
+    },
+    "frontend": {
+      "password_missing_title": "Champ incomplet",
+      "password_missing_text": "Le mot de passe doit être renseigné"
+    }
   }
 }

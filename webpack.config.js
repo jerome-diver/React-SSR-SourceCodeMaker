@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const mode = (process.env.NODE_ENV === 'dev') ? 'development' : 'production'
 const { I18NextHMRPlugin } = require('i18next-hmr/plugin')
 
-
+/* GENERAL config */
 var config = {
     mode: mode,
     module: {
@@ -41,7 +41,7 @@ var config = {
                 loader: 'file-loader',
                 type: 'javascript/auto',
                 options: {
-                    name: '[name].[ext]',
+                    name: '[folder]/[name].[ext]',
                     publicPath: '/locales',
                     outputPath: 'locales'
                 }
@@ -72,6 +72,7 @@ var config = {
     ],
  }
 
+/* Frontend (client browser with React.js) side config  */
 const clientConfig = Object.assign({}, config, {
     name: "clientReact",
     target: "web",
@@ -85,6 +86,7 @@ const clientConfig = Object.assign({}, config, {
     },
 })
 
+/* Backend (server with Express.js) side config  */
 const serverConfig = Object.assign({}, config, {
     name: "serverExpress",
     target: "node",

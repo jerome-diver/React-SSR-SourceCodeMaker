@@ -5,14 +5,15 @@ import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
 import { I18nextProvider } from 'react-i18next'
 import App from '../../frontend/App'
-import i18n from '../i18n'
 
 /* GET -all- pages. */
 router.get('*', function(req, res) {
     const context = {}
+  //  console.log("---layout router get language:", req.i18n)
+    const language = req.i18n.language
     const appContent = renderToString(
         <StaticRouter location={req.url} context={context}>
-            <I18nextProvider i18n={i18n}>
+            <I18nextProvider i18n={req.i18n}>
                 <App />
             </I18nextProvider>
         </StaticRouter>
@@ -22,10 +23,10 @@ router.get('*', function(req, res) {
         res.end() 
     } else {
         res.render('layout', { 
-        title: 'Source Code Maker (infos)',
-        lang: "en",
-        name: "Source Code maker (infos) my Freelance web site",
-        content: "Let me show you example of my job's done and feel welcome to hire me up there.",
+        title: req.t('head.title'),
+        lang: language,
+        name: req.t('head.meta.name'),
+        content: req.t('head.meta.content'),
         }, (err, html) => {
             res.write(html.replace(
                 /(<div id="root">)(<\/div>)/, 
