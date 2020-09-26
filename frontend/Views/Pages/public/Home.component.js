@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import parse from 'html-react-parser'
+import Loading from './Loading.component'
 
 const Home = (props) => {
   const [home, setHome] = useState({ title: "", content: "" })
@@ -13,7 +14,7 @@ const Home = (props) => {
   useEffect( () => {
       const lang = i18n.language || 'en'
       console.log("--- home get language:", lang)
-      fetch(`http://localhost:3000/api/home/${lang}`)
+      fetch('http://localhost:3000/api/home/')
         .then(res => res.json())
         .then(respond => {
           setHome( { title: respond.title, content: respond.content } )
@@ -28,16 +29,7 @@ const Home = (props) => {
           <div id="home_article">{ parse(`${home.content}`) }</div>
       </>
     )
-  } else {
-    return (
-      <>
-          <Alert variant='info'>
-              <Spinner animation='border' role='status'/>
-              <p>Loading...</p>
-          </Alert>
-      </>
-    )
-  }
+  } else return <><Loading /></>
 }
 
 export default Home

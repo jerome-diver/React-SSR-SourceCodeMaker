@@ -8,6 +8,7 @@ import { validatePassword } from '../../../Controllers/user/user-form-helper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKey, faUserCheck, faUserEdit } from '@fortawesome/free-solid-svg-icons'
 import parse from 'html-react-parser'
+import Loading from './Loading.component'
 
 const reducer = (state, action) => {
     switch (action.validated) {
@@ -131,14 +132,7 @@ const SetupPassword = (props) => {
             </Card> 
         </>)
 
-    } else {
-        return (<>
-                <Alert variant='warning'>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
-                </Alert>
-        </>)
-    }
+    } else return <><Loading/></>
 }
 
 export default SetupPassword

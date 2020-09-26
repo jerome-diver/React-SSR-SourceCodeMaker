@@ -9,6 +9,7 @@ import { fireError, validatePassword,
 import { html_new_user } from '../../Views/helpers/config'
 import { create } from '../../Controllers/user/action-CRUD'
 import { useCookies } from 'react-cookie'
+import Loading from '../Pages/public/Loading.component'
 
 const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
@@ -93,16 +94,7 @@ const SignUp = (props) => {
                 </Card.Footer>
             </Card>
         )
-    } else {
-        return (
-            <>
-                <Alert variant='info'>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
-                </Alert>
-            </>
-        )
-    }
+    } else return <><Loading /></>
 }
 
 export default SignUp

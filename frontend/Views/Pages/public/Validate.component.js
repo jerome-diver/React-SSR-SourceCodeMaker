@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Redirect } from 'react-router-dom'
 import { validatePassword } from '../../../Controllers/user/authenticate-api'
-import { Modal, Alert, Spinner, Button } from 'react-bootstrap'
+import { Modal, Alert, Button } from 'react-bootstrap'
+import Loading from './Loading.component'
 import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
@@ -65,16 +66,7 @@ const Validate = (props) => {
                 </>
             )
         } }
-    else {
-        return (
-            <>
-                <Alert variant='warning'>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
-                </Alert>
-            </>
-        )
-    }
+    else return <><Loading /></>
 }
 
 export default Validate

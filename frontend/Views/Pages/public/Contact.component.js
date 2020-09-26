@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
+import Loading from './Loading.component'
 
 const FormContact = (props) => {
 
@@ -104,16 +105,7 @@ const Contact = (props) => {
         </Modal> 
       </> 
     )
-  } else {
-      return (
-          <>
-            <Alert variant='info'>
-                <Spinner animation='border' role='status'/>
-                <p>Loading...</p>
-            </Alert>
-          </>
-      )
-  }
+  } else return <><Loading /></>
 }
 
 export default Contact

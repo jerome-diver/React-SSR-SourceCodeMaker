@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
 import { Jumbotron, ListGroup, Spinner, Badge, Alert } from 'react-bootstrap'
 import { variant } from '../../helpers/config'
+import Loading from './Loading.component'
 import '../../../stylesheet/users.sass'
 
 const User = (props) => {
@@ -42,15 +43,7 @@ const Users = () => {
   
     switch (load) {
         case 0:     // loading
-            return (
-                <>
-                    <Alert variant='warning'>
-                        <Spinner animation='border' role='status'/>
-                        <p>Loading...</p>
-                    </Alert>
-                </>
-            )
-            break
+            return <><Loading /></>
         case 1:     // loaded
             return (
                 <Jumbotron fluid id="users">
@@ -60,7 +53,6 @@ const Users = () => {
                     </ListGroup>
                 </Jumbotron>
             )
-            break
         case 2:     // failed to load
             return (
                 <>
@@ -71,7 +63,6 @@ const Users = () => {
                     </Alert>
                 </>
             )
-            break
     }
 }
 

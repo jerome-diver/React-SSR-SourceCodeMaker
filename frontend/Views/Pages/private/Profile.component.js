@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { Jumbotron, Card, Form, Spinner, Badge, Tooltip,Modal,
+import { Jumbotron, Card, Form, Badge, Tooltip,Modal,
          Button, Alert, OverlayTrigger } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus, faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
@@ -10,6 +10,7 @@ import { canChangeEmail, validatePassword, cypher } from '../../../Controllers/u
 import { update } from '../../../Controllers/user/action-CRUD'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
+import Loading from '../public/Loading.component'
 
 const userReducer = (state, action) => {
     return { 
@@ -206,10 +207,7 @@ const Profile = (props) => {
     } else {
         return (<>
             <Messenger message={message} setMessage={setMessage} />
-            <Alert variant='info'>
-                <Spinner animation='border' role='status'/>
-                <p>{t('general.loading')}</p>
-            </Alert>
+            <Loading />
         </>)
     }
 }

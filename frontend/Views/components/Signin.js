@@ -10,6 +10,7 @@ import { useCookies } from 'react-cookie'
 import { signin, setupPassword, validateAccount } from '../../Controllers/user/authenticate-api'
 import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
 import validator from 'validator'
+import Loading from '../Pages/public/Loading.component'
 
 const reducer = (state, action) => {
     switch (action.isLogged) {
@@ -140,16 +141,7 @@ const SignIn = (props) => {
                 </Card.Footer>
             </Card> </> 
         ) }
-  } else {
-      return (
-          <>
-                <Alert variant='info'>
-                    <Spinner animation='border' role='status'/>
-                    <p>Loading...</p>
-                </Alert>
-          </>
-      )
-  }
+  } else return <><Loading /></>
 }
 
 const FormIdEntrySelector = (props) => {
