@@ -41,6 +41,38 @@
       "text_success": "Successfuly updated user"
     }
   },
+  "signup": {
+    "title": "Sign up",
+    "header": {
+      "title": "Create your account",
+      "intro": "Come on, let's try to be a wonderful user there in this fantastic web site...",
+      "description": "After to register, you will have to check your email box and click the link to confirm registration to set this account enable"
+    },
+    "email": {
+      "label": "Your email of this account",
+      "placeholder": "enter valid email",
+      "helper": "I will never share your email with anyone else"
+    },
+    "username": {
+      "label": "Your username",
+      "placeholder": "username",
+      "helper": "Username is unique"
+    },
+    "password": {
+      "label": "Your password",
+      "placeholder": "hidden password",
+      "helper": "total of 8 characters minimum, with a number, a special character, low cap and high cap character inside required"
+    },
+    "password_repeat": {
+      "label": "Repeat same password",
+      "placeholder": "same password hidden",
+      "helper": "control that your password entered up there is the same as you would like"
+    },
+    "button_submit": "Create account",
+    "link": {
+      "have_account": "I allready have an account"
+    }
+  },
   "nav_bar": {
     "home": "Home",
     "subjects": "Subjects",

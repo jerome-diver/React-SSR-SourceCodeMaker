@@ -35,6 +35,7 @@ const adminRouter = require('./routes/admin')
 const validateEmailRouter = require('./routes/validate')
 const rolesRouter = require('./routes/roles')
 const authRouter = require('./routes/authenticate')
+const setLanguage = require('./routes/language')
 
 /* if (process.env.NODE_ENV !== 'production') {
   const { applyServerHMR } = require('i18next-hmr/server');
@@ -45,7 +46,7 @@ i18n
   .use(i18nextMiddleWare.LanguageDetector)
   .init({
     ...options,
-    debug: (process.env.NODE_ENV === 'development'),
+    debug: false, //(process.env.NODE_ENV === 'development'),
     backend: { loadPath: './locales/{{lng}}/{{ns}}.json' }
   }, () => {
     app.use(i18nextMiddleWare.handle(i18n))
@@ -59,6 +60,7 @@ i18n
     app.use(express.static('build/public'))          // read dir as public
 //    app.use('/locales', express.static('../locales'))
     // define route to use and action to respond from own defined requests
+    app.use('/api/language', setLanguage)
     app.use('/api/home', homeRouter)
     app.use('/api/auth', authRouter)
     app.use('/api/users', usersRouter)

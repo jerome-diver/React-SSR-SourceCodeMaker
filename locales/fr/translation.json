@@ -39,7 +39,38 @@
     "modal": {
       "title_success": "Utilisateur mis à jour",
       "text_success": "La modification des données utiliseteurs est un succès"
-
+    }
+  },
+  "signup": {
+    "title": "Enregistrement",
+    "header": {
+      "title": "Créer un compte utilisateur",
+      "intro": "Vous allez devenir un heureux utilisateur de ce magnifique site web, souriez !",
+      "description": "Après que vous ayez soumis vos informations, vous recevrez un email contenant un lien à cliquer pour confirmer la création et valider le compte."
+    },
+    "email": {
+      "label": "Vôtre email",
+      "placeholder": "entrez un email valide",
+      "helper": "Je ne donnerais pas vôte email"
+    },
+    "username": {
+      "label": "Nom d'utilisateur",
+      "placeholder": "Entrez un nom unique à retenir",
+      "helper": "Il est vraiment unique ici."
+    },
+    "password": {
+      "label": "Mot de passe",
+      "placeholder": "mot de passe caché",
+      "helper": "Le mot de passe doit contenir au minimum 8 caractères, un chiffre, un caractère minuscule, une majuscule et une caractère spécial."
+    },
+    "password_repeat": {
+      "label": "Répétez le mot de passe",
+      "placeholder": "le mot de passe caché",
+      "helper": "Il doit être identique à celui du haut"
+    },
+    "button_submit": "Créer le compte",
+    "link": {
+      "have_account": "J'ai déjà un compte"
     }
   },
   "nav_bar": {

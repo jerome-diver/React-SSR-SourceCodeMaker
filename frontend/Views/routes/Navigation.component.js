@@ -7,46 +7,86 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
+import { useCookies } from 'react-cookie'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
 
+const getFlagFromLng = (lng) => {
+  switch(lng) {
+    case 'fr':
+      return FlagFR
+    case 'en':
+      return FlagUK
+    case 'us': 
+      return FlagUS
+    default:
+      return FlagUK
+  }
+}
+
+const getLngFromFlag = (flag) => {
+  switch(flag) {
+    case FlagFR:
+      return 'fr'
+    case FlagUK:
+      return 'en'
+    case FlagUS: 
+      return 'en'
+    default:
+      return 'en'
+  }
+}
 
 const reducer = (state, action) => {
   switch (action.user) {
     case undefined:
-      return { user: action.user, username: '', role: '' }
+      return { user: '', username: '', role: '', language: 'en' }
     default:
       return { username: action.user.username,
-               role: action.role.name }
+               role: action.role.name,
+               language: action.language }
   }
 }
 
 const I18nSelector = (props) => {
-    const { selected } = props
-    const [ flagSelected, setFlagSelected ] = useState(selected)
     const { i18n } = useTranslation()
+    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
+    const { setLanguage } = useAuthenticate()
+    const [ flagSelected, setFlagSelected ] = useState(getFlagFromLng(i18n.language))
 
     useEffect(() => {
-      console.log("---I18nSelector useEffect loop for", flagSelected)
-      switch(flagSelected) {
-        case FlagFR:
-          i18n.changeLanguage('fr')
-          break
-        case FlagUK:
-          i18n.changeLanguage('en')
-          break
-        case FlagUS:
-          i18n.changeLanguage('us')
-          break
-      }
+        console.log("--- I18nSelector navigation sub-menu useEffect loop for", flagSelected)
+        const lng = (cookies.session && cookies.session.language) ? cookies.session.language : i18n.language
+        i18n.changeLanguage(lng)
+        setFlagSelected(getFlagFromLng(lng))
     },[flagSelected])
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng)
+        setFlagSelected(getFlagFromLng(lng))
+        setLanguage(lng)
+        fetchLanguage(lng)
+    }
+
+    const fetchLanguage = (lng) => {
+        fetch('/api/language', 
+              {method: 'POST', 
+              headers: {'Accept': 'application/json', 'Content-type': 'application/json'},
+              body: JSON.stringify({language: lng}) })
+             .then(response => response.json())
+             .then(response => {
+                if (response.language) {
+                  console.log("OK, language change done with", response.language)
+                }
+             })
+    }
 
     return (<>
         <NavDropdown title={<img src={flagSelected} height='20px' />} id="basic-nav-dropdown">
-            <Link to='' onClick={() => { setFlagSelected(FlagFR) }} ><img src={FlagFR} height='30px' /></Link>
-            <Link to='' onClick={() => { setFlagSelected(FlagUS) }} ><img src={FlagUS} height='30px' /></Link>
-            <Link to='' onClick={() => { setFlagSelected(FlagUK) }} ><img src={FlagUK} height='30px' /></Link>
+            <Link to='' onClick={() => { changeLanguage('fr') } }><img src={FlagFR} height='30px' /></Link>
+            <Link to='' onClick={() => { changeLanguage('us') } }><img src={FlagUS} height='30px' /></Link>
+            <Link to='' onClick={() => { changeLanguage('en') } } ><img src={FlagUK} height='30px' /></Link>
         </NavDropdown>
     </>)
 }
@@ -56,7 +96,7 @@ const UserRoleEntries = (props) => {
     const { role } = props
     const { t } = useTranslation()
 
-    console.log("Sub-menu role, role is:", role)
+    console.log("--- UserRoleEntries navigation sub-menu role, role is:", role)
     
     switch (role) {
       case 'Admin':
@@ -79,7 +119,7 @@ const UserLoggedEntries = (props) => {
     const { username, role } = props
     const { t } = useTranslation()
   
-    console.log("Sub-menu users, username is:", username)
+    console.log("--- UserLogEntries navigation sub-menu users, username is:", username)
     if (username) {
       return (
         <>
@@ -104,13 +144,15 @@ const UserLoggedEntries = (props) => {
 
 const Navigation = (props) => {
 
-    const { getUser, getRole } = useAuthenticate()
-    const [ session, dispatch ] = useReducer(reducer, {username: '', role: ''})
-    const [ flagSelected, setFlagSelected ] = useState(FlagUK)
+    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
+    const { getUser, getRole, getLanguage } = useAuthenticate()
+    var lng = (cookies.session) ? cookies.session.language : undefined || getLanguage() || 'en'
+    console.log("--- Navigation component, lng is", lng)
+    const [ session, dispatch ] = useReducer(reducer, {username: '', role: '', language: lng})
     const { t } = useTranslation()
 
   useEffect( () => {
-    dispatch({user: getUser(), role: getRole()})
+    dispatch({user: getUser(), role: getRole(), language: getLanguage()})
   }, [getUser()] )
 
   return (
@@ -129,7 +171,7 @@ const Navigation = (props) => {
               <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user_main')}</span>} id="basic-nav-dropdown">
                 <UserLoggedEntries username={session.username} role={session.role} />
               </NavDropdown>
-              <I18nSelector selected={flagSelected} />
+              <I18nSelector />
             </Nav>
           </Navbar.Collapse>
         </Navbar>

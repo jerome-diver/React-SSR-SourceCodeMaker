@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Navigation from './Views/routes/Navigation.component'
 import PageSwitcher from './Views/routes/PageSwitcher.component'
 import { useCookies } from 'react-cookie'
+import { getI18n } from 'react-i18next'
 import './stylesheet/menu.sass'
 import { AuthenticateContext } from './Controllers/context/authenticate'
 
@@ -9,23 +10,30 @@ const App = (props) => {
   const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
 
   useEffect( () => {
-    console.log("APP get useEffect updated")
+      const i18n = getI18n()
+      console.log("--- App language is", i18n.language)
   }, [])
   
-  const setSession = (data) => {  /// data: {user: ___, role: ___]}
+  const setSession = (data) => {  /// data: {user: ___, role: ___, language: ___}
     if(data != 0) {
-      console.log("Define session cookie from", data)
+      console.log("--- App component, Define session cookie from", data)
       setCookies('session', data) }
     else {
-      console.log("Reset session cookie")
+      console.log("--- App component, Reset session cookie")
       removeCookies('session') }
   }
-  const getUser = () => { if (cookies.session) return cookies.session.user }
-  const getRole = () => { if (cookies.session) return cookies.session.role }
+  const setLanguage  = (lng) => {
+      var data = (cookies.session) ? { ...cookies.session, language: lng } : {language: lng}
+      setCookies('session', data)
+  }
+  const getUser = () => { if (cookies.session && cookies.session.user) return cookies.session.user }
+  const getRole = () => { if (cookies.session && cookies.session.role) return cookies.session.role }
+  const getLanguage = () => { if (cookies.session && cookies.session.language) return cookies.session.language }
 
   return (
     <>
-      <AuthenticateContext.Provider value={{ getUser: getUser, getRole: getRole, setSession: setSession }}>
+      <AuthenticateContext.Provider value={{ getUser: getUser, getRole: getRole, getLanguage: getLanguage,
+                                             setSession: setSession, setLanguage: setLanguage }}>
         <header>
           <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>

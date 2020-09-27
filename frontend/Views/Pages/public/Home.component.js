@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, useSSR } from 'react-i18next'
+import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import parse from 'html-react-parser'
 import Loading from './Loading.component'
 
 const Home = (props) => {
+  const { language } = props
   const [home, setHome] = useState({ title: "", content: "" })
   const [load, setLoad] = useState(false)
-  const { i18n } = useTranslation()
 
   useEffect( () => {
-      const lang = i18n.language || 'en'
-      console.log("--- home get language:", lang)
+      console.log("--- Home component, useEffect, get language:", language)
       fetch('http://localhost:3000/api/home/')
         .then(res => res.json())
         .then(respond => {
           setHome( { title: respond.title, content: respond.content } )
           setLoad(true) } )
-  }, [i18n.language] )
+  }, [language] )
 
   if (load) {
     return (

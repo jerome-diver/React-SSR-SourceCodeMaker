@@ -9,14 +9,15 @@ import App from '../../frontend/App'
 /* GET -all- pages. */
 router.get('*', function(req, res) {
     const context = {}
-  //  console.log("---layout router get language:", req.i18n)
-    const language = req.i18n.language
+    const cookie_lng = JSON.parse(req.cookies.session).language
+    req.i18n.changeLanguage(cookie_lng)
+    console.log("=== / layout, GET request, language is", req.i18n.language)
     const appContent = renderToString(
-        <StaticRouter location={req.url} context={context}>
-            <I18nextProvider i18n={req.i18n}>
+        <I18nextProvider i18n={req.i18n}>
+            <StaticRouter location={req.url} context={context}>
                 <App />
-            </I18nextProvider>
-        </StaticRouter>
+            </StaticRouter>
+        </I18nextProvider>
         )
     if(context.url) {
         res.writeHead(301, { Location: context.url })
@@ -24,7 +25,7 @@ router.get('*', function(req, res) {
     } else {
         res.render('layout', { 
         title: req.t('head.title'),
-        lang: language,
+        lang: req.i18n.language,
         name: req.t('head.meta.name'),
         content: req.t('head.meta.content'),
         }, (err, html) => {

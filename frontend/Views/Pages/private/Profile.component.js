@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { Jumbotron, Card, Form, Badge, Tooltip,Modal,
          Button, Alert, OverlayTrigger } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserPlus, faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
+import { faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'

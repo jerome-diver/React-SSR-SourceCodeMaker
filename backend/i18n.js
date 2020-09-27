@@ -35,7 +35,7 @@ const options = {
     defaultNS: 'translation',
     load: 'languageOnly',
     react: { useSuspense: false },
-    wait: process && process.release,
+    wait: process && process.release
   }
 
 /*   if (process.env.NODE_ENV !== 'production') {
