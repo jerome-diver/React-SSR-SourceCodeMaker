@@ -5,8 +5,6 @@ import Home from '../Pages/public/Home.component'
 import Contact from '../Pages/public/Contact.component'
 import Subjects from '../Pages/public/Subjects.component'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
-import { getI18n } from 'react-i18next'
-import { useCookies } from 'react-cookie'
 //import Subject from './public/Subject.component'
 import Users from '../Pages/public/Users.component'
 import Sign from "../Pages/public/Sign.component"
@@ -17,15 +15,9 @@ import SetupPassword from '../Pages/public/SetupPassword.component'
 
 const PageSwitcher = (props) => {
     const { getUser, getRole, getLanguage } = useAuthenticate()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const [ language, setLanguage ] = useState(getLanguage())
-    const i18n = getI18n()
 
     useEffect(() => {
         console.log("--- PageSwitcher component useEffect refresh after i18n.language changed")
-        const lng = (cookies.session && cookies.session.language) ? cookies.session.language : i18n.language
-        i18n.changeLanguage(lng)
-        setLanguage(lng)
     }, [])
 
     return (
