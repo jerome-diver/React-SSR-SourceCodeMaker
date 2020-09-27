@@ -17,13 +17,13 @@ const SignUp = (props) => {
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
     const [submit, setSubmit] = useState(false)
-    const [redirect, setRedirect] = useState('')
+    const [redirect, setRedirect] = useState('signup')
     const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
     
     useEffect( () => {
         setLoad(!submit)
-    }, [submit] )
+    }, [submit, t] )
     
     const handleChange = name => event => { setUser({...user, [name]: event.target.value}) }
     const emailFailed = () => { setRedirect(location.state.from) }
@@ -44,7 +44,8 @@ const SignUp = (props) => {
         } else fireError('Password request failed', 'Not the same password confirmed')
     }
     const renderRedirect = () => { 
-        if (redirect !== '') { return <Redirect to={redirect}/> }
+        console.log("Rich redirection to", redirect)
+        //if (redirect !== '') { return <Redirect to={redirect}/> }
         if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> }
     }
 

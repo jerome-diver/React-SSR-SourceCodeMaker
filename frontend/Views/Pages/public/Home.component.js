@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { useTranslation, useSSR } from 'react-i18next'
-import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import parse from 'html-react-parser'
 import Loading from './Loading.component'
 

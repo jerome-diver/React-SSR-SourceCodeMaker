@@ -58,18 +58,13 @@ const I18nSelector = (props) => {
     useEffect(() => {
         console.log("--- I18nSelector navigation sub-menu useEffect loop for", flagSelected)
         const lng = (cookies.session && cookies.session.language) ? cookies.session.language : i18n.language
-        i18n.changeLanguage(lng)
-        setFlagSelected(getFlagFromLng(lng))
+        changeLanguage(lng)
     },[flagSelected])
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng)
         setFlagSelected(getFlagFromLng(lng))
         setLanguage(lng)
-        fetchLanguage(lng)
-    }
-
-    const fetchLanguage = (lng) => {
         fetch('/api/language', 
               {method: 'POST', 
               headers: {'Accept': 'application/json', 'Content-type': 'application/json'},
@@ -158,22 +153,24 @@ const Navigation = (props) => {
   return (
     <>
         <Navbar expand="lg" bg="dark" fg="light" fixed="top">
-          <Navbar.Brand href="">SourceCodeMaker</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
-                <FontAwesomeIcon icon={faHome}/> {t('nav_bar.home')}</Nav.Link>
-              <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
-                <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.subjects')}</Nav.Link>
-              <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
-                <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
-              <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user_main')}</span>} id="basic-nav-dropdown">
-                <UserLoggedEntries username={session.username} role={session.role} />
-              </NavDropdown>
-              <I18nSelector />
-            </Nav>
-          </Navbar.Collapse>
+            <Navbar.Brand href="">SourceCodeMaker</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                  <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
+                      <FontAwesomeIcon icon={faHome}/> {t('nav_bar.home')}</Nav.Link>
+                  <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
+                      <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.subjects')}</Nav.Link>
+                  <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
+                      <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
+                  <NavDropdown title={<span><FontAwesomeIcon 
+                               icon={faUserCircle}/> {t('nav_bar.user_main')}</span>} 
+                               id="basic-nav-dropdown">
+                      <UserLoggedEntries username={session.username} role={session.role} />
+                  </NavDropdown>
+                  <I18nSelector />
+                </Nav>
+            </Navbar.Collapse>
         </Navbar>
     </>
   )
