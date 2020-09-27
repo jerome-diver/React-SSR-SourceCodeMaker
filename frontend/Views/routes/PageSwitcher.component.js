@@ -30,7 +30,7 @@ const PageSwitcher = (props) => {
 
     return (
         <Switch>
-            <Route exact path="/" component={(props) => <Home language={language} />} />
+            <Route exact path="/" component={Home}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/subjects" component={Subjects}/>
             <PrivateRoute path="/users" component={Users}/>

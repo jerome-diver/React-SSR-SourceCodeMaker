@@ -3,20 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import parse from 'html-react-parser'
 import Loading from './Loading.component'
+import { i18n } from '../../../../backend/i18n'
 
 const Home = (props) => {
-  const { language } = props
   const [home, setHome] = useState({ title: "", content: "" })
   const [load, setLoad] = useState(false)
 
   useEffect( () => {
-      console.log("--- Home component, useEffect, get language:", language)
+      console.log("--- Home component, useEffect, get language:", i18n.language)
       fetch('http://localhost:3000/api/home/')
         .then(res => res.json())
         .then(respond => {
           setHome( { title: respond.title, content: respond.content } )
           setLoad(true) } )
-  }, [language] )
+  }, [i18n.language] )
 
   if (load) {
     return (
