@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import parse from 'html-react-parser'
 import Loading from './Loading.component'
-import { i18n } from '../../../../backend/i18n'
+import { useTranslation } from 'react-i18next'
 
 const Home = (props) => {
+  const { i18n } = useTranslation()
   const [home, setHome] = useState({ title: "", content: "" })
   const [load, setLoad] = useState(false)
 
