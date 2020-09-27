@@ -10,6 +10,7 @@ const Home = (props) => {
   const [load, setLoad] = useState(false)
 
   useEffect( () => {
+      setLoad(false)
       console.log("--- Home component, useEffect, get language:", i18n.language)
       fetch('http://localhost:3000/api/home/')
         .then(res => res.json())
