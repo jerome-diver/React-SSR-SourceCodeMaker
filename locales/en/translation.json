@@ -73,6 +73,37 @@
       "have_account": "I allready have an account"
     }
   },
+  "signin": {
+    "title": "Sign in",
+    "header": {
+      "title": "Authenticte yourself to connect",
+      "intro": "Your user role will give you some magic power (but only there)",
+      "description": "If you failed to connect two times, i will send you an email."
+    },
+    "id_first_word": "Your ",
+    "email": {
+      "label": "email",
+      "placeholder": "enter valid email",
+      "helper": "I will never share your email with anyone else"
+    },
+    "username": {
+      "label": "username",
+      "placeholder": "username",
+      "helper": "Username is unique"
+    },
+    "password": {
+      "label": "Your password",
+      "placeholder": "hidden password",
+      "helper": "You have to provide your secret password"
+    },
+    "button_submit": "Connect",
+    "link": {
+      "no_account": "I don't have an account",
+      "problem": "I have a problem to fix",
+      "validation": "Send validation again",
+      "password_forgotten": "I forget my password"
+    }
+  },
   "nav_bar": {
     "home": "Home",
     "subjects": "Subjects",

@@ -17,7 +17,7 @@ const PageSwitcher = (props) => {
     const { getUser, getRole, getLanguage } = useAuthenticate()
 
     useEffect(() => {
-        console.log("--- PageSwitcher component useEffect refresh after i18n.language changed")
+        console.log("--- PageSwitcher component useEffect")
     }, [])
 
     return (

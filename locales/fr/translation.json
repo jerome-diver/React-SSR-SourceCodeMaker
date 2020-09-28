@@ -73,6 +73,37 @@
       "have_account": "J'ai déjà un compte"
     }
   },
+  "signin": {
+    "title": "Se connecter à son compte",
+    "header": {
+      "title": "S'authentifier pour se connecter",
+      "intro": "Vôtre status du compte peut vous donner des supers pouvoirs (ici seulement, ne rêvez pas)",
+      "description": "Si vous ne parvenez pas à vous connecter par deux fois, un email vous sera envoyé"
+    },
+    "id_first_word": "Vôtre ",
+    "email": {
+      "label": "email",
+      "placeholder": "entrez un email valide",
+      "helper": "Je ne donnerais pas vôte email"
+    },
+    "username": {
+      "label": "nom d'utilisateur",
+      "placeholder": "Entrez un nom unique à retenir",
+      "helper": "Il est vraiment unique ici."
+    },
+    "password": {
+      "label": "Mot de passe",
+      "placeholder": "mot de passe caché",
+      "helper": "Vous devez renseigner vôtre mot de passe secret."
+    },
+    "button_submit": "Se connecter",
+    "link": {
+      "no_account": "Je n'ai pas de compte",
+      "problem": "J'ai un problème à régler",
+      "validation": "Renvoyez l'email de validation",
+      "password_forgotten": "J'ai perdu mon mot de passe"
+    }
+  },
   "nav_bar": {
     "home": "Acceuil",
     "subjects": "Sujets",

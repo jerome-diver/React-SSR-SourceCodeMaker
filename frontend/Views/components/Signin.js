@@ -6,6 +6,7 @@ import { faUserCheck, faMailBulk, faKey } from '@fortawesome/free-solid-svg-icon
 import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
          Collapse, Form, Spinner, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
+import { useTranslation } from 'react-i18next'
 import { useCookies } from 'react-cookie'
 import { signin, setupPassword, validateAccount } from '../../Controllers/user/authenticate-api'
 import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
@@ -30,6 +31,7 @@ const reducer = (state, action) => {
 }
 
 const SignIn = (props) => {
+    const { t } = useTranslation()
     const [ loaded, setLoaded ] = useState(false)
     const [ submit, setSubmit ] = useState(false)
     const [ validated, setValidated ] = useState(false)
@@ -109,33 +111,33 @@ const SignIn = (props) => {
                   </Modal.Footer>
               </Modal>
               <Card id='sign'>
-                <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> Sign in</h2></Card.Header>
+                <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> {t('signin.title')}</h2></Card.Header>
                 <Card.Body>
-                    <Card.Title>Authenticate yourself to connect</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted'>your user role will give you some magic power (but only there)</Card.Subtitle> 
-                    <Card.Text>If you failed to sign in 2 times, an email will be sent to your email box.</Card.Text>
+                    <Card.Title>{t('signin.header.title')}</Card.Title>
+                    <Card.Subtitle className='mb-2 text-muted'>{t('signin.header.intro')}</Card.Subtitle> 
+                    <Card.Text>{t('signin.header.description')}</Card.Text>
                     <Form noValidate validated={validated}>
                         <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
                                              selection={selectIdentifier} handleChange={handleChange} />
                         <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Your password</Form.Label>
+                            <Form.Label>{t('signin.password.label')} </Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">
                                         <FontAwesomeIcon icon={ faKey }/>
                                     </InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <Form.Control type='password' placeholder='password' 
+                                <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
                                               onChange={handleChange('password')} />
-                                <Form.Control.Feedback type="invalid">Please choose a valid password.</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
                             </InputGroup>
-                            <Form.Text className='text-muted'>You should provide your password</Form.Text>
+                            <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
                         </Form.Group>
                     </Form>
                 </Card.Body>
                 <Card.Footer>
                     <Button type='submit' onClick={clickSubmit}>
-                        <FontAwesomeIcon icon={ faUserCheck }/> Submit
+                        <FontAwesomeIcon icon={ faUserCheck }/> {t('signin.button_submit')}
                     </Button>
                     <FixProblem username={form.username} email={form.email} password={form.password} />
                 </Card.Footer>
@@ -145,6 +147,7 @@ const SignIn = (props) => {
 }
 
 const FormIdEntrySelector = (props) => {
+    const { t } = useTranslation()
     const { email, username, selection, handleChange, switcher } = props
     const selectedEntry = () => {
         switch (selection) {
@@ -157,12 +160,12 @@ const FormIdEntrySelector = (props) => {
                                     <FontAwesomeIcon icon={ faMailBulk }/>
                                 </InputGroup.Text>
                             </InputGroup.Prepend>
-                            <Form.Control type='email' placeholder='enter email' name='formEmail'
+                            <Form.Control type='email' placeholder={t('signin.email.placeholder')} name='formEmail'
                                             onChange={handleChange('email')}
                                             value={email} />
                             <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
                         </InputGroup>
-                        <Form.Text className="text-muted">I will never share with no one, i hate scammers.</Form.Text>
+                        <Form.Text className="text-muted">{t('signin.email.helper')}</Form.Text>
                     </Form.Group> 
                 )
             case 'Username':
@@ -172,30 +175,31 @@ const FormIdEntrySelector = (props) => {
                             <InputGroup.Prepend>
                                 <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
                             </InputGroup.Prepend>
-                            <Form.Control type='text' placeholder='username' name="formUsername"
+                            <Form.Control type='text' placeholder={t('signin.username.placeholder')} name="formUsername"
                                             onChange={handleChange('username')}
                                             value={username}/>
                             <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
                         </InputGroup>
-                        <Form.Text className="text-muted">he is unique there...</Form.Text>
+                        <Form.Text className="text-muted">{t('signin.username.helper')}</Form.Text>
                     </Form.Group>
                 )
         }
     }
 
     return (<>
-                <span>Your </span>
+                <span>{t('signin.id_first_word')}</span>
                 <ToggleButtonGroup name='IdentifierSelector' value={selection}
                                    onChange={switcher} 
                                    size='sm' aria-label="identifier selector">
-                    <ToggleButton value='Email' variant="secondary">Email</ToggleButton>
-                    <ToggleButton value='Username' variant="secondary">Username</ToggleButton>
+                    <ToggleButton value='Email' variant="secondary">{t('signin.email.label')}</ToggleButton>
+                    <ToggleButton value='Username' variant="secondary">{t('signin.username.label')} </ToggleButton>
                 </ToggleButtonGroup>
                 { selectedEntry() }
     </>)
 }
 
 const FixProblem = (props) => {
+    const { t } = useTranslation()
     const { username, email, password } = props
     const [ redirect, setRedirect ] = useState('')
     const [ collapse, setCollapse ] = useState(false)
@@ -223,18 +227,18 @@ const FixProblem = (props) => {
         return (
             <>
                 <hr/>
-                <Card.Link href="#" onClick={toggle}>I have a problem to fix</Card.Link>
+                <Card.Link href="#" onClick={toggle}>{t('signin.link.problem')}</Card.Link>
                 <Collapse in={collapse}>
                     <div>
                         { (password && validatePassword(password)[1]) ?
-                            (<Card.Link href='#' onClick={sendValidationAgain}>Send validation</Card.Link>) :
-                            (<Card.Link href='#' onClick={forgetPassword}>I forget my password</Card.Link>) }
+                            (<Card.Link href='#' onClick={sendValidationAgain}>{t('signin.link.validation')}</Card.Link>) :
+                            (<Card.Link href='#' onClick={forgetPassword}>{t('signin.link.password_forgotten')}</Card.Link>) }
                     </div>
                 </Collapse>
             </>
         )
     }
-    return ( <> <hr/><Card.Link href='/signup'> I don't have an account</Card.Link> </> )
+    return ( <> <hr/><Card.Link href='/signup'> {t('signin.link.no_account')}</Card.Link> </> )
 }
 
 export default SignIn
