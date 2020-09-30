@@ -145,6 +145,7 @@
   },
   "sanitizer": {
     "backend": {
+      "request": "Need:",
       "username": {
         "missing": "You have to use a username",
         "empty": "Username field can not be empty"
@@ -155,10 +156,13 @@
         "valid": "Email is not valid"
       },
       "password": {
+        "title": "Password format failed",
         "missing": "You have to inform a password",
-        "minimum": "Password have to contain minimum 8 characters",
-        "number": "Password have to contain a least one number",
-        "special": "Password have to contain at least one of this special character: [\/)]}@?.!+-*]"
+        "upper_case": "at least an uppercase character",
+        "lower_case": "at least a lowercase character",
+        "minimum": "minimum 8 characters",
+        "number": "at least one number",
+        "special": "at least one of this special character: [\/)]}@?.!+-*]"
       },
       "id": {
         "missing": "ID is missing",

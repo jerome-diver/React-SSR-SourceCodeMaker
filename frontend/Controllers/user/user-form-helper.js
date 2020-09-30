@@ -21,14 +21,14 @@ const cypher = (password) => {
 
 const validatePassword = (password) => {
     var passwordValidated = true
-    var message = "<h6>need:</h6>"
+    var message = `<h6>${i18n.t('sanitizer.backend.request')}</h6>`
     const check_char = checkPassword(password)
-    if (!check_char.countEnough) { passwordValidated = false; message += '<p>more chars (8 minimum)</p>'; }
-    if (!check_char.special) { passwordValidated = false;  message += '<p>a special char inside</p>' }
-    if (!check_char.upperCase) { passwordValidated = false; message += '<p>a upper case char inside</p>' }
-    if (!check_char.lowerCase) { passwordValidated = false; message += '<p>a lower case char inside</p>'  }
-    if (!check_char.aNumber) { passwordValidated = false; message += '<p>a numeric char inside</p>' }
-    const error = (!passwordValidated) ? {name: 'Password format failed', message: message} : false
+    if (!check_char.countEnough) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.minimum')}</p>`; }
+    if (!check_char.special) { passwordValidated = false;  message += `<p>${i18n.t('sanitizer.backend.password.special')}</p>` }
+    if (!check_char.upperCase) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.upper_case')}</p>` }
+    if (!check_char.lowerCase) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.lower_case')}</p>`  }
+    if (!check_char.aNumber) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.number')}</p>` }
+    const error = (!passwordValidated) ? {name: i18n.t('sanitizer.backend.password.title'), message: message} : false
     return [ error, passwordValidated ]
 }
 

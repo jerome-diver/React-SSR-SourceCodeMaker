@@ -145,6 +145,7 @@
   },
   "sanitizer": {
     "backend": {
+      "request": "Vous devez indiquer:",
       "username": {
         "missing": "Vous devez indiquer un nom d'utilisateur",
         "empty": "Le champ utilisateur est vide, c'est inacceptable"
@@ -155,10 +156,13 @@
         "valid": "Le champ d'email n'est pas valide"
       },
       "password": {
+        "title": "Format du mot de passe éronné",
         "missing": "Vous devez indiquer un mot de passe",
-        "minimum": "Le mot de passe doit comporter au moins 8 caractères.",
-        "number": "Le mot de passe doit comporter au moins un chiffre.",
-        "special": "Le mot de passe doit comporter au moins un des caractères spéciaux: [\/)]}@?.!+-*]"
+        "upper_case": "au moins un caractère minuscule",
+        "lower_case": "au moins un caractère majuscule",
+        "minimum": "au minimum de 8 caractères.",
+        "number": "au moins un chiffre.",
+        "special": "au moins un des caractères spéciaux: [\/)]}@?.!+-*]"
       },
       "id": {
         "missing": "Il n'existe aucun ID",

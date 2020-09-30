@@ -97,9 +97,7 @@ const Profile = (props) => {
     }
     const editUserRole = (e) => { console.log("Edit user Role") }
     const changeEmail = (e) => { canChangeEmail(editEmail, emailNoEdit) }
-    const editEmail = () => {
-        setEmailReadOnly(false)
-    }
+    const editEmail = () => { setEmailReadOnly(false) }
     const emailNoEdit = () => {
         const emailInput = document.getElementById("formEmail")
         emailInput.value = user.origin.email
