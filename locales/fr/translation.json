@@ -7,38 +7,59 @@
     }
   },
   "general": {
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "share": {
+      "nextcloud": "Partagez avec moi sur mon cloud"
+    }
   },
   "home": {
     "title": "Description",
     "content": "<p>Bienvenue sur mon site web.</p><p>Mon nom est Jérôme Lanteri, je suis un informaticien français en status d'auto-entrepreneur (micro-entreprise).</p><p>Mon site est construit avec du code Javascript et avec un serveur Express et un code côté client avec React.</p><p>Je peux aussi construire un site avec du code Python (Django ou Flask) ou du code Ruby (RubyOnRails).i</p><p>Les bases de données peuvent être MySQL ou Postgresql ou MongoDB. Je peux aussi installer le code du site sur un serveur distant (que je peux commander et installer pour vous, mais aussi maintenir) avec un serveur HTTP Nginx.</p><p>Et bien d'autres choses, il suffit de demander.</p>"
   },
   "profile": {
-    "edit_profile_text": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte.",
-    "email_button": "email",
-    "email_button_tooltip": "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
-    "email_correct_error": "Choisissez une adresse email avec une syntaxe correcte",
-    "email_helper": "SI vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir.",
-    "username_label": "Nom d'utilisateur",
-    "username_correct_error": "Le nom d'utilisateur doit être unique et comporter plus de 3 caractères.",
-    "username_helper": "Vôtre nom d'utilisateur sert aussi à vous connecter, trouvez en un original et notez-le en secret.",
-    "first_name_label": "Nom de famille",
-    "first_name_correct_error": "Vôtre nom de famille doit être acceptable.",
-    "second_name_label": "Prénom",
-    "second_name_correct_error": "Vôtre prénom doit être acceptable.",
-    "password_button": "Mot de passe",
-    "password_button_tooltip": "Cliquez pour pouvoir modifiez vôtre mot de passe, puis suivez les instuctions pour le mettre à jour.",
-    "password_placeholder": "Écrivez ici le mot de passe",
-    "password_helper": "Le mot de passe ne s'affiche pas, seul vous le connaissez. Vous pouvez le changer en cliquant sur le bouton du haut...",
+    "title": "Édite le profile de {{username}}",
+    "header": {
+      "title": "{{username}} a un ",
+      "description": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte."
+    },
+    "email": {
+      "button": "email",
+      "button_tooltip": "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
+      "correct_error": "Choisissez une adresse email avec une syntaxe correcte",
+      "helper": "SI vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir."
+    },
+    "username": {
+      "label": "Nom d'utilisateur",
+      "correct_error": "Le nom d'utilisateur doit être unique et comporter plus de 3 caractères.",
+      "helper": "Vôtre nom d'utilisateur sert aussi à vous connecter, trouvez en un original et notez-le en secret."
+    },
+    "first_name": {
+      "label": "Nom de famille",
+      "correct_error": "Vôtre nom de famille doit être acceptable."
+    },
+    "second_name": {
+      "label": "Prénom",
+      "correct_error": "Vôtre prénom doit être acceptable."
+    },
+    "password": {
+      "button": "Mot de passe",
+      "button_tooltip": "Cliquez pour pouvoir modifiez vôtre mot de passe, puis suivez les instuctions pour le mettre à jour.",
+      "placeholder": "Écrivez ici le mot de passe",
+      "helper": "Le mot de passe ne s'affiche pas, seul vous le connaissez. Vous pouvez le changer en cliquant sur le bouton du haut..."
+    },
     "submit": "Validez la mise à jour",
     "account_enable": "Compte actif",
     "account_disable": "Compte inactif",
-    "role_can_edit": "Changez de droits d'accès",
-    "role_can_not_edit": "Vous ne pouvez pas changer de droits d'accès",
-    "role_admin_only": "Seul un administrateur peut changer un droit d'accès",
+    "role": {
+      "can_edit": "Changez de droits d'accès",
+      "can_not_edit": "Vous ne pouvez pas changer de droits d'accès",
+      "admin_only": "Seul un administrateur peut changer un droit d'accès"
+    },
     "modal": {
-      "title_success": "Utilisateur mis à jour",
-      "text_success": "La modification des données utiliseteurs est un succès"
+      "success": {
+        "title": "Utilisateur mis à jour",
+        "text": "La modification des données utiliseteurs est un succès"
+      }
     }
   },
   "signup": {
@@ -124,21 +145,33 @@
   },
   "sanitizer": {
     "backend": {
-      "username_missing": "Vous devez indiquer un nom d'utilisateur",
-      "username_empty": "Le champ utilisateur est vide, c'est inacceptable",
-      "email_missing": "Vous devez indiquer un email",
-      "email_empty": "Le champ d'email est vide, c'est inacceptable",
-      "email_valid": "Le champ d'email n'est pas valide",
-      "password_missing": "Vous devez indiquer un mot de passe",
-      "password_minimum": "Le mot de passe doit comporter au moins 8 caractères.",
-      "password_number": "Le mot de passe doit comporter au moins un chiffre.",
-      "password_special": "Le mot de passe doit comporter au moins un des caractères spéciaux: [\/)]}@?.!+-*]",
-      "id_missing": "Il n'existe aucun ID",
-      "id_empty": "L'ID est vide"
+      "username": {
+        "missing": "Vous devez indiquer un nom d'utilisateur",
+        "empty": "Le champ utilisateur est vide, c'est inacceptable"
+      },
+      "email": {
+        "missing": "Vous devez indiquer un email",
+        "empty": "Le champ d'email est vide, c'est inacceptable",
+        "valid": "Le champ d'email n'est pas valide"
+      },
+      "password": {
+        "missing": "Vous devez indiquer un mot de passe",
+        "minimum": "Le mot de passe doit comporter au moins 8 caractères.",
+        "number": "Le mot de passe doit comporter au moins un chiffre.",
+        "special": "Le mot de passe doit comporter au moins un des caractères spéciaux: [\/)]}@?.!+-*]"
+      },
+      "id": {
+        "missing": "Il n'existe aucun ID",
+        "empty": "L'ID est vide"
+      }
     },
     "frontend": {
-      "password_missing_title": "Champ incomplet",
-      "password_missing_text": "Le mot de passe doit être renseigné"
+      "password": {
+        "missing": {
+          "title": "Champ incomplet",
+          "text": "Le mot de passe doit être renseigné"
+        }
+      }
     }
   }
 }

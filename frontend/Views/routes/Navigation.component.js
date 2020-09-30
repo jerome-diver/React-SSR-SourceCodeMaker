@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { NavLink, Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,19 +25,6 @@ const getFlagFromLng = (lng) => {
   }
 }
 
-const getLngFromFlag = (flag) => {
-  switch(flag) {
-    case FlagFR:
-      return 'fr'
-    case FlagUK:
-      return 'en'
-    case FlagUS: 
-      return 'en'
-    default:
-      return 'en'
-  }
-}
-
 const reducer = (state, action) => {
   switch (action.user) {
     case undefined:
@@ -52,23 +39,21 @@ const reducer = (state, action) => {
 const I18nSelector = (props) => {
     const { i18n } = useTranslation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const { setLanguage } = useAuthenticate()
-    const [ flagSelected, setFlagSelected ] = useState(getFlagFromLng(i18n.language))
+    const { getLanguage, setLanguage } = useAuthenticate()
+    const [ flagSelected, setFlagSelected ] = useState(getFlagFromLng(getLanguage()))
 
     useEffect(() => {
-        console.log("--- I18nSelector navigation sub-menu useEffect loop for", flagSelected)
-        const lng = (cookies.session && cookies.session.language) ? cookies.session.language : i18n.language
-        changeLanguage(lng)
+        console.log("--- I18nSelector navigation sub-menu useEffect loop for", getLanguage())
     },[flagSelected])
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng)
         setFlagSelected(getFlagFromLng(lng))
         setLanguage(lng)
-        fetch('/api/language', 
-              {method: 'POST', 
-              headers: {'Accept': 'application/json', 'Content-type': 'application/json'},
-              body: JSON.stringify({language: lng}) })
+        fetch('/api/language', { method: 'POST', 
+                                 headers: {'Accept': 'application/json', 
+                                           'Content-type': 'application/json'},
+                                 body: JSON.stringify({language: lng}) })
              .then(response => response.json())
              .then(response => {
                 if (response.language) {
@@ -77,13 +62,13 @@ const I18nSelector = (props) => {
              })
     }
 
-    return (<>
+    return <>
         <NavDropdown title={<img src={flagSelected} height='20px' />} id="basic-nav-dropdown">
             <Link to='' onClick={() => { changeLanguage('fr') } }><img src={FlagFR} height='30px' /></Link>
             <Link to='' onClick={() => { changeLanguage('us') } }><img src={FlagUS} height='30px' /></Link>
             <Link to='' onClick={() => { changeLanguage('en') } } ><img src={FlagUK} height='30px' /></Link>
         </NavDropdown>
-    </>)
+    </>
 }
 
 const UserRoleEntries = (props) => {
@@ -95,17 +80,14 @@ const UserRoleEntries = (props) => {
     
     switch (role) {
       case 'Admin':
-        return (
-          <>
+        return <>
               <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
                 <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.admin')}</NavLink>
               <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
                 <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
           </>
-        )
-        break
       default:
-        return (<></>)
+        return <></>
     }
 }
 

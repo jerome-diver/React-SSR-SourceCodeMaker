@@ -7,38 +7,58 @@
     }
   },
   "general": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "share": {
+      "nextcloud": "Share with me on my cloud"
+    }
   },
   "home": {
     "title": "Description",
     "content": "<p>Welcome to my web site.</p><p>My name is Jérôme Lanteri and i'm french dev freelance. This web site is build with Express.js backend simple framework and React.js frontend framework.</p><p>I can also build other backend code with Ruby (Rails-5 framework) or Python-3 (Flask or Django-3 framework). I can link them as you want with any ORM database (MySQL/MariaDB, Postgresql, MongoDB).</p><p> I can install your web site on a remote server for you on Nginx http server</p>"
   },
   "profile": {
-    "edit_profile_text": "You can edit your profile there but you will have then to indicate your password and confirm it to apply.",
-    "email_button": "eMail",
-    "email_button_tooltip": "Click to be able to modify email address, and read instructions to apply update process.",
-    "email_correct_error": "Please choose a valid email syntax",
-    "email_helper": "In case of email modification, youwill receipt an email in this mail box with a link to confirm within 2 days to apply update changed.",
-    "username_label": "Username",
-    "username_correct_error": "username should be unique and up to 3 chars long.",
-    "username_helper": "Your username can be used to login, then choose a nice one and write it on your private notebook.",
-    "first_name_label": "First name",
-    "first_name_correct_error": "Your first name should be acceptable.",
-    "second_name_label": "Second name",
-    "second_name_correct_error": "Your second name should be acceptable.",
-    "password_button": "Password",
-    "password_button_tooltip": "Click to be able to update your password, then follow instructions to apply update.",
-    "password_placeholder": "Write password there",
-    "password_helper": "Password doesn't print for safety reason. You can modify it by first click the button upper...",
+    "title": "Edit profile for {{username}}",
+    "header": {
+      "title": "{{username}} has a ",
+      "description": "You can edit your profile there but you will have then to indicate your password and confirm it to apply."
+    },
+    "email": {
+      "button": "eMail",
+      "button_tooltip": "Click to be able to modify email address, and read instructions to apply update process.",
+      "correct_error": "Please choose a valid email syntax",
+      "helper": "In case of email modification, youwill receipt an email in this mail box with a link to confirm within 2 days to apply update changed."
+    },
+    "username": {
+      "label": "Username",
+      "correct_error": "username should be unique and up to 3 chars long.",
+      "helper": "Your username can be used to login, then choose a nice one and write it on your private notebook."
+    },
+    "first_name": {
+      "label": "First name",
+      "correct_error": "Your first name should be acceptable."
+    },
+    "second_name": {
+      "label": "Second name",
+      "correct_error": "Your second name should be acceptable."
+    },
+    "password": {
+      "button": "Password",
+      "button_tooltip": "Click to be able to update your password, then follow instructions to apply update.",
+      "placeholder": "Write password there",
+      "helper": "Password doesn't print for safety reason. You can modify it by first click the button upper..."
+    },
     "submit": "Apply update",
     "account_enable": "Account enable",
     "account_disable": "Account disable",
-    "role_can_edit": "Edit role",
-    "role_can_not_edit": "Can not edit role",
-    "role_admin_only": "Administrator only can edit role",
+    "role": {
+      "can_edit": "Edit role",
+      "can_not_edit": "Can not edit role",
+      "admin_only": "Administrator only can edit role",
     "modal": {
-      "title_success": "Updated user",
-      "text_success": "Successfuly updated user"
+      "success": {
+        "title": "Updated user",
+        "text": "Successfuly updated user"
+      }
     }
   },
   "signup": {
@@ -124,17 +144,25 @@
   },
   "sanitizer": {
     "backend": {
-      "username_missing": "You have to use a username",
-      "username_empty": "Username field can not be empty",
-      "email_missing": "You should inform an email",
-      "email_empty": "The email field can not be empty",
-      "email_valid": "Email is not valid",
-      "password_missing": "You have to inform a password",
-      "password_minimum": "Password have to contain minimum 8 characters",
-      "password_number": "Password have to contain a least one number",
-      "password_special": "Password have to contain at least one of this special character: [\/)]}@?.!+-*]",
-      "id_missing": "ID is missing",
-      "id_empty": "ID is empty"
+      "username": {
+        "missing": "You have to use a username",
+        "empty": "Username field can not be empty"
+      },
+      "email": {
+        "missing": "You should inform an email",
+        "empty": "The email field can not be empty",
+        "valid": "Email is not valid"
+      },
+      "password": {
+        "missing": "You have to inform a password",
+        "minimum": "Password have to contain minimum 8 characters",
+        "number": "Password have to contain a least one number",
+        "special": "Password have to contain at least one of this special character: [\/)]}@?.!+-*]"
+      },
+      "id": {
+        "missing": "ID is missing",
+        "empty": "ID is empty"
+      }
     },
     "frontend": {
       "password_missing_title": "Missing field",

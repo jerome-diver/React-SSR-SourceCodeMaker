@@ -4,27 +4,27 @@ import { i18n } from '../i18n'
 const checkNewUser = [
     check('username')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.username_missing'))
+      .withMessage(i18n.t('sanitizer.backend.username.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.username_empty')),
+      .withMessage(i18n.t('sanitizer.backend.username.empty')),
     check('email')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.email_missing'))
+      .withMessage(i18n.t('sanitizer.backend.email.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.email_empty'))
+      .withMessage(i18n.t('sanitizer.backend.email.empty'))
       .isEmail()
-      .withMessage(i18n.t('sanitizer.backend.email_valid')),
+      .withMessage(i18n.t('sanitizer.backend.email.valid')),
     check('password')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.password_missing'))
+      .withMessage(i18n.t('sanitizer.backend.password.missing'))
       .isLength({ min: 8 })
-      .withMessage(i18n.t('sanitizer.backend.password_minimum'))
+      .withMessage(i18n.t('sanitizer.backend.password.minimum'))
       .matches(/\d/)
-      .withMessage(i18n.t('sanitizer.backend.password_number'))
+      .withMessage(i18n.t('sanitizer.backend.password.number'))
       .matches(/[\/\\\.\@\!\:\;\,\+\-\*\}\]\)]/)
-      .withMessage(i18n.t('sanitizer.backend.password_special'))
+      .withMessage(i18n.t('sanitizer.backend.password.special'))
 ]
   
   /**
@@ -33,22 +33,22 @@ const checkNewUser = [
  const checkUpdateUser = [
     check('username')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.username_missing'))
+      .withMessage(i18n.t('sanitizer.backend.username.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.username_empty')),
+      .withMessage(i18n.t('sanitizer.backend.username.empty')),
     check('email')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.email_missing'))
+      .withMessage(i18n.t('sanitizer.backend.email.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.email_empty')),
+      .withMessage(i18n.t('sanitizer.backend.email.empty')),
     check('id')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.id_missing'))
+      .withMessage(i18n.t('sanitizer.backend.id.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.id_empty')),
+      .withMessage(i18n.t('sanitizer.backend.id.empty')),
 ]
   
   /**

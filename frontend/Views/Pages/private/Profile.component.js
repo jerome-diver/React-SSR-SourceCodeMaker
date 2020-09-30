@@ -86,12 +86,12 @@ const Profile = (props) => {
                             else {
                                 setUser({session: washUser(response.user), form: washUser(response.user)})
                                 setSession(response)
-                                setMessage( {text: {name: t('profile.modal.title_success'), 
-                                                    message: t('profile.modal.text_success')}})
+                                setMessage( {text: {name: t('profile.modal.success.title'), 
+                                                    message: t('profile.modal.success.text')}})
                             }
                 } ) }
-            } else setMessage( {text: {name:t('sanitizer.frontend.password_missing_title'), 
-                                       message: t('sanitizer.frontend.password_missing_text')} } )
+            } else setMessage( {text: {name:t('sanitizer.frontend.password.missing.title'), 
+                                       message: t('sanitizer.frontend.password.missing.text')} } )
         }
         setValidated(true)
     }
@@ -121,17 +121,17 @@ const Profile = (props) => {
     }
     const roleTooltip = (props) => (
         <Tooltip id="role-tooltip" {...props}>
-            {(role.name === "Admin") ? t('profile.role_can_edit') : t('profile.role_admin_only')}
+            {(role.name === "Admin") ? t('profile.role.can_edit') : t('profile.role.admin_only')}
         </Tooltip>
     )
     const changeEmailTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            {t('profile.email_button_tooltip')}
+            {t('profile.email.button_tooltip')}
         </Tooltip>
     )
     const changePasswordTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            {t('profile.password_button_tooltip')}
+            {t('profile.password.button_tooltip')}
         </Tooltip>
     )
 
@@ -141,7 +141,7 @@ const Profile = (props) => {
             <Messenger message={message} setMessage={setMessage} />
             <Jumbotron>
                 <h4>
-                    <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{user.username}&nbsp;&nbsp; 
+                    <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: user.form.username})}&nbsp;&nbsp; 
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
                         <Button disabled={((role.name !== "Admin") || (user.session.username == userProfile.username))}
                                 onClick={editUserRole} 
@@ -155,44 +155,44 @@ const Profile = (props) => {
                     <Card.Body>
                         <Form onSubmit={clickSubmit} noValidate validated={validated}>
                             <Card.Title>
-                                <Badge variant={accountState.color}>{accountState.status}</Badge>
+                                {t('profile.header.title', { username: user.form.username })} <Badge variant={accountState.color}>{accountState.status}</Badge>
                             </Card.Title>
                             <Card.Subtitle className='mb-2 text-muted' />
-                            <Card.Text>{t('profile.edit_profile_text')}</Card.Text>
+                            <Card.Text>{t('profile.header.description')}</Card.Text>
                             <Form.Group controlId="formEmail">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changeEmailTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>{t('profile.email_button')}</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>{t('profile.email.button')}</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Control type='email' readOnly={emailReadOnly} defaultValue={user.form.email} onChange={handleChange('email')} />
-                                <Form.Control.Feedback type="invalid">{t('profile.email_correct_error')}</Form.Control.Feedback>
-                                <Form.Text className='text-muted'>{t('profile.email_helper')} Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
+                                <Form.Control.Feedback type="invalid">{t('profile.email.correct_error')}</Form.Control.Feedback>
+                                <Form.Text className='text-muted'>{t('profile.email.helper')} Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formText">
-                                <Form.Label>{t('profile.username_label')}</Form.Label>
+                                <Form.Label>{t('profile.username.label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.username} onChange={handleChange('username')} />
-                                <Form.Control.Feedback type="invalid">{t('profile.username_correct_error')}</Form.Control.Feedback>
-                                <Form.Text className="text-muted">{t('profile.username_helper')}</Form.Text>
+                                <Form.Control.Feedback type="invalid">{t('profile.username.correct_error')}</Form.Control.Feedback>
+                                <Form.Text className="text-muted">{t('profile.username.helper')}</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formFirstName">
-                                <Form.Label>{t('profile.first_name_label')}</Form.Label>
+                                <Form.Label>{t('profile.first_name.label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.first_name} onChange={handleChange('first_name')} />
-                                <Form.Control.Feedback type="invalid">{t('profile.first_name_correct_error')}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">{t('profile.first_name.correct_error')}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formSecondName">
-                                <Form.Label>{t('profile.second_name_label')}</Form.Label>
+                                <Form.Label>{t('profile.second_name.label')}</Form.Label>
                                 <Form.Control type='text' defaultValue={user.form.second_name} onChange={handleChange('second_name')} />
-                                <Form.Control.Feedback type="invalid">{t('profile.second_name_correct_error')}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">{t('profile.second_name.correct_error')}</Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formPassword">
                                 <Form.Label>
                                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={changePasswordTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changePassword}>{t('profile.password_button')}</Button>
+                                        <Button size='sm' variant='outline-light' onClick={changePassword}>{t('profile.password.button')}</Button>
                                     </OverlayTrigger>
                                 </Form.Label>
-                                <Form.Control type='password' placeholder={t('profile.password_placeholder')} onChange={handleChange('password')} />
-                                <Form.Text className='text-muted'>{t('profile.password_helper')}</Form.Text>
+                                <Form.Control type='password' placeholder={t('profile.password.placeholder')} onChange={handleChange('password')} />
+                                <Form.Text className='text-muted'>{t('profile.password.helper')}</Form.Text>
                             </Form.Group>
                             <Card.Link>
                                 <Button type='submit' variant="warning" disabled={userNotChanged}>

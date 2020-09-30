@@ -31,7 +31,7 @@ const reducer = (state, action) => {
 }
 
 const SignIn = (props) => {
-    const { t } = useTranslation()
+    const { i18n, t } = useTranslation()
     const [ loaded, setLoaded ] = useState(false)
     const [ submit, setSubmit ] = useState(false)
     const [ validated, setValidated ] = useState(false)
@@ -48,7 +48,7 @@ const SignIn = (props) => {
         console.log('Location is', location)
         setLoaded(!submit)
         focusOnSelectedIdEntry()    // put the cursor at the end of the input entry of selected one
-    }, [submit, selectIdentifier] )
+    }, [submit, selectIdentifier, i18n.language] )
 
     const getError = (error) => { 
         console.log("FAILED to signed in")
@@ -94,11 +94,10 @@ const SignIn = (props) => {
     }
 
     if (loaded) {
-        if (sign.isLogged) return (<> <Redirect to={sign.from}/> </>)
-        if (cookies.session && cookies.session.user) return (<> <Redirect to='/' /> </>)
+        if (sign.isLogged) return <> <Redirect to={sign.from}/> </>
+        if (cookies.session && cookies.session.user) return <> <Redirect to='/' /> </>
         else {
-          return (
-            <>  
+          return <>  
               <Modal show={sign.hasError}>
                   <Modal.Header closeButton>
                       <Modal.Title>Failed to login with {sign.error.name}</Modal.Title>
@@ -111,39 +110,39 @@ const SignIn = (props) => {
                   </Modal.Footer>
               </Modal>
               <Card id='sign'>
-                <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> {t('signin.title')}</h2></Card.Header>
-                <Card.Body>
-                    <Card.Title>{t('signin.header.title')}</Card.Title>
-                    <Card.Subtitle className='mb-2 text-muted'>{t('signin.header.intro')}</Card.Subtitle> 
-                    <Card.Text>{t('signin.header.description')}</Card.Text>
-                    <Form noValidate validated={validated}>
-                        <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
-                                             selection={selectIdentifier} handleChange={handleChange} />
-                        <Form.Group controlId="formBasicPassword">
-                            <Form.Label>{t('signin.password.label')} </Form.Label>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text id="inputGroupPrepend">
-                                        <FontAwesomeIcon icon={ faKey }/>
-                                    </InputGroup.Text>
-                                </InputGroup.Prepend>
-                                <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
-                                              onChange={handleChange('password')} />
-                                <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
-                            </InputGroup>
-                            <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
-                        </Form.Group>
-                    </Form>
-                </Card.Body>
-                <Card.Footer>
-                    <Button type='submit' onClick={clickSubmit}>
-                        <FontAwesomeIcon icon={ faUserCheck }/> {t('signin.button_submit')}
-                    </Button>
-                    <FixProblem username={form.username} email={form.email} password={form.password} />
-                </Card.Footer>
-            </Card> </> 
-        ) }
-  } else return <><Loading /></>
+                  <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> {t('signin.title')}</h2></Card.Header>
+                  <Card.Body>
+                      <Card.Title>{t('signin.header.title')}</Card.Title>
+                      <Card.Subtitle className='mb-2 text-muted'>{t('signin.header.intro')}</Card.Subtitle> 
+                      <Card.Text>{t('signin.header.description')}</Card.Text>
+                      <Form noValidate validated={validated}>
+                          <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
+                                               selection={selectIdentifier} handleChange={handleChange} />
+                          <Form.Group controlId="formBasicPassword">
+                              <Form.Label>{t('signin.password.label')} </Form.Label>
+                              <InputGroup>
+                                  <InputGroup.Prepend>
+                                      <InputGroup.Text id="inputGroupPrepend">
+                                          <FontAwesomeIcon icon={ faKey }/>
+                                      </InputGroup.Text>
+                                  </InputGroup.Prepend>
+                                  <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
+                                                onChange={handleChange('password')} />
+                                  <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
+                              </InputGroup>
+                              <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
+                          </Form.Group>
+                      </Form>
+                  </Card.Body>
+                  <Card.Footer>
+                      <Button type='submit' onClick={clickSubmit}>
+                          <FontAwesomeIcon icon={ faUserCheck }/> {t('signin.button_submit')}
+                      </Button>
+                      <FixProblem username={form.username} email={form.email} password={form.password} />
+                  </Card.Footer>
+              </Card> 
+        </> }
+  } else return <><Loading/></>
 }
 
 const FormIdEntrySelector = (props) => {

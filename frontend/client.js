@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { hydrate } from 'react-dom'
 import { BrowserRouter } from "react-router-dom"
-import { I18nextProvider, useSSR, getI18n } from 'react-i18next'
 import '../node_modules/bootstrap/scss/bootstrap.scss'
 import "./stylesheet/awesome.sass"
 import './stylesheet/index.sass'
