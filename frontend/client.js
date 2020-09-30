@@ -8,7 +8,6 @@ import './stylesheet/app.sass'
 import App from './App'
 import Loading from './Views/Pages/public/Loading.component'
 import { CookiesProvider } from 'react-cookie'
-//import { i18n } from '../backend/i18n'
 
 const BaseAppI18n = () => {
   //useSSR(window.initialI18nStore, window.initialLanguage)

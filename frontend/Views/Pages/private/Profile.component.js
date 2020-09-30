@@ -167,7 +167,7 @@ const Profile = (props) => {
                                 </Form.Label>
                                 <Form.Control type='email' readOnly={emailReadOnly} defaultValue={user.form.email} onChange={handleChange('email')} />
                                 <Form.Control.Feedback type="invalid">{t('profile.email.correct_error')}</Form.Control.Feedback>
-                                <Form.Text className='text-muted'>{t('profile.email.helper')} Click the button to modify your email, it will be modified only if you confirm from your email box.</Form.Text>
+                                <Form.Text className='text-muted'>{t('profile.email.helper')}</Form.Text>
                             </Form.Group>
                             <Form.Group controlId="formText">
                                 <Form.Label>{t('profile.username.label')}</Form.Label>

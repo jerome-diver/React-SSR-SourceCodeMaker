@@ -19,14 +19,14 @@
   "profile": {
     "title": "Edit profile for {{username}}",
     "header": {
-      "title": "{{username}} has a ",
+      "title": "{{username}} has an ",
       "description": "You can edit your profile there but you will have then to indicate your password and confirm it to apply."
     },
     "email": {
       "button": "eMail",
       "button_tooltip": "Click to be able to modify email address, and read instructions to apply update process.",
       "correct_error": "Please choose a valid email syntax",
-      "helper": "In case of email modification, youwill receipt an email in this mail box with a link to confirm within 2 days to apply update changed."
+      "helper": "In case of email modification, you will receipt an email in this mail box with a link to confirm within 2 days to apply update changed."
     },
     "username": {
       "label": "Username",
@@ -53,7 +53,8 @@
     "role": {
       "can_edit": "Edit role",
       "can_not_edit": "Can not edit role",
-      "admin_only": "Administrator only can edit role",
+      "admin_only": "Administrator only can edit role"
+    },
     "modal": {
       "success": {
         "title": "Updated user",
@@ -165,8 +166,12 @@
       }
     },
     "frontend": {
-      "password_missing_title": "Missing field",
-      "password_missing_text": "Password have to be set."
+      "password": {
+        "missing": {
+          "title": "Missing field",
+          "text": "Password have to be set."
+        }
+      }
     }
   }
 }

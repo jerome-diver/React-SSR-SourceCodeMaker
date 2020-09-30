@@ -64,9 +64,9 @@ const I18nSelector = (props) => {
 
     return <>
         <NavDropdown title={<img src={flagSelected} height='20px' />} id="basic-nav-dropdown">
-            <Link to='' onClick={() => { changeLanguage('fr') } }><img src={FlagFR} height='30px' /></Link>
-            <Link to='' onClick={() => { changeLanguage('us') } }><img src={FlagUS} height='30px' /></Link>
-            <Link to='' onClick={() => { changeLanguage('en') } } ><img src={FlagUK} height='30px' /></Link>
+            <Link to='#' onClick={() => { changeLanguage('fr') } }><img src={FlagFR} height='30px' /></Link>
+            <Link to='#' onClick={() => { changeLanguage('us') } }><img src={FlagUS} height='30px' /></Link>
+            <Link to='#' onClick={() => { changeLanguage('en') } } ><img src={FlagUK} height='30px' /></Link>
         </NavDropdown>
     </>
 }
