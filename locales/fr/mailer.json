@@ -1,0 +1,28 @@
+{
+  "account": {
+    "validation": {
+      "title": "Validation de compte sur SourceCodeMaker",
+      "subject": "Confirmez vôtre email pour valider vôtre compte sur SourceCodeMaker",
+      "content": {
+        "title": "Lien de validation de compte pour SourceCodeMaker",
+        "introduction": "Le {date_start}}, vous avez demandé la création d'un nouveau compte sur mon site web: SourceCodeMaker.",
+        "text": "Vous devez valider la création du compte avant le {date_end}} pour que celui-ci soit opérationel."
+      },
+      "link_label": "Cliquez sur ce lien pour valider vôte compte",
+      "error": {
+        "name": "Erreur de validation de compte",
+        "text": "Vôtre compte a déjà été validé"
+      }
+    },
+    "password": {
+      "title": "SourceCodeMaker: Nouveau mot de passe",
+      "subject": "Confirmez que vous voulez vraiment créer un nouveau mot de passe SourceCodeMaker.",
+      "content": {
+        "title": "Créer un nouveau mot de passe pour vôte compte sur SourceCodeMaker.fr",
+        "introduction": "Le {{date_now}}, vous avez oublié vôtre mot de passe sur vôtre compte du site SourceCodeMaker. Vous avez demandé d'en créer un nouveau.",
+        "text": "Vous devez confirmer, avant {{date_end}}, que vous voulez vraiment créer un nouveau mot de passe sur vôtre compte lié à cet email sur SourceCodeMaker."
+      },
+      "link_label": "Cliquez sur ce lien pour créer un nouveau mot de passe"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "router": {
+    "validation": {
+      "verify": {
+        "expired": {
+          "name": "Expiry error",
+          "text": "Token expiration check exceed since {{date_expiry}}"
+        },
+        "wrong_token": {
+          "name": "Token is wrong",
+          "text": "User is not admin or is not the owner of this account. Access refected."
+        }
+      }
+    },
+    "users": {
+      "token": {
+        "authorization": {
+          "name": "Authorization failed",
+          "text": "Failed to authentify user token"
+        }
+      },
+      "parser": {
+        "name": "Wrong validation entry"
+      },
+      "update": {
+        "failed": {
+          "password": "Password failed"
+        }
+      },
+      "delete": {
+        "missing": {
+          "name": "Users collection error",
+          "text": "Unexisting user in database"
+      }
+    }
+  },
+  "database": {
+    "users": {
+      "create": {
+        "failed": {
+          "validation": "Failed database internal validation"
+        }
+      },
+      "update": {
+        "failed": {
+          "name": "User update failed",
+          "password": "Failed to update password"
+        }
+      }
+    }
+  }
+}

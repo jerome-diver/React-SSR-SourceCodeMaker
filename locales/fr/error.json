@@ -1,0 +1,52 @@
+{
+  "router": {
+    "validation": {
+      "verify": 
+        "expired": {
+          "name": "Expiration",
+          "text": "Le jeton a expiré depuis le {{date_expiry}}"
+        },
+        "wrong_token": {
+          "name": "Le jeton est faux",
+          "text": "L'utilisateur n'est pas un administrateur ou n'est pas le propriétaire du compte."
+        }
+      }
+    },
+    "users": {
+      "token": {
+        "authorization": {
+          "name": "Erreur d'authorification",
+          "text": "Le jeton est erroné, authentification rejetée."
+        }
+      },
+      "parser": {
+        "name": "Entrée de validation erronée"
+      },
+      "update": {
+        "failed": {
+          "password": "Mot de passe erroné"
+        }
+      },
+      "delete": {
+        "missing": {
+          "name": "Erreur pour ce utilisateur",
+          "text": "Utilisateur inexistant dans la base de donnée."
+      }
+    }
+  },
+  "database": {
+    "users": {
+      "create": {
+        "failed": {
+          "validation": "Problème de validation dans le modèle de la base de donnée"
+        }
+      },
+      "update": {
+        "failed": {
+          "name": "La mise à jour de l'utilisateur a échoué",
+          "password": "La mise à jour du mot de passe à échouée"
+        }
+      }
+    }
+  }
+}

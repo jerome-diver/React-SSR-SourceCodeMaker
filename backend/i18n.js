@@ -6,32 +6,16 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 //const i18nextMiddleware = require('i18next-http-middleware')
 const enI18n = require('../locales/en/translation.json')
 const frI18n = require('../locales/fr/translation.json')
-
-/* 
-i18n
-  // detect user language
-  // learn more: https://github.com/i18next/i18next-browser-languageDetector
-  .use(FilesystemBackend)
-  .use(i18nextMiddleware.LanguageDetector)
-  .init({
-    whiteList: ['en', 'fr', 'th'],
-    fallbackLng: 'en',
-    load: 'languageOnly',
-    preload: ['en', 'fr'],
-    defaultNS: 'translation',
-    debug: (process.env.NODE_ENV === 'development'),
-    react: { useSuspense: false },
-  //  interpolation: {
-  //    escapeValue: false, // not needed for react as it escapes by default
-  //  },
-    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json', isClone: true }
-  }); */
+const enI18nMailer = require('../locales/en/mailer.json')
+const frI18nMailer = require('../locales/fr/mailer.json')
+const enI18nError = require('../locales/en/error.json')
+const frI18nError = require('../locales/fr/error.json')
 
 const options = {
     whiteList: ['en', 'fr', 'th'],
     fallbackLng: 'en',
     preload: ['en', 'fr'],
-    ns: ['translation'],
+    ns: ['translation', 'mailer', 'error'],
     defaultNS: 'translation',
     load: 'languageOnly',
     react: { useSuspense: false },

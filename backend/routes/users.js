@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 /* GET user profile. */
 router.get('/user', (req, res) => {
     const token = req.cookies.token
-    console.log('THE TOKEN', token)
+    console.log('=== users router (/user GET): THE TOKEN', token)
     const decoded_token = decodeJWT(token)
     if (decoded_token.error) return res.status(403).json({error: decoded_token.error})
     User.findOne({_id: decoded_token.id}, (err, user) => { 
@@ -59,7 +59,7 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
     if (!validationErrors.isEmpty) {
         let message = ''
         validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
-        return status(403).json({error: {name: 'Validation entry failed', message: message} } )
+        return status(403).json({error: {name: req.i18n.t('error:router.users.parser.name'), message: message} } )
     }
     Role.findOne({name: 'Reader'}, (err, role) => {  // find Role.id for Reader
         if (err) return res.status(400).json({ error: err })
@@ -74,7 +74,7 @@ router.post('/', jsonParser, checkNewUser, (req, res) => {
                 if (err.errors) {
                     err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
                 } else return res.status(401).json({error: {name: err.name, message: err.code}})
-                return res.status(401).json({error: {name: 'DB internal validation', message: message}})
+                return res.status(401).json({error: {name: req.i18n.t('error:database.users.create.failed.validation'), message: message}})
             }
         })
         res.status(201).json( {accepted: true} ) } )
@@ -91,19 +91,19 @@ router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
         if (!validationErrors.isEmpty) {
             let message = ''
             validationErrors.errors.forEach(error => message += `${error.param}: ${error.msg}\n`)
-            return status(403).json({error: {name: 'Validation entry failed', message: message} } ) }
+            return status(403).json({error: {name: req.i18n.t('error:router.users.parser.name'), message: message} } ) }
         User.findOne({_id: user_id, password: password}, (err, user) => {
-            if (err) return res.status(401).json({error: {name: 'Password failed', message: err}}) } )
+            if (err) return res.status(401).json({error: {name: req.i18n.t('error:router:users.update.failed.password'), message: err}}) } )
         User.findOneAndUpdate({_id: user_id},
                             user_form,
                             {new: true}, (err, user) => {
-            if (err) return res.status(400).json({error: {name: 'Failed to update collection User', message: err}})
+            if (err) return res.status(400).json({error: {name: req.i18n.t('error:database.users.update.failed.name'), message: err}})
             else { 
                 Role.findOne({_id: user.role_id}, (err, role) => {
                     if (err) { return res.status(401).json({ error: err }) }
                     return res.status('200').json({user: user.toJSON(), role: role.toJSON()}) } ) } } )
-    } else return res.status(403).json({error: {name: 'Authorization failure', 
-                                                message:  'User is not admin or is not the owner'}})
+    } else return res.status(403).json({error: {name: req.i18n.t('error:router.users.token.authorization.name'), 
+                                                message:  req.i18n.t('error:router.users.token.authorization.text')}})
 })
 
 /* DELETE delete user */
@@ -113,21 +113,21 @@ router.post('/reset_password', jsonParser, (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( {error: { name: "Users collection error",
-                                                               message: "User doesn't exist" } } ) }
+            if(!user) { return res.status(401).json( {error: { name: req.i18n.t('error:router.users.delete.missing.name'),
+                                                               message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
             const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
             const url = 'http:/localhost:3000/setup_password'
             const setup_password_link = `${url}/${user.id}/${user.ticket}`
             res.app.mailer.send('send_email_to_user', {
                 to: user.email,
-                subject: 'Confirm your want to reset your password',
-                title: 'Source Code Maker, reset password process',
-                content_title: "Reset your password for Source Maker Code web site",
-                introduction: `The ${date_now}, you forget your password and then you would like to reset this one and setup a new one on my Source Maker Code web site.`,
-                text: `You should confirm you want to setup a new password before the ${date_end} (local server UTC time) by clicking the next link.`,
+                subject: req.i18n.t('mailer:account.password.subject'),
+                title: req.i18n.t('mailer:account.password.title'),
+                content_title: req.i18n.t('mailer:account.password.content.title'),
+                introduction: req.i18n.t('mailer:account.password.content.introduction', {date_now: date_now}),
+                text: req.i18n.t('mailer:account.password.content.text', {date_end: date_end}),
                 link_validate: setup_password_link,
-                validation_text: 'Click this link to setup a new password'
+                validation_text: req.i18n.t('mailer:account.password.link_label')
             }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
                                            : res.status(200).json({sent: true})    } )
     } )
@@ -141,12 +141,12 @@ router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
     User.findOne({_id: id, 
                   ticket: ticket, 
                   validated: true}, (err, user) => {
-            if (err) return res.status(401).json({error: {name: 'Failed to update on database',
+            if (err) return res.status(401).json({error: {name: req.i18n.t('error:database.users.update.failed.password'),
                                                           message: err}})
             user.password = password
             user.save(err => {
-                if (err) return res.status(401).json({error: {name: 'Failed to update on database',
-                                                            message: err}})
+                if (err) return res.status(401).json({error: {name: req.i18n.t('error:database.users.update.failed.password'),
+                                                              message: err}})
             })
             return res.status(201).json({username: user.username})
     })

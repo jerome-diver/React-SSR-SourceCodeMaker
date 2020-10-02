@@ -1,0 +1,29 @@
+{
+  "account": {
+    "validation": {
+      "title": "SourceCodeMaker, account validation process",
+      "subject": "Confirm your email to validate your SourceCodeMaker account",
+      "content": {
+        "title": "Account validation link for SourceCodeMaker web site.",
+        "introduction": "The {{date_start}}, you created a new user account on my SourceCodeMaker web site.",
+        "text": "You should confirm your new account before the {{date_end}} by clicking the next link."
+      },
+      "link_label": "Click this link to validate account",
+      "error": {
+        "name": "Account validation error",
+        "text": "Your account is already validated"
+      }
+
+    },
+    "password": {
+      "title": "SourceCodeMaker: Reset password process",
+      "subject": "Confirm you want to reset your SourceCodeMaker password",
+      "content": {
+        "title": "Reset your password of your SourceCodeMaker web site account",
+        "introduction": "The {{date_now}}, you forget your password and asked for reset this one to setup a new one on SourceCodeMaker web site.",
+        "text": "You should confirm before {{date_end}}, that you want to create a new password for your linked account on SourceCodeMaker web site."
+      },
+      "link_label": "Click this link to settup a new password online"
+    }
+  }
+}
