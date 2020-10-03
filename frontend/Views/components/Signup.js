@@ -34,12 +34,12 @@ const SignUp = (props) => {
                 create(user)
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
-                        else if (!response.accepted) fireError(t('signup.failed.title'), t('signup.failed.user'))
+                        else if (!response.accepted) fireError(t('popup.signup.failed.title'), t('popup.signup.failed.user'))
                         else sendEmailLink('newAccount', user, emailSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)
-        } else fireError(t('signup.failed.title'), t('signup.failed.password'))
+        } else fireError(t('popup.signup.failed.title'), t('popup.signup.failed.password'))
     }
     const renderRedirect = () => { 
         console.log("--- Signup component: Rich redirection to", redirect)

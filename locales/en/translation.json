@@ -92,14 +92,6 @@
     "button_submit": "Create account",
     "link": {
       "have_account": "I allready have an account"
-    },
-    "popup": {
-      "failed": {
-        "title": "Signup failed",
-        "user": "User rejected",
-        "password": "Password confirmation rejected"
-      },
-      "created": "A new user account has been created, but need a validation to be used. look at your email box."
     }
   },
   "signin": {
@@ -145,11 +137,25 @@
     "signup": "Sign Up",
     "admin": "Administrate"
   },
-  "fire_dialog": {
-    "email_change_text": "<p>You can edit email, but you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
-    "email_change_title": "Process to change email",
-    "email_change_button_ok": "Unlock edit mail",
-    "email_change_button_cancel": "Cancel email edit"
+  "popup": {
+    "signup": {
+      "failed": {
+        "title": "Signup failed",
+        "user": "User rejected",
+        "password": "Password confirmation rejected"
+      },
+      "created": "A new user account has been created, but need a validation to be used. look at your email box."
+    },
+    "email": {
+      "change": {
+        "text": "<p>You can edit email, but you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
+        "title": "Process to change email",
+        "button": {
+          "ok": "Unlock edit mail",
+          "cancel": "Cancel email edit"
+        }
+      }
+    }
   },
   "sanitizer": {
     "backend": {

@@ -92,14 +92,6 @@
     "button_submit": "Créer le compte",
     "link": {
       "have_account": "J'ai déjà un compte"
-    },
-    "popup": {
-      "failed": {
-        "title": "Enregistrement échoué",
-        "user": "Utilisateur rejeté",
-        "password": "Mot de passe de confirmation rejeté"
-      },
-      "created": "Un nouveau compte utilisateur vient d'être créé, mais il faut encore le valider pour qu'il soit utilisable. Regardez dans vôtre boite mail."
     }
   },
   "signin": {
@@ -145,11 +137,25 @@
     "signup": "S'enregistrer",
     "admin": "Administration"
   },
-  "fire_dialog": {
-    "email_change_text": "<p>Vous pouvez changer d'email, mais vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
-    "email_change_title": "Protocole pour changer d'email",
-    "email_change_button_ok": "Permettre l'édition",
-    "email_change_button_cancel": "Annuler l'édition"
+  "popup": {
+    "signup": {
+      "failed": {
+        "title": "Enregistrement échoué",
+        "user": "Utilisateur rejeté",
+        "password": "Mot de passe de confirmation rejeté"
+      },
+      "created": "Un nouveau compte utilisateur vient d'être créé, mais il faut encore le valider pour qu'il soit utilisable. Regardez dans vôtre boite mail."
+    },
+    "email": {
+      "change": {
+        "text": "<p>Vous pouvez changer d'email, mais vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
+        "title": "Protocole pour changer d'email",
+        "button": {
+          "ok": "Permettre l'édition",
+          "cancel": "Annuler l'édition"
+        }
+      }
+    }
   },
   "sanitizer": {
     "backend": {

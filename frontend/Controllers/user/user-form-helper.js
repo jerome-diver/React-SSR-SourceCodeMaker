@@ -39,7 +39,7 @@ const sendEmailLink = (what, user_data, emailSuccess, emailFailed) => {
         switch (type) {
             case 'newAccount':
                 action = validateAccount
-                htmlText = `<div class='alert alert-info'><p>${i18n.t('signup.popup.created')}</p>`
+                htmlText = `<div class='alert alert-info'><p>${i18n.t('popup.signup.created')}</p>`
                 break
             case 'revokeEmailUpdate':
                 action = cancelEmailUpdate
@@ -74,12 +74,12 @@ const emailHasBeenSent = (success, failed, htmlText) => {
 }
 
 const canChangeEmail = (unlock, lock) => {
-    Swal.fire({ title: i18n.t('fire_dialog.email_change_title'), 
-                html: i18n.t('fire_dialog.email_change_text'),
+    Swal.fire({ title: i18n.t('popup.email.change.title'), 
+                html: i18n.t('popup.email.change.text'),
                 icon: 'warning',
                 showCancelButton: true, 
-                cancelButtonText: i18n.t('fire_dialog.email_change_button_cancel'),
-                confirmButtonText: i18n.t('fire_dialog.email_change_button_ok')} )
+                cancelButtonText: i18n.t('popup.email.change.button.cancel'),
+                confirmButtonText: i18n.t('popup.email.change.button.ok')} )
         .then(result => (result.value) ? unlock() : lock() )
 }
 
