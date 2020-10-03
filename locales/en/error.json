@@ -48,5 +48,11 @@
         }
       }
     }
+  },
+  "validation": {
+    "title": "{{username}} account validation",
+    "status": "Validation account has $t(error:validation.{{validated}})",
+    "success": "been successfuly passed",
+    "failed": "been failed"
   }
 }

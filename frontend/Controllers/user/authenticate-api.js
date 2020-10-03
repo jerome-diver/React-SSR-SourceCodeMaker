@@ -28,18 +28,20 @@ const signout = async (id, signal) => {
     } catch(error) { return JSON.stringify({error: error}) }
 }
 
-const setupPassword = async (username) => {
+/* POST request to send email with a link to setup new password */
+const resetPassword = async (user) => {
     try {
-        let response = await fetch('/api/users/reset_password', {
+        let response = await fetch('/api/mailer/account/reset_password', {
             method: 'POST',
             credentials: 'include',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({username: username})
+            body: JSON.stringify({username: user.username})
         } )
         return await response.json()
     } catch(error) { return JSON.stringify({error: error}) }
 }
 
+/* POST request to rich new password from link clicked after SetupPassword.component process */
 const updatePassword = async (id, ticket, password) => {
     try {
         let response = await fetch(`/api/users/setup_password/${id}/${ticket}`, {
@@ -51,9 +53,22 @@ const updatePassword = async (id, ticket, password) => {
     } catch (error) { return JSON.stringify({error: error}) }
 }
 
-const validatePassword = async (token, ticket) => {
+/* POST request to send email to validate new account */
+const validateAccount = async (user) => {
+    console.log("Start to send email with validation link inside for ", username)
     try {
-        const url = `/api/validate/${ticket}`
+        let response = await fetch(`/api/mailer/account/validate`, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify( {username: user.username} ) } )
+        return response.json() 
+    } catch(error) { return{error: error} }
+}
+
+/* POST request to validate account from link clicked after Validate.component process */
+const updateAccount = async (token, ticket) => {
+    try {
+        const url = `/api/users/validate/account/${ticket}`
         let response = await fetch(url, {
             method: 'POST',
             credentials: 'include',
@@ -67,25 +82,21 @@ const validatePassword = async (token, ticket) => {
     } catch (error) { return{error: error} }
 }
 
-const validateAccount = async (username) => {
-    console.log("Start to send email with validation link inside for ", username)
-    try {
-        let response = await fetch(`/api/validate`, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify( {username: username} ) } )
-        return response.json() 
-    } catch(error) { return{error: error} }
-}
-
-const updateEmail = async (username) => {
+const updateEmail = async (user) => {
     try {
         let response = await fetch('', {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify( {username: username} ) } )
+            body: JSON.stringify( {username: user.username} ) } )
         return response.json() 
     } catch(error) { return{error: error} }
 }
 
-export { signin, signout, setupPassword, validatePassword, validateAccount, updatePassword }
+const cancelEmailUpdate = (user) => {
+    
+}
+
+export { signin, signout, 
+         resetPassword, updatePassword, 
+         updateAccount, validateAccount, 
+         cancelEmailUpdate, updateEmail }

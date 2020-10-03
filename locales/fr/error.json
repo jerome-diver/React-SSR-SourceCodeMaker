@@ -48,5 +48,11 @@
         }
       }
     }
+  },
+  "validation": {
+    "title": "Validation du compte de {{username}}",
+    "status": "La validation du compte est $t(error:validation.{{validated}})",
+    "success": "un succès",
+    "failed": "un échec"
   }
 }

@@ -27,7 +27,8 @@ const PageSwitcher = (props) => {
             <Route path="/subjects" component={Subjects}/>
             <PrivateRoute path="/users" component={Users}/>
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
-            <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} userRole={getRole()} />}/>
+            <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 
+                                                                                    userRole={getRole()} />}/>
             <Route path="/signin" render={(props) => <Sign {...props} action="in" />} />
             <Route path="/signup" render={(props) => <Sign {...props} action="up" />}/>
             <PrivateRoute path="/signout" component={(props) => <Sign {...props} action="out" />}/>

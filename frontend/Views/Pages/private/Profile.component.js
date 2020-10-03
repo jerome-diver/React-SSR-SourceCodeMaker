@@ -6,7 +6,7 @@ import { faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
-import { canChangeEmail, validatePassword, cypher } from '../../../Controllers/user/user-form-helper'
+import { canChangeEmail, validatePassword, cypher, sendEmailLink } from '../../../Controllers/user/user-form-helper'
 import { update } from '../../../Controllers/user/action-CRUD'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
@@ -77,19 +77,28 @@ const Profile = (props) => {
                 const [ haveError, validated ] = validatePassword(user.form.password)
                 if (haveError) setMessage( {text: haveError} )
                 else if (validated) {
-                    const password = cypher(user.form.password)
-                    const parsedUser = prepareCleanUser(user.form)
-                    update(parsedUser, password, user.session.id)
-                        .then(response => {
-                            setLoaded(true)
-                            if (response.error) setMessage( {text: response.error} )
-                            else {
-                                setUser({session: washUser(response.user), form: washUser(response.user)})
-                                setSession(response)
-                                setMessage( {text: {name: t('profile.modal.success.title'), 
-                                                    message: t('profile.modal.success.text')}})
-                            }
-                } ) }
+                    /* check email to update and apply */
+                    if (user.form.email != user.origin.email) {
+                        console.log("---Profile component: got it, i should send an email to confirm email change")
+                        sendEmailLink('updateEmail', user.form, )
+                        sendEmailLink('revokeEmailUpdate', user.origin, )
+                    } else {
+
+
+
+                        const password = cypher(user.form.password)
+                        const parsedUser = prepareCleanUser(user.form)
+                        update(parsedUser, password, user.session.id)
+                            .then(response => {
+                                if (response.error) setMessage( {text: response.error} )
+                                else {
+                                    setUser({session: washUser(response.user), form: washUser(response.user)})
+                                    setSession(response)
+                                    setMessage( {text: {name: t('profile.modal.success.title'), 
+                                                        message: t('profile.modal.success.text')}})
+                                }
+                                setLoaded(true)
+                } ) } }
             } else setMessage( {text: {name:t('sanitizer.frontend.password.missing.title'), 
                                        message: t('sanitizer.frontend.password.missing.text')} } )
         }

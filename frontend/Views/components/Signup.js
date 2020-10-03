@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { fireError, validatePassword, 
-         sendEmailLinkToValidate } from '../../Controllers/user/user-form-helper'
+import { fireError, validatePassword, sendEmailLink } from '../../Controllers/user/user-form-helper'
 import { html_new_user } from '../../Views/helpers/config'
 import { create } from '../../Controllers/user/action-CRUD'
 import { useCookies } from 'react-cookie'
@@ -37,7 +36,7 @@ const SignUp = (props) => {
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
                         else if (!response.accepted) fireError('Signup Failed', 'User rejected')
-                        else sendEmailLinkToValidate(user.username, html_new_user, emailSuccess, emailFailed)
+                        else sendEmailLink(user, html_new_user, emailSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)

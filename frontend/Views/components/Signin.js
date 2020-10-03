@@ -8,7 +8,7 @@ import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
 import { useCookies } from 'react-cookie'
-import { signin, setupPassword, validateAccount } from '../../Controllers/user/authenticate-api'
+import { signin, resetPassword, validateAccount } from '../../Controllers/user/authenticate-api'
 import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
 import validator from 'validator'
 import Loading from '../Pages/public/Loading.component'
@@ -206,7 +206,7 @@ const FixProblem = (props) => {
     const toggle = () => { setCollapse(!collapse)}
     const forgetPassword = () => {
         const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on reset password link to setup a new one.</p></div>"
-        setupPassword(username).then(response => {
+        resetPassword(username).then(response => {
             (response.error) ? getError(response.error) : emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent) } )
     }
     const sendValidationAgain = () => { 

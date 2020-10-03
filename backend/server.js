@@ -32,7 +32,7 @@ const usersRouter = require('./routes/users')
 const contactsRouter = require('./routes/contacts')
 const subjectRouter = require('./routes/subject')
 const adminRouter = require('./routes/admin')
-const validateEmailRouter = require('./routes/validate')
+const sendMailRouter = require('./routes/mailer')
 const rolesRouter = require('./routes/roles')
 const authRouter = require('./routes/authenticate')
 const setLanguage = require('./routes/language')
@@ -68,7 +68,7 @@ i18n
     app.use('/template/contact', contactsRouter)
     app.use('/api/subject/*', subjectRouter)
     app.use('/api/admin', adminRouter)
-    app.use('/api/validate', validateEmailRouter)
+    app.use('/api/mailer', sendMailRouter)
     app.use('/', layoutRouter)
 
     /* express-jwt handle error message it thrown */

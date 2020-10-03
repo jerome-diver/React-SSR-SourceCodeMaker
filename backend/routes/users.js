@@ -108,32 +108,7 @@ router.put('/:id', jsonParser, checkUpdateUser, (req, res) => {
 
 /* DELETE delete user */
 
-/* POST to reset password by new email to access new password setup */
-router.post('/reset_password', jsonParser, (req, res) => {
-    User.findOne({username: req.body.username}, 
-        (err, user) => { 
-            if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( {error: { name: req.i18n.t('error:router.users.delete.missing.name'),
-                                                               message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-            const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
-            const url = 'http:/localhost:3000/setup_password'
-            const setup_password_link = `${url}/${user.id}/${user.ticket}`
-            res.app.mailer.send('send_email_to_user', {
-                to: user.email,
-                subject: req.i18n.t('mailer:account.password.subject'),
-                title: req.i18n.t('mailer:account.password.title'),
-                content_title: req.i18n.t('mailer:account.password.content.title'),
-                introduction: req.i18n.t('mailer:account.password.content.introduction', {date_now: date_now}),
-                text: req.i18n.t('mailer:account.password.content.text', {date_end: date_end}),
-                link_validate: setup_password_link,
-                validation_text: req.i18n.t('mailer:account.password.link_label')
-            }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                           : res.status(200).json({sent: true})    } )
-    } )
-} )
-
-/* SETUP PASSWORD */
+/* POST user account to setup new password */
 router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
     const password = req.body.password
     const id = req.params.id
@@ -151,5 +126,34 @@ router.post('/setup_password/:id/:ticket', jsonParser, (req, res) => {
             return res.status(201).json({username: user.username})
     })
 })
+
+/* POST user account validation process with user ticket params, and http_only token body session */
+router.post('/validate/account/:ticket', jsonParser, (req, res) => {
+    console.log("===validate router (/:ticket POST): API search a user with from token decoded user_id, then update to be validated if not expired")
+    const secret = process.env.JWT_SECRET
+    const ticket = req.params.ticket
+    jwt.verify(req.body.token, secret, (error, decoded) => {
+        if(error) return res.status(403).json(
+            {validated: 'failed',
+             error: {name: req.i18n.t('error:router.validation.wrong_token.name'), message: error}})
+        if (decoded.valid_util <= moment().valueOf()) 
+            return res.status(401).send(
+                {validated: 'failed', 
+                 error: { name: req.i18n.t('error:router.validation.verify.expired.name'), 
+                          message: req.i18n.t('error:router.validation.verify.expired.name', {date_expiry: decoded.valid_until}) } } )
+        console.log("=== validate router (/:ticket POST): TOKEN user_id is", decoded.user_id)
+        console.log("=== validate router (/:ticket POST): ticket params is ", ticket)
+        User.findOneAndUpdate( { _id: decoded.user_id, ticket: ticket }, 
+                               { validated: true },
+                               {new: true},
+                               (error, user) => { 
+            if (error) return res.status(401).json({
+                                    validated: 'failed',
+                                    error: {name: req.i18n.t('error:database.user.update.failed.name'), 
+                                            message: error}})
+            return res.json( { validated: 'success' } )
+        } )
+    } ) 
+} )
 
 module.exports = router
