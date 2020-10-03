@@ -94,6 +94,11 @@
       "have_account": "I allready have an account"
     },
     "popup": {
+      "failed": {
+        "title": "Signup failed",
+        "user": "User rejected",
+        "password": "Password confirmation rejected"
+      },
       "created": "A new user account has been created, but need a validation to be used. look at your email box."
     }
   },

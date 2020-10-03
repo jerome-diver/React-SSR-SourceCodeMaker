@@ -94,6 +94,11 @@
       "have_account": "J'ai déjà un compte"
     },
     "popup": {
+      "failed": {
+        "title": "Enregistrement échoué",
+        "user": "Utilisateur rejeté",
+        "password": "Mot de passe de confirmation rejeté"
+      },
       "created": "Un nouveau compte utilisateur vient d'être créé, mais il faut encore le valider pour qu'il soit utilisable. Regardez dans vôtre boite mail."
     }
   },

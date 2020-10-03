@@ -34,15 +34,15 @@ const SignUp = (props) => {
                 create(user)
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
-                        else if (!response.accepted) fireError('Signup Failed', 'User rejected')
+                        else if (!response.accepted) fireError(t('signup.failed.title'), t('signup.failed.user'))
                         else sendEmailLink('newAccount', user, emailSuccess, emailFailed)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)
-        } else fireError('Password request failed', 'Not the same password confirmed')
+        } else fireError(t('signup.failed.title'), t('signup.failed.password'))
     }
     const renderRedirect = () => { 
-        console.log("Rich redirection to", redirect)
+        console.log("--- Signup component: Rich redirection to", redirect)
         //if (redirect !== '') { return <Redirect to={redirect}/> }
         if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> }
     }
