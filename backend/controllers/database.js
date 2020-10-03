@@ -24,8 +24,8 @@ const init_db = function() {
               switch(model) {
                 case 'Role':
                   Object.keys(config[model]).forEach(role => {
-                    Role.findOne(config[model][role].name, (err, x) => {
-                      if (x) console.log('Role exist already:', role)
+                    Role.findOne({name: config[model][role].name}, (err, x) => {
+                      if (x) console.log('Role exist already:', config[model][role].name)
                       else {
                         Role.create(config[model][role], (err, r) => {
                           (err) ? console.log('Failed to create role', role, err.code)

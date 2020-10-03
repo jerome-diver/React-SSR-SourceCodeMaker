@@ -86,7 +86,7 @@ i18n
   })
 
 // Initialize first need entries in MongoDB database collections.
-//init_db()
+init_db()
 
 // scheduler job tasks actions
 //agenda_schedule(agenda)
