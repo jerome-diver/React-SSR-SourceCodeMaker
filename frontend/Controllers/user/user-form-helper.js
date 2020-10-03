@@ -39,7 +39,7 @@ const sendEmailLink = (what, user_data, emailSuccess, emailFailed) => {
         switch (type) {
             case 'newAccount':
                 action = validateAccount
-                htmlText = i18n.t('')
+                htmlText = `<div class='alert alert-info'><p>${i18n.t('signup.popup.created')}</p>`
                 break
             case 'revokeEmailUpdate':
                 action = cancelEmailUpdate

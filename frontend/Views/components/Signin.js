@@ -206,12 +206,12 @@ const FixProblem = (props) => {
     const toggle = () => { setCollapse(!collapse)}
     const forgetPassword = () => {
         const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on reset password link to setup a new one.</p></div>"
-        resetPassword(username).then(response => {
+        resetPassword({username: username}).then(response => {
             (response.error) ? getError(response.error) : emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent) } )
     }
     const sendValidationAgain = () => { 
         const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
-        validateAccount(username)
+        validateAccount({username: username})
             .then(response => { 
                 console.log('GET BACK: ', response.sent, response.error)
                 if(response.sent) emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent)

@@ -92,6 +92,9 @@
     "button_submit": "Create account",
     "link": {
       "have_account": "I allready have an account"
+    },
+    "popup": {
+      "created": "A new user account has been created, but need a validation to be used. look at your email box."
     }
   },
   "signin": {
