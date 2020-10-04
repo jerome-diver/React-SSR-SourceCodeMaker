@@ -3,12 +3,10 @@ import { Spinner, Alert, Modal, Button } from 'react-bootstrap'
 import { Route, Redirect } from 'react-router-dom'
 import { isAuthenticated, useAuthenticate } from '../../../Controllers/context/authenticate'
 
-
 const  PrivateRoute = ({component: Component, ...rest}) => {
 
     const { authority } = rest
-    console.log("Check for private route access...")
-    console.log("For authority role access on demand is:", authority)
+    console.log("--- PrivateRoute component: For authority role { authority } props access on demand is:", authority)
 
     const [ access, setAccess ] = useState(false)
     const [ loaded, setLoaded ] = useState(false)
@@ -18,12 +16,12 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
 
     useEffect(() => {
         const user = getUser()
-        console.log("--- PrivateRouter useEffect entry point, user is", user)
+        console.log("--- PrivateRoute component useEffect entry point, user is", user)
         if (!user) setError('Undefined user, you need to be logged in.')
         else if (!loaded) {
-            if(user) isAuthenticated(user.id)
+            if(user) isAuthenticated()
                     .then(response => {
-                        setAccess(response.authorized)
+                        setAccess(response.authenticated)
                         setLoaded(true) } )
                     .catch(error => setError(error) ) }
     }, [])

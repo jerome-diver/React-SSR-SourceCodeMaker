@@ -42,7 +42,7 @@ router.post('/account/validate', jsonParser, (req, res) => {
     } } )
 } )
 
-/* POST to reset password by new email to access new password setup */
+/* POST to send email to reset account password by rich destination to password setup page */
 router.post('/account/reset_password', jsonParser, (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
@@ -62,6 +62,31 @@ router.post('/account/reset_password', jsonParser, (req, res) => {
                 text: req.i18n.t('mailer:account.password.content.text', {date_end: date_end}),
                 link_validate: setup_password_link,
                 validation_text: req.i18n.t('mailer:account.password.link_label')
+            }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
+                                           : res.status(200).json({sent: true})    } )
+    } )
+} )
+
+/* POST to send email to modify account email by rich destination to email setup page */
+router.post('/account/modify_email', jsonParser, (req, res) => {
+    User.findOne({username: req.body.username}, 
+        (err, user) => { 
+            if (err) { return res.status(401).json({error: err}) }
+            if(!user) { return res.status(401).json( {error: { name: req.i18n.t('error:router.users.delete.missing.name'),
+                                                               message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
+            const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            const url = 'http:/localhost:3000/modify_email'
+            const setup_email_link = `${url}/${user.id}/${user.ticket}`
+            res.app.mailer.send('send_email_to_user', {
+                to: user.email,
+                subject: req.i18n.t('mailer:account.email.subject'),
+                title: req.i18n.t('mailer:account.email.title'),
+                content_title: req.i18n.t('mailer:account.email.content.title'),
+                introduction: req.i18n.t('mailer:account.email.content.introduction', {date_now: date_now}),
+                text: req.i18n.t('mailer:account.email.content.text', {date_end: date_end}),
+                link_validate: setup_email_link,
+                validation_text: req.i18n.t('mailer:account.email.link_label')
             }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
                                            : res.status(200).json({sent: true})    } )
     } )

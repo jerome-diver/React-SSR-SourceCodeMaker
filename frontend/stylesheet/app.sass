@@ -1,6 +1,7 @@
 body
   position: relative
   background-color: #000
+  background-image: url('../img/background_dark_leether_canvas.png')
   display: block
   height: 100vh
   width: 100%
@@ -58,7 +59,7 @@ article
 
 #message_contact_form
   label
-    display: block;
+    display: block
 
 #submit_form_message
    margin-top: 10px
@@ -73,7 +74,9 @@ article
   border: 1px solid #172e64
   border-radius: 8px
   box-shadow: 10px 10px 6px rgb(20,20,20)
-  background-color: rgba(75,75,75,0.75)
+  //background-color: rgba(75,75,75,0.75)
+  background-image: url('../img/background_dark_canvas.png')
+  background-size: 150% 150%
   animation: spin 2s linear
 
 @keyframes spin
@@ -100,7 +103,7 @@ article
 
 #editUser
   width: 28rem
-  background-color: rgb(20, 20, 20)
+  background-color: rgba(20, 20, 20, 0.55)
   magin: 20px
 
 .modal-content
@@ -108,8 +111,12 @@ article
   color: rgb(220,220,220)
 
 #contact
-  background-color: rgba(40,40,40,0.8)
+  background-color: rgba(40,40,40,0.3)
   color: white
   .card-body
     .card-title
       border-bottom: 1px solid white
+
+.jumbotron
+  background-image: url('../img/background_dark_canvas.png')
+  background-size: 150% 150%

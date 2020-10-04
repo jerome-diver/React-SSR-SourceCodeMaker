@@ -12,14 +12,25 @@ export const IsAuthorized = () => {
   // and get back an answer if Authorized
 }
 
-export const isAuthenticated = async (id) => {
-  console.log("Fetch id", id)
+export const isAuthenticated = async () => {
   try {
-    let response = await fetch('/api/auth/authorized', {
+    let response = await fetch('/api/auth/authenticated', {
       method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      headers: { 'Accept': 'application/json', 
+                 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({id: id})
+    })
+    return await response.json()
+  } catch (err) { return { error: err } }
+}
+
+export const hasRole = async (role) => {
+  try {
+    let response = await fetch(`/api/auth/authorized/${role}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 
+                 'Content-Type': 'application/json' },
+      credentials: 'include',
     })
     return await response.json()
   } catch (err) { return { error: err } }

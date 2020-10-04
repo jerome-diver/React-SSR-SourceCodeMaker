@@ -38,3 +38,7 @@ yarn-error.log*
 
 # wrong generated compiled dev dist driectories
 **/dist/*
+
+# logs directories
+**/logs
+

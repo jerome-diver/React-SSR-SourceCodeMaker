@@ -25,7 +25,7 @@ const Home = (props) => {
       <>
           <h1><FontAwesomeIcon icon={faCoffee} size="xs" color="blue" /> { home.title }</h1>
           <hr />
-          <div id="home_article">{ parse(`${home.content}`) }</div>
+          <div id="home_article">{ parse(home.content) }</div>
       </>
     )
   } else return <><Loading /></>

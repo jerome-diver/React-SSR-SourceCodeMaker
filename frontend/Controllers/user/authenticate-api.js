@@ -46,6 +46,7 @@ const updatePassword = async (id, ticket, password) => {
     try {
         let response = await fetch(`/api/users/setup_password/${id}/${ticket}`, {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify({password: cypher(password)})
         } )
@@ -84,7 +85,7 @@ const updateAccount = async (token, ticket) => {
 
 const updateEmail = async (user) => {
     try {
-        let response = await fetch('', {
+        let response = await fetch('/api/mailer/account/modify_email', {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify( {username: user.username} ) } )

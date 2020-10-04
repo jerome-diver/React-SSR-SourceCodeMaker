@@ -1,6 +1,7 @@
-import fs from 'fs'
-import path from 'path'
 import express from 'express'
+import morganBody from 'morgan-body'
+import fs from 'fs'
+const path = require('path')
 const mailer = require('express-mailer')
 const cors = require('cors')
 const favicon = require('serve-favicon')
@@ -71,22 +72,25 @@ i18n
     app.use('/api/mailer', sendMailRouter)
     app.use('/', layoutRouter)
 
-    /* express-jwt handle error message it thrown */
-    /* app.use((err, req, res, next) => {
-      if (err) {
-        if (err.name === 'UnauthorizedError') return res.status('401').json({error: err.name + ": " + err.message})
-        if (err.code === 'EBADCSRFTOKEN') return res.status('403').json({error: err.message})
-        else return res.status('400').json({error: err.name + ": " + err.message}) }
-      next()
-    }) */
-
     const port = normalizePort(process.env.SERVER_PORT || '3000')
-
     app.listen(port, () => { console.log("Express server started successfully") })
   })
 
 // Initialize first need entries in MongoDB database collections.
 init_db()
+
+// Logger body pretty if not production
+if (process.env.NODE_ENV != 'production') { 
+  morganBody(app, 
+    {theme: 'darkened'}) 
+} else {
+  const log = fs.createWriteStream(
+    path.join(__dirname, "logs", "express.log"), { flags: 'a'}
+  )
+  morganBody(app, 
+    { noColors: true,
+      stream: log })
+}
 
 // scheduler job tasks actions
 //agenda_schedule(agenda)
