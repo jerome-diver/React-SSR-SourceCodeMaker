@@ -50,14 +50,18 @@ const isValid = (req, res, next) => {
     const secret = process.env.JWT_SECRET
     console.log("=== isValid middleware check body token to be sign validated and not expired")
     jwt.verify(req.body.token, secret, (error, decoded) => {
-        if(error) return res.status(403).json(
-            {validated: 'failed',
-             error: {name: req.i18n.t('error:router.validation.wrong_token.name'), message: error}})
+        if(error) return res.status(403).json( {
+            validated: 'failed',
+            error: {
+                name: req.i18n.t('error:router.validation.wrong_token.name'), 
+                message: error } } )
         if (decoded.valid_util <= moment().valueOf()) 
-            return res.status(401).send(
-                {validated: 'failed', 
-                 error: { name: req.i18n.t('error:router.validation.verify.expired.name'), 
-                          message: req.i18n.t('error:router.validation.verify.expired.name', {date_expiry: decoded.valid_until}) } } )
+            return res.status(401).send( {
+                validated: 'failed', 
+                error: { 
+                    name: req.i18n.t('error:router.validation.verify.expired.name'), 
+                    message: req.i18n.t('error:router.validation.verify.expired.name', 
+                                        { date_expiry: decoded.valid_until } )   } } )
         req.ticket = req.params.ticket
         req.user_id = decoded.user_id
     })

@@ -42,7 +42,7 @@ const update = async (user, password, id) => {
             headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({user: user, password: password}) } )
+            body: JSON.stringify({user_form: user, password: password}) } )
         return await response.json()
     } catch(error) { return{error: error} }
 }

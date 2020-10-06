@@ -42,3 +42,6 @@ yarn-error.log*
 # logs directories
 **/logs
 
+# VIM sessions
+*.vim
+

@@ -1,6 +1,5 @@
 import Crypto from 'crypto'
 import Swal from 'sweetalert2'
-import { unlock_email_text } from '../../Views/helpers/config'
 import { validateAccount, updateEmail, cancelEmailUpdate, setupPassword } from '../../Controllers/user/authenticate-api'
 import { i18n } from '../../../backend/i18n'
 

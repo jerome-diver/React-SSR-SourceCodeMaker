@@ -42,10 +42,7 @@
         }
       },
       "update": {
-        "failed": {
-          "name": "User update failed",
-          "password": "Failed to update password"
-        }
+        "failed": "Update failed"
       }
     }
   },

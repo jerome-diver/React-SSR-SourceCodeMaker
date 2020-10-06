@@ -42,10 +42,7 @@
         }
       },
       "update": {
-        "failed": {
-          "name": "La mise à jour de l'utilisateur a échoué",
-          "password": "La mise à jour du mot de passe à échouée"
-        }
+        "failed": "La mise à jour a échoué"
       }
     }
   },

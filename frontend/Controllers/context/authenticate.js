@@ -1,15 +1,9 @@
 import { createContext, useContext } from 'react'
-const jwt = require('jsonwebtoken')
 
 export const AuthenticateContext = createContext();
 
 export function useAuthenticate() {
   return useContext(AuthenticateContext);
-}
-
-export const IsAuthorized = () => {
-  // should send the Cookie token (the httpOnly one) 
-  // and get back an answer if Authorized
 }
 
 export const isAuthenticated = async () => {
