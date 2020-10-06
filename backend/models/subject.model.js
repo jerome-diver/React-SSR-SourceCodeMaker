@@ -19,6 +19,10 @@ const SubjectSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
+    category_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: false
+    },
     enable: {
         type: Boolean,
         default: false

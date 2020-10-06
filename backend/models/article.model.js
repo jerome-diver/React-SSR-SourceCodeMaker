@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import mongoose, { Schema, model } from 'mongoose'
 
 /* Schema for document user for collection "articles" */
 const ArticleSchema = new Schema({
@@ -18,6 +18,10 @@ const ArticleSchema = new Schema({
     content: {
         type: String,
         trim: true,
+        unique: false
+    },
+    subject_id: {
+        type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
     enable: {

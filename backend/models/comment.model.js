@@ -19,6 +19,10 @@ const CommentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
+    article_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: false
+    },
     created: {
         type: Date,
         default: Date.now
