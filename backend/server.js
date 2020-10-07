@@ -1,5 +1,6 @@
 import express from 'express'
 import morganBody from 'morgan-body'
+const bodyParser = require('body-parser')
 import fs from 'fs'
 const path = require('path')
 const mailer = require('express-mailer')
@@ -57,19 +58,18 @@ i18n
     app.set('view engine', 'pug')                   // template views engine type (pug)
     app.use(cors())                                 // Cross sites able
     app.use(express.json())                         // JSON Express module used
-    //app.use(express.urlencoded({ extended: false }))
     app.use(express.static('build/public'))          // read dir as public
-//    app.use('/locales', express.static('../locales'))
+//  app.use('/locales', express.static('../locales'))
     // define route to use and action to respond from own defined requests
-    app.use('/api/language', setLanguage)
+    app.use('/api/language', [bodyParser.json(), setLanguage])
     app.use('/api/home', homeRouter)
-    app.use('/api/auth', authRouter)
-    app.use('/api/users', usersRouter)
-    app.use('/api/roles', rolesRouter)
+    app.use('/api/auth', [bodyParser.json(), authRouter])
+    app.use('/api/users', [bodyParser.json(), usersRouter])
+    app.use('/api/roles', [bodyParser.json(), rolesRouter])
     app.use('/template/contact', contactsRouter)
-    app.use('/api/subject/*', subjectRouter)
-    app.use('/api/admin', adminRouter)
-    app.use('/api/mailer', sendMailRouter)
+    app.use('/api/subject/*', [bodyParser.json(), subjectRouter])
+    app.use('/api/admin', [bodyParser.json(), adminRouter])
+    app.use('/api/mailer', [bodyParser.json(), sendMailRouter])
     app.use('/', layoutRouter)
 
     const port = normalizePort(process.env.SERVER_PORT || '3000')

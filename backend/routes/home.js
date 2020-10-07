@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
     console.log("=== /api/home, GET request, language is", req.i18n.language)
     const home_title = req.t('home.title')
     const home_content = req.t('home.content')
-    res.json( {title: home_title, content: home_content} )
+    res.status(200).json( {title: home_title, content: home_content} )
 })
 
 module.exports = router

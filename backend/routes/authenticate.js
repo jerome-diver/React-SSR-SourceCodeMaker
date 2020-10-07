@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const bodyParser = require('body-parser')
 import User from '../models/user.model'
 import Role from '../models/role.model'
 import { hasAuthorization, isRole } from '../controllers/authentication'
@@ -8,7 +7,6 @@ import { hasAuthorization, isRole } from '../controllers/authentication'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 
-const jsonParser = bodyParser.json()
 
 const constructIdentifier = (data) => {
     let id = {}
@@ -18,7 +16,7 @@ const constructIdentifier = (data) => {
 }
 
 /* POST to sign in user with token to ask */
-router.post('/signin', jsonParser, (req, res) => {
+router.post('/signin', (req, res) => {
     console.log("=== signin router (POST /signin): Try to get the user, his role and check he is valid")
     const id = constructIdentifier(req.body)
     if (id === {}) { res.status(400).json({error: 'You have to provide an email or a username'}) }
@@ -51,16 +49,16 @@ router.post('/signin', jsonParser, (req, res) => {
 } )
 
 /* POST to sign out user with token to ask */
-router.post('/signout', [jsonParser, hasAuthorization], (req, res) => {
+router.post('/signout', [hasAuthorization], (req, res) => {
     res.clearCookie('token')
     return res.status('200').json(true)
 } )
 
-router.post('/authenticated', [jsonParser, hasAuthorization], (req, res) => {
+router.post('/authenticated', [hasAuthorization], (req, res) => {
     return res.status(200).json({authenticated: true})
 })
 
-router.post('/authorized/:role', [jsonParser, hasAuthorization, isRole], (req, res) => {
+router.post('/authorized/:role', [hasAuthorization, isRole], (req, res) => {
     return res.status(200).json({authorized: true})
 })
 

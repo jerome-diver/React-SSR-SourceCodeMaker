@@ -1,15 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const bodyParser = require('body-parser')
 import moment from 'moment'
 import User from '../models/user.model'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 
-const jsonParser = bodyParser.json()
-
 /* POST to send email to validate new user account */
-router.post('/account/validate', jsonParser, (req, res) => {
+router.post('/account/validate', (req, res) => {
     const username = req.body.username
     User.findOne({username: username}, (err, user) => {
         if (err) {
@@ -43,7 +40,7 @@ router.post('/account/validate', jsonParser, (req, res) => {
 } )
 
 /* POST to send email to reset account password by rich destination to password setup page */
-router.post('/account/reset_password', jsonParser, (req, res) => {
+router.post('/account/reset_password', (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
@@ -68,7 +65,7 @@ router.post('/account/reset_password', jsonParser, (req, res) => {
 } )
 
 /* POST to send email to modify account email by rich destination to email setup page */
-router.post('/account/modify_email', jsonParser, (req, res) => {
+router.post('/account/modify_email', (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
