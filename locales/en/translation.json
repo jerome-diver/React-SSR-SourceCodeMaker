@@ -56,6 +56,25 @@
       "admin_only": "Administrator only can edit role"
     },
     "modal": {
+      "update": {
+        "password": {
+          "title": "Change account password",
+          "first": {
+            "label": "New password",
+            "placeholder": "enter new password",
+            "helper": "Password has to have minimum (each of them): [1 uppercase, 1 lowercase, 1 number, 1 special] character"
+          },
+          "second": {
+            "label": "Confirm new password",
+            "placeholder": "Exact password copy",
+            "helper": "If password doesn't correzpond to first one, you will not be able to update password"
+          },
+          "button": {
+            "cancel": "Cancel",
+            "submit": "Ok, validate the choice"
+          }
+        }
+      },
       "success": {
         "title": "Updated user",
         "text": "Successfuly updated user"
@@ -139,14 +158,15 @@
   },
   "popup": {
     "signup": {
+      "validate": "<div class='alert alert-info'><p>A new user account has been created, but need a validation to be used. look at your email box.</p></div>",
       "failed": {
         "title": "Signup failed",
         "user": "User rejected",
         "password": "Password confirmation rejected"
-      },
-      "created": "A new user account has been created, but need a validation to be used. look at your email box."
+      }
     },
     "email": {
+      "modify": "<div class='alert alert-info'><p>Email account has been changed, you need to validate to apply change.</p></div>",
       "change": {
         "text": "<p>You can edit email, but you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
         "title": "Process to change email",
@@ -155,6 +175,9 @@
           "cancel": "Cancel email edit"
         }
       }
+    },
+    "password": {
+      "modify": "<div class='alert alert-info'><p>Password has been changed, you need to validate to apply.</p></div>"
     }
   },
   "sanitizer": {
@@ -188,6 +211,86 @@
         "missing": {
           "title": "Missing field",
           "text": "Password have to be set."
+        }
+      }
+    }
+  },
+  "setup": {
+    "password": {
+      "header": "User password",
+      "title": "Setup your new password",
+      "subtitle": "8 characteres minimum, some upper cases and lower casses chars, a spécial char",
+      "first": {
+        "label": "Your new password identique copy",
+        "placeholder": "password",
+        "feedback": "Choose a valid password",
+        "description": "Your password should be difficult to find, and to hold."
+      },
+      "second": {
+        "label": "Confirm your password",
+        "placeholder": "confirm password (no copy/paste)",
+        "feedback": "__",
+        "description": "Second password should be same as first one."
+      },
+      "button": {
+        "submit": "Submit"
+      },
+      "error": {
+        "name": "Failed to setup password",
+        "message": "Password confirmed is not the same than password setup."
+      },
+      "modal": {
+        "success": {
+          "title": "Setup new password success",
+          "subtitle": "Happy to setup your new password",
+          "content": "You can directly access your account with this new one."
+        },
+        "failed": {
+          "subtitle": "Error status:"
+        }
+      }
+    },
+    "email": {
+      "title": "Define your account email",
+      "header": "User acoount email",
+      "subtitle": "email should be valid and exist",
+      "button": {
+        "submit": "Update email"
+      },
+      "principal": {
+        "label": "Your actual account email",
+        "placeholder": "actual account email",
+        "feedback": "Choose the existing email",
+        "description": "Your account actual email."
+      },
+      "new": {
+        "label": "Your new email",
+        "placeholder": "email",
+        "feedback": "Choose a valid email",
+        "description": "Your email should exist."
+      },
+      "repeat": {
+        "label": "Your confirmed new email copy",
+        "placeholder": "new email copy",
+        "feedback": "Copy the valid new email",
+        "description": "Your email should be the same copy than the new one."
+      },
+      "error": {
+        "name": "Failed to setup email",
+        "message": "Only account user owner can modify his account email (then he has to be connected first)."
+      },
+      "modal": {
+        "button": {
+          "home": "Home",
+          "signin": "Sign in"
+        },
+        "success": {
+          "title": "Email update process success",
+          "subtitle": "Happy to successfuly update your account email.",
+          "content": "You can now use this email to sign in your account."
+        },
+        "failed": {
+          "subtitle": "Error status:"
         }
       }
     }

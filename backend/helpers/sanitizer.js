@@ -27,13 +27,7 @@ const checkPassword = [
       .withMessage(i18n.t('sanitizer.backend.password.special'))
 ]
 
-const checkNewUser = [
-    check('username')
-      .exists()
-      .withMessage(i18n.t('sanitizer.backend.username.missing'))
-      .not()
-      .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.username.empty')),
+const checkEmail = [
     check('email')
       .exists()
       .withMessage(i18n.t('sanitizer.backend.email.missing'))
@@ -42,6 +36,16 @@ const checkNewUser = [
       .withMessage(i18n.t('sanitizer.backend.email.empty'))
       .isEmail()
       .withMessage(i18n.t('sanitizer.backend.email.valid')),
+]
+
+const checkNewUser = [
+    check('username')
+      .exists()
+      .withMessage(i18n.t('sanitizer.backend.username.missing'))
+      .not()
+      .isEmpty()
+      .withMessage(i18n.t('sanitizer.backend.username.empty')),
+      ...checkEmail,
       ...checkPassword
 ]
   
@@ -97,5 +101,5 @@ const checkDeleteItem = [
 
 export { checkNewUser, checkUpdateUser, 
          checkGetItem, checkDeleteItem,
-         checkPassword,
+         checkPassword, checkEmail,
          sanitizer }

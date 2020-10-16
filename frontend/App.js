@@ -8,10 +8,10 @@ import { AuthenticateContext } from './Controllers/context/authenticate'
 
 const App = (props) => {
   const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const { i18n, t } = useTranslation()
+  const { i18n, t } = useTranslation()
 
   useEffect( () => {
-      console.log("--- App language is", i18n.language)
+      console.log("--- App component: language is", getLanguage())
   }, [])
   
   const setSession = (data) => {  /// data: {user: ___, role: ___, language: ___}
@@ -23,13 +23,14 @@ const App = (props) => {
       removeCookies('session') }
   }
   const setLanguage  = (lng) => {
+      console.log("--- App component, Define session language cookie to", lng)
       var data = (cookies.session) ? { ...cookies.session, language: lng } : {language: lng}
       setCookies('session', data)
   }
   const getUser = () => { if (cookies.session && cookies.session.user) return cookies.session.user }
   const getRole = () => { if (cookies.session && cookies.session.role) return cookies.session.role }
   const getLanguage = () => { 
-      return (cookies.session && cookies.session.language) ? cookies.session.language : 'en'
+      if (cookies.session && cookies.session.language) return cookies.session.language
   }
 
   return (

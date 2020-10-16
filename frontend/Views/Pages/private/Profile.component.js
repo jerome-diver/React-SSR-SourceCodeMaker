@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
+import { updateEmail } from '../../../Controllers/user/authenticate-api'
+import { validateEmail } from '../../../Controllers/user/user-form-helper'
 import '../../../stylesheet/users.sass'
 import { canChangeEmail, validatePassword, cypher, sendEmailLink } from '../../../Controllers/user/user-form-helper'
 import { update } from '../../../Controllers/user/action-CRUD'
@@ -17,6 +19,13 @@ const userReducer = (state, action) => {
         session: (action.session) ? action.session : state.session, 
         form: (action.form) ? action.form : state.form ,
         origin: (action.origin) ? action.origin : state.origin }
+}
+
+const passwordReducer = (state, action) => {
+    return { 
+        first: action.first, 
+        second: action.second,
+        match: ((state.first === state.second) && state.first != '') }
 }
 
 const messageReducer = (state, action) => {
@@ -39,6 +48,12 @@ const prepareCleanUser = (clean_user) => {
     return user
 }
 
+const prepareUpdatePasswordUser = (clean_user, new_password) => {
+    const user = clean_user
+    user.password = new_password
+    return user
+}
+
 const Profile = (props) => {
     console.log("--- Profile.component start function point")
     const { userProfile, userRole } = props
@@ -54,6 +69,8 @@ const Profile = (props) => {
     const [ loaded, setLoaded ] = useState(false)
     const [ emailReadOnly, setEmailReadOnly ] = useState(false)
     const [ message, setMessage ] = useReducer(messageReducer, { text: {}, state: false })
+    const [ passwordToUpdate, setPasswordToUpdate ] = useState('')
+    const [ showPasswordModal, setShowPasswordModal ] = useState(false)
 
     useEffect( () => {
         console.log("--- Profile.component useEffect")
@@ -77,28 +94,30 @@ const Profile = (props) => {
                 const [ haveError, validated ] = validatePassword(user.form.password)
                 if (haveError) setMessage( {text: haveError} )
                 else if (validated) {
-                    /* check email to update and apply */
-                    if (user.form.email != user.origin.email) {
-                        console.log("---Profile component: got it, i should send an email to confirm email change")
-                        sendEmailLink('updateEmail', user.form, )
-                        sendEmailLink('revokeEmailUpdate', user.origin, )
-                    } else {
-
-
-
-                        const password = cypher(user.form.password)
-                        const parsedUser = prepareCleanUser(user.form)
-                        update(parsedUser, password, user.session.id)
-                            .then(response => {
-                                if (response.error) setMessage( {text: response.error} )
-                                else {
-                                    setUser({session: washUser(response.user), form: washUser(response.user)})
-                                    setSession(response)
-                                    setMessage( {text: {name: t('profile.modal.success.title'), 
-                                                        message: t('profile.modal.success.text')}})
-                                }
-                                setLoaded(true)
-                } ) } }
+                    if (user.form.email != user.origin.email) {  /*    M o d i f y   e m a i l 
+                                                                    --> send email to:
+                                                                        _ actual account email
+                                                                        _ new account email to update 
+                                                                    (with two links to accept or reject update) */
+                        console.log("--- Profile component [clickSubmit -modify email-]")
+                        sendEmailLink('updateEmail', user.form, emailSuccess, emailFailed)
+                    }
+                    const password = cypher(user.form.password)
+                    const parsedUser = (passwordToUpdate === '') 
+                            ? prepareCleanUser(user.form) 
+                            : prepareUpdatePasswordUser(user.form, passwordToUpdate)
+                    update(parsedUser, password, user.session.id)
+                        .then(response => {
+                            if (response.error) setMessage( {text: response.error} )
+                            else {
+                                setUser({session: washUser(response.user), form: washUser(response.user)})
+                                setSession(response)
+                                setMessage( {text: {name: t('profile.modal.success.title'), 
+                                                    message: t('profile.modal.success.text')}})
+                            }
+                            setLoaded(true)
+                        } ) 
+                }
             } else setMessage( {text: {name:t('sanitizer.frontend.password.missing.title'), 
                                        message: t('sanitizer.frontend.password.missing.text')} } )
         }
@@ -114,9 +133,7 @@ const Profile = (props) => {
         setUser({form: {...user.form, email: user.origin.email}})
         setEmailReadOnly(true)
     }
-    const changePassword = (e) => { 
-        console.log("Change password")
-     }
+    const changePassword = (e) => { setShowPasswordModal(true) }
     const compare = () => {  // check differences between actual entries and existing user data
         const user_formated = prepareCleanUser(user.form)
         return (user.session === user_formated)
@@ -146,6 +163,7 @@ const Profile = (props) => {
         return (
             <>
             <Messenger message={message} setMessage={setMessage} />
+            <PasswordUpdateModal show={showPasswordModal} setPasswordToUpdate={setPasswordToUpdate} />
             <Jumbotron>
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: user.form.username})}&nbsp;&nbsp; 
@@ -237,6 +255,51 @@ const Messenger = (props) => {
                 </Modal.Footer>
             </Modal>
     </>)
+}
+
+const PasswordUpdateModal = (props) => {
+    const { showModal, setPasswordToUpdate } = props
+    const { t } = useTranslation()
+    const [ password, setPassword ] = useReducer(passwordReducer, { first: '', second: '' }) 
+    const [ show, setShow ] = useState(showModal)
+
+    const closeModal = () => { setShow(false) }
+    const updatePasswordSubmit = () => {
+        if (password.match) { 
+            setPasswordToUpdate(password.first)
+            closeModal() }
+    }
+    const handleChange = name => event => { 
+        setPassword( {...password, [name]: event.target.value } )
+    }
+
+    return <>
+        <Modal show={show}>
+            <Modal.Header closeButton>
+                <Modal.Title>{t('profile.modal.update.password.title')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group controlId="formPassword">
+                        <Form.Label>{t('profile.modal.update.password.first.label')}</Form.Label>
+                        <Form.Control type='password' placeholder={t('profile.modal.update.password.first.placeholder')}
+                                      onChange={handleChange('first')} />
+                        <Form.Text className='text-muted'>{t('profile.modal.update.password.first.helper')}</Form.Text>
+                    </Form.Group>
+                    <Form.Group controlId="formPassword">
+                        <Form.Label>{t('profile.modal.update.password.second.label')}</Form.Label>
+                        <Form.Control type='password' placeholder={t('profile.modal.update.password.second.placeholder')}
+                                      onChange={handleChange('second')} />
+                        <Form.Text className='text-muted'>{t('profile.modal.update.password.second.helper')}</Form.Text>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={updatePasswordSubmit}>{t('profile.modal.update.password.button.submit')}</Button>
+                <Button onClick={closeModal}>{t('profile.modal.update.password.button.cancel')}</Button>
+            </Modal.Footer>
+        </Modal>
+    </>
 }
 
 

@@ -35,7 +35,7 @@ const PageSwitcher = (props) => {
             <PrivateRoute path="/signout" component={(props) => <Sign {...props} action="out" />}/>
             <Route path="/validate/:username/:token/:ticket" component={Validate}/>
             <PrivateRoute path="/setup_password/:id/:ticket" component={(props) => <SetupPassword {...props} /> }/>
-            <PrivateRoute path='/modify_email/:id/:ticket' component={(props) => <ModifyEmail {...props} /> }/>
+            <PrivateRoute path='/modify_email/:id/:ticket/:new_email' component={(props) => <ModifyEmail {...props} /> }/>
       </Switch>
   )
 }

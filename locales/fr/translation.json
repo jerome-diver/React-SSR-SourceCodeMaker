@@ -26,7 +26,7 @@
       "button": "email",
       "button_tooltip": "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
       "correct_error": "Choisissez une adresse email avec une syntaxe correcte",
-      "helper": "SI vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir."
+      "helper": "Si vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir."
     },
     "username": {
       "label": "Nom d'utilisateur",
@@ -56,6 +56,25 @@
       "admin_only": "Seul un administrateur peut changer un droit d'accès"
     },
     "modal": {
+      "update": {
+        "password": {
+          "title": "Changez de mot de passe du compte",
+          "first": {
+            "label": "Nouveau mot de passe",
+            "placeholder": "entrez vôtre mot de passe",
+            "helper": "Le mot de passe doit comporter  caractères minimum, et au moins: [1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial]"
+          },
+          "second": {
+            "label": "Confirmation du mot de passe",
+            "placeholder": "copie exact du nouveau mot de passe",
+            "helper": "Si ce mot de passe ne correspond pas au premier vous ne pourrez pas le modifier"
+          },
+          "button": {
+            "cancel": "Annuler",
+            "submit": "Ok, valider ce choix"
+          }
+        }
+      },
       "success": {
         "title": "Utilisateur mis à jour",
         "text": "La modification des données utiliseteurs est un succès"
@@ -144,9 +163,10 @@
         "user": "Utilisateur rejeté",
         "password": "Mot de passe de confirmation rejeté"
       },
-      "created": "Un nouveau compte utilisateur vient d'être créé, mais il faut encore le valider pour qu'il soit utilisable. Regardez dans vôtre boite mail."
+      "validate": "<div class='alert alert-info'><p>Un nouveau compte utilisateur vient d'être créé, vous devez le valider pour accepter la création.</p></div>"
     },
     "email": {
+      "modify": "<div class='alert alert-info'><p>L'email de vôtre compte a été mis à jour, vous devez valider la modification pour qu'elle soit appliquée.</p></div>",
       "change": {
         "text": "<p>Vous pouvez changer d'email, mais vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
         "title": "Protocole pour changer d'email",
@@ -155,6 +175,9 @@
           "cancel": "Annuler l'édition"
         }
       }
+    },
+    "password": {
+      "modify": "<div class='alert alert-info'><p>Le mot de passse de vôtre compte a été mis à jour, vous devez valider le changement pour qu'il soit appliqué.</p></div>"
     }
   },
   "sanitizer": {
@@ -188,6 +211,86 @@
         "missing": {
           "title": "Champ incomplet",
           "text": "Le mot de passe doit être renseigné"
+        }
+      }
+    }
+  },
+  "setup": {
+    "password": {
+      "header": "Mot de passe utilisateur",
+      "title": "Définissez vôtre nouveau mot de passe",
+      "subtitle": "8 caractères minimum, une majuscule et une minuscule (mnimum), un caractère spécial",
+      "first": {
+        "label": "Vôtre nouveau mot de passe",
+        "placeholder": "mot de passe",
+        "feedback": "Choisissez un mot de passe valide",
+        "description": "Vôtre mot de passe doit être difficle à retenir."
+      },
+      "second": {
+        "label": "Confirmez vôtre mot de passe",
+        "placeholder": "mot de passs (pas de copié/collé)",
+        "feedback": "__",
+        "description": "Le second mot de passe doit être identique à la première pioche."
+      },
+      "button": {
+        "submit": "Modifier"
+      },
+      "error": {
+        "name": "Mise à jour échouée",
+        "message": "Mot de passe de confirmation différent du mot de passe à modifier."
+      },
+      "modal": {
+        "success": {
+          "title": "Mise à jour du nouveau mot de passe réussi",
+          "subtitle": "Content d'avoir pu mettre à jour vôtre mot de passe",
+          "content": "Vous pouvez, dès à présent, accéder à vôtre compte avec ce mot de passe."
+        },
+        "failed": {
+          "subtitle": "Statut d'erreur:"
+        }
+      }
+    },
+    "email": {
+      "title": "Définissez vôtre nouvel email du compte.",
+      "header": "Email du compte utilisateur",
+      "subtitle": "un email valide et qui existe",
+      "button": {
+        "submit": "Mise à jour"
+      },
+      "principal": {
+        "label": "Vôtre email actuel du compte",
+        "placeholder": "email courant à mettre à jour",
+        "feedback": "Indiquez l'email actuel du compte",
+        "description": "Vôtre actuel email du compte."
+      },
+      "new": {
+        "label": "Vôtre nouvel email",
+        "placeholder": "nouvel email",
+        "feedback": "Choisissez un email valide",
+        "description": "Vôtre email doit exister."
+      },
+      "repeat": {
+        "label": "Confirmez vôtre nouvel email",
+        "placeholder": "nouvel email copie",
+        "feedback": "Copie le nouveau valide email",
+        "description": "Vôtre nouvel email copie doit être iddentique au nouvel email à mettre à jour."
+      },
+      "error": {
+        "name": "Mise à jour de l'email échoué",
+        "message": "Seul l'utilisateur du compte peut modifier son email (il doit donc être préalablement connecté)."
+      },
+      "modal": {
+        "button": {
+          "home": "Acceuil",
+          "signin": "Se connecter"
+        },
+        "success": {
+          "title": "Mise à jour de l'email réussi",
+          "subtitle": "Content d'avoir pu mettre à jour vôtre email de compte.",
+          "content": "Vous pouvez à présent utiliser cet email pour vous connecter à vôtre compte"
+        },
+        "failed": {
+          "subtitle": "Status d'erreur:"
         }
       }
     }

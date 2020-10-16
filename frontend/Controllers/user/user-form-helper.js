@@ -1,6 +1,6 @@
 import Crypto from 'crypto'
 import Swal from 'sweetalert2'
-import { validateAccount, updateEmail, cancelEmailUpdate, setupPassword } from '../../Controllers/user/authenticate-api'
+import { validateAccount, modifyEmail, resetPassword } from '../../Controllers/user/authenticate-api'
 import { i18n } from '../../../backend/i18n'
 
 const cypher = (password) => {
@@ -31,29 +31,29 @@ const validatePassword = (password) => {
     return [ error, passwordValidated ]
 }
 
+const validateEmail = (email) => {
+
+}
+
 const sendEmailLink = (what, user_data, emailSuccess, emailFailed) => {    
     let htmlText = null
-    const validation = (data, type) => {
-        let action = null
-        switch (type) {
-            case 'newAccount':
-                action = validateAccount
-                htmlText = `<div class='alert alert-info'><p>${i18n.t('popup.signup.created')}</p>`
-                break
-            case 'revokeEmailUpdate':
-                action = cancelEmailUpdate
-                htmlText = i18n.t('')
-                break
-            case 'updateEmail':
-                action = updateEmail
-                htmlText = i18n.t('') 
-                break
-            case 'setupPassword':
-                action = setupPassword
-                htmlText = i18n.t('') 
-                break
-        }
-        action(data)
+    let action = null
+    switch (what) {
+        case 'newAccount':
+            action = validateAccount
+            htmlText = i18n.t('popup.signup.validate')
+            break
+        case 'updateEmail':
+            action = modifyEmail
+            htmlText = i18n.t('popup.email.modify') 
+            break
+        case 'updatePassword':
+            action = resetPassword
+            htmlText = i18n.t('popup.password.modify') 
+            break
+    }
+    const validation = (data, to_do) => {
+        to_do(data)
             .then(response => { 
                 if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
                 else fireError('Failed to send email', response.error) } )
@@ -62,7 +62,7 @@ const sendEmailLink = (what, user_data, emailSuccess, emailFailed) => {
     Swal.fire({ title: 'Singup process success', html:  htmlText, icon:  'warning', 
                 showCancelButton: true, cancelButtonText: "go Home",
                 confirmButtonText: "Send email with link to validate" } )
-        .then(result => (result.value) ? validation(user_data, what) : emailFailed() ) 
+        .then(result => (result.value) ? validation(user_data, action) : emailFailed() ) 
 }
 
 const emailHasBeenSent = (success, failed, htmlText) => {
@@ -84,5 +84,5 @@ const canChangeEmail = (unlock, lock) => {
 
 const fireError = (title, text) => Swal.fire(title, text, 'error')
 
-export { cypher, checkPassword, validatePassword, 
+export { cypher, checkPassword, validatePassword, validateEmail, 
          sendEmailLink, fireError, emailHasBeenSent, canChangeEmail }

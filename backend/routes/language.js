@@ -6,8 +6,13 @@ router.post('/', (req, res)=> {
     const cookie_lng = JSON.parse(req.cookies.session).language
     req.i18n.changeLanguage(language)
     console.log("=== /api/language, POST request, language is", 
-                req.i18n.language, cookie_lng)
-    res.status(200).json({language: req.i18n.language})
+                req.language, cookie_lng)
+    return res.status(200).json({language: req.language})
+})
+
+router.get('/', (req, res)=> {
+    console.log("=== /api/language, GET request, language is", req.language)
+    return res.status(200).json({language: req.language})
 })
 
 module.exports = router

@@ -9,9 +9,9 @@ import App from '../../frontend/App'
 /* GET -all- pages. */
 router.get('*', function(req, res) {
     const context = {}
-    const cookie_lng = (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.i18n.language || 'en'
+    const cookie_lng = (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.language || 'en'
     req.i18n.changeLanguage(cookie_lng)
-    console.log("=== / layout, GET request, language is", req.i18n.language)
+    console.log("=== / layout, GET request, language is", req.language)
     const appContent = renderToString(
         <I18nextProvider i18n={req.i18n}>
             <StaticRouter location={req.url} context={context}>
@@ -25,7 +25,7 @@ router.get('*', function(req, res) {
     } else {
         res.render('layout', { 
         title: req.t('head.title'),
-        lang: req.i18n.language,
+        lang: req.language,
         name: req.t('head.meta.name'),
         content: req.t('head.meta.content'),
         }, (err, html) => {

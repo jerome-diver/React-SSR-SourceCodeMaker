@@ -3,7 +3,7 @@ const router = express.Router()
 import User from '../models/user.model'
 import Role from '../models/role.model'
 import jwt from 'jsonwebtoken'
-import { checkNewUser, checkUpdateUser, checkPassword, sanitizer } from '../helpers/sanitizer'
+import { checkNewUser, checkUpdateUser, checkPassword, checkEmail, sanitizer } from '../helpers/sanitizer'
 import { hasAuthorization, isRole, isValid, isAdmin } from '../controllers/authentication'
 require('dotenv').config('../../')
 
@@ -83,7 +83,7 @@ router.put('/:id', [hasAuthorization, checkUpdateUser, sanitizer], (req, res) =>
 /* DELETE delete user */
 
 /* POST user account to setup new password */
-router.post('/setup_password/:id/:ticket', [checkPassword, hasAuthorization, sanitizer], (req, res, next) => {
+router.post('/setup_password/:id/:ticket', [hasAuthorization, checkPassword, sanitizer], (req, res, next) => {
     const password = req.body.password
     const id = req.params.id
     const ticket = req.params.ticket
@@ -102,11 +102,25 @@ router.post('/setup_password/:id/:ticket', [checkPassword, hasAuthorization, san
                 return res.status(201).json({username: user.username}) }) }
 })
 
-/* POST user account validation process with user ticket params, and http_only token body session */
+/* POST user account validation process with user ticket params and http_only token body session */
 router.post('/validate/account/:ticket', isValid, (req, res) => {
     console.log("=== users router (/validate/account/:ticket POST):\n\tTOKEN user_id: %s\n\tticket: %s", req.user_id, req.ticket)
     User.findOneAndUpdate( { _id: req.user_id, ticket: req.ticket }, 
                            { validated: true },
+                           {new: true},
+                           (error, user) => { 
+        if (error) return res.status(401).json({
+                                validated: 'failed',
+                                error: {name: req.i18n.t('error:database.user.update.failed.name'), 
+                                        message: error}})
+        return res.json({validated: 'success'}) })
+})
+
+/* POST user email account modify with user ticket params and hhtp_only token body session */
+router.post('/modify/email/:ticket', [isValid, checkEmail, sanitizer], (req, res) => {
+    console.log("=== users router (/modify/email/:ticket POST):\n\tTOKEN user_id: %s\n\tticket: %s", req.user_id, req.ticket)
+    User.findOneAndUpdate( { _id: req.user_id, ticket: req.ticket }, 
+                           { email: req.body.newEmail },
                            {new: true},
                            (error, user) => { 
         if (error) return res.status(401).json({

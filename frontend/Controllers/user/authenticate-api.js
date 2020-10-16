@@ -41,19 +41,6 @@ const resetPassword = async (user) => {
     } catch(error) { return JSON.stringify({error: error}) }
 }
 
-/* POST request to rich new password from link clicked after SetupPassword.component process */
-const updatePassword = async (id, ticket, password) => {
-    try {
-        let response = await fetch(`/api/users/setup_password/${id}/${ticket}`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({password: cypher(password)})
-        } )
-        return response.json()
-    } catch (error) { return JSON.stringify({error: error}) }
-}
-
 /* POST request to send email to validate new account */
 const validateAccount = async (user) => {
     console.log("Start to send email with validation link inside for ", username)
@@ -66,29 +53,12 @@ const validateAccount = async (user) => {
     } catch(error) { return{error: error} }
 }
 
-/* POST request to validate account from link clicked after Validate.component process */
-const updateAccount = async (token, ticket) => {
-    try {
-        const url = `/api/users/validate/account/${ticket}`
-        let response = await fetch(url, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {  'Accept': 'application/json', 
-                        'Content-Type': 'application/json',
-                       // 'Authorization': `Bearer ${token}`
-                     },
-            body: JSON.stringify({token: token})
-        } )
-        return await response.json()
-    } catch (error) { return{error: error} }
-}
-
-const updateEmail = async (user) => {
+const modifyEmail = async (user) => {
     try {
         let response = await fetch('/api/mailer/account/modify_email', {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify( {username: user.username} ) } )
+            body: JSON.stringify( {newEmail: user.email } ) } )
         return response.json() 
     } catch(error) { return{error: error} }
 }
@@ -98,6 +68,6 @@ const cancelEmailUpdate = (user) => {
 }
 
 export { signin, signout, 
-         resetPassword, updatePassword, 
-         updateAccount, validateAccount, 
-         cancelEmailUpdate, updateEmail }
+         resetPassword, 
+         validateAccount, 
+         modifyEmail }

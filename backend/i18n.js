@@ -14,7 +14,7 @@ const frI18nError = require('../locales/fr/error.json')
 const options = {
     whiteList: ['en', 'fr', 'th'],
     fallbackLng: 'en',
-    //preload: ['en', 'fr'],
+    preload: ['en', 'fr'],
     ns: ['translation', 'mailer', 'error'],
     defaultNS: 'translation',
     load: 'languageOnly',
