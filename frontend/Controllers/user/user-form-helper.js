@@ -8,81 +8,70 @@ const cypher = (password) => {
 }
 
  const checkPassword = (password) => {
-    var checkChar = {
-        countEnough: (password.length >= 8),
+    const checkChar = {
+        minimum: (password.length >= 8),
         special: password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/),
-        upperCase: password.match(/(?=.*[A-Z])/),
-        lowerCase: password.match(/(?=.*[a-z])/),
-        aNumber: password.match(/(?=.*[0-9])/),
+        upper_case: password.match(/(?=.*[A-Z])/),
+        lower_case: password.match(/(?=.*[a-z])/),
+        number: password.match(/(?=.*[0-9])/),
     }
     return checkChar
 }
 
 const validatePassword = (password) => {
-    var passwordValidated = true
     var message = `<h6>${i18n.t('sanitizer.backend.request')}</h6>`
     const check_char = checkPassword(password)
-    if (!check_char.countEnough) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.minimum')}</p>`; }
-    if (!check_char.special) { passwordValidated = false;  message += `<p>${i18n.t('sanitizer.backend.password.special')}</p>` }
-    if (!check_char.upperCase) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.upper_case')}</p>` }
-    if (!check_char.lowerCase) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.lower_case')}</p>`  }
-    if (!check_char.aNumber) { passwordValidated = false; message += `<p>${i18n.t('sanitizer.backend.password.number')}</p>` }
-    const error = (!passwordValidated) ? {name: i18n.t('sanitizer.backend.password.title'), message: message} : false
-    return [ error, passwordValidated ]
+    for (const [key, value] of Object.entries(check_char)) {
+        if (!value) message += `<p>${i18n.t('sanitizer.backend.password.' + key)}</p>` }
+    const passwordNotValidated = Object.values(check_char).reduce((passwordValidated, value) => 
+        passwordValidated || value) 
+    const error = (passwordNotValidated) 
+        ? {name: i18n.t('sanitizer.backend.password.title'), message: message} 
+        : false
+    return [ error, !passwordNotValidated ]
 }
 
-const validateEmail = (email) => {
-
-}
-
-const sendEmailLink = (what, user_data, emailSuccess, emailFailed) => {    
-    let htmlText = null
+const sendEmailLink = (target, user_data) => {    
+    let succeed = null
+    let failed = null
     let action = null
-    switch (what) {
+    switch (target) {
         case 'newAccount':
             action = validateAccount
             htmlText = i18n.t('popup.signup.validate')
             break
         case 'updateEmail':
             action = modifyEmail
-            htmlText = i18n.t('popup.email.modify') 
+            succeed = {
+                title: i18n.t('popup.email.change.succeed.title'),
+                content: i18n.t('popup.email.change.succeed.content'),
+                link_ok: i18n.t('popup.email.change.succeed.link.ok'),
+                icon: 'success'
+            }
+            failed = {
+                title: i18n.t('popup.email.change.failed.title'),
+                content: i18n.t('popup.email.change.failed.content'),
+                link_ok: i18n.t('popup.email.change.failed.link.ok'),
+                icon: 'danger'
+            }
             break
         case 'updatePassword':
             action = resetPassword
             htmlText = i18n.t('popup.password.modify') 
             break
     }
-    const validation = (data, to_do) => {
-        to_do(data)
-            .then(response => { 
-                if(response.sent) emailHasBeenSent(emailSuccess, emailFailed)
-                else fireError('Failed to send email', response.error) } )
-            .catch(error => fireError(error.name, error.message))
-    }
-    Swal.fire({ title: 'Singup process success', html:  htmlText, icon:  'warning', 
-                showCancelButton: true, cancelButtonText: "go Home",
-                confirmButtonText: "Send email with link to validate" } )
-        .then(result => (result.value) ? validation(user_data, action) : emailFailed() ) 
+    action(user_data)
+        .then(response => {
+            (response.sent) ? afterAction(succeed) : afterAction(failed)
+        })
 }
 
-const emailHasBeenSent = (success, failed, htmlText) => {
-    Swal.fire({ title: 'Email as been sent', html: htmlText, icon: 'success',
-                showCancelButton: true, cancelButtonText: "go Home",
-                confirmButtonText: 'Sign in'} )
-        .then(result => (result.value) ? success() : failed() )
-}
-
-const canChangeEmail = (unlock, lock) => {
-    Swal.fire({ title: i18n.t('popup.email.change.title'), 
-                html: i18n.t('popup.email.change.text'),
-                icon: 'warning',
-                showCancelButton: true, 
-                cancelButtonText: i18n.t('popup.email.change.button.cancel'),
-                confirmButtonText: i18n.t('popup.email.change.button.ok')} )
-        .then(result => (result.value) ? unlock() : lock() )
+const afterAction = (data) => {
+    Swal.fire({ title: data.title, html: data.content, icon: data.icon,
+                showCancelButton: false, confirmButtonText: data.link_ok} )
 }
 
 const fireError = (title, text) => Swal.fire(title, text, 'error')
 
 export { cypher, checkPassword, validatePassword, validateEmail, 
-         sendEmailLink, fireError, emailHasBeenSent, canChangeEmail }
+         sendEmailLink, fireError, emailHasBeenSent }

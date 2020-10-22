@@ -166,9 +166,16 @@
       }
     },
     "email": {
-      "modify": "<div class='alert alert-info'><p>Email account has been changed, you need to validate to apply change.</p></div>",
+      "modified": {
+        "text": "<div class='alert alert-info'><p>Email account has been changed, you need to validate to apply change.</p></div>",
+        "title": "Modify account email (validation)",
+        "link": {
+          "home": "Go home",
+          "submit": "Send email to validate"
+        }
+      },
       "change": {
-        "text": "<p>You can edit email, but you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
+        "text": "<p>You can edit email, but after to submit, you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
         "title": "Process to change email",
         "button": {
           "ok": "Unlock edit mail",
@@ -278,7 +285,11 @@
       "error": {
         "name": "Failed to setup email",
         "message": "Only account user owner can modify his account email (then he has to be connected first)."
-      },
+      }
+    }
+  },
+  "modify": {
+    "email": {
       "modal": {
         "button": {
           "home": "Home",

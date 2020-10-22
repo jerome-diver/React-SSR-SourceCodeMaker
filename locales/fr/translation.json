@@ -166,9 +166,16 @@
       "validate": "<div class='alert alert-info'><p>Un nouveau compte utilisateur vient d'être créé, vous devez le valider pour accepter la création.</p></div>"
     },
     "email": {
-      "modify": "<div class='alert alert-info'><p>L'email de vôtre compte a été mis à jour, vous devez valider la modification pour qu'elle soit appliquée.</p></div>",
+      "modified": {
+        "text": "<div class='alert alert-info'><p>L'email de vôtre compte a été mis à jour, vous devez valider la modification pour qu'elle soit appliquée.</p></div>",
+        "title": "Modification de l'email du comtpe (validation)",
+        "link": {
+          "home": "Acceuil",
+          "submit": "Envoyer l'email de validation"
+        }
+      },
       "change": {
-        "text": "<p>Vous pouvez changer d'email, mais vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
+        "text": "<p>Vous pouvez changer d'email, et une fois le profile à modifier validé, vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
         "title": "Protocole pour changer d'email",
         "button": {
           "ok": "Permettre l'édition",
@@ -278,7 +285,11 @@
       "error": {
         "name": "Mise à jour de l'email échoué",
         "message": "Seul l'utilisateur du compte peut modifier son email (il doit donc être préalablement connecté)."
-      },
+      }
+    }
+  },
+  "modify": {
+    "email": {
       "modal": {
         "button": {
           "home": "Acceuil",
@@ -286,8 +297,8 @@
         },
         "success": {
           "title": "Mise à jour de l'email réussi",
-          "subtitle": "Content d'avoir pu mettre à jour vôtre email de compte.",
-          "content": "Vous pouvez à présent utiliser cet email pour vous connecter à vôtre compte"
+          "subtitle": "L'email du compte de {{username}} a été mis à jour.",
+          "content": "Vous pouvez à présent utiliser cet email: {{email}} pour vous connecter à vôtre compte."
         },
         "failed": {
           "subtitle": "Status d'erreur:"

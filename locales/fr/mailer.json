@@ -6,9 +6,10 @@
       "content": {
         "title": "Lien de validation de compte pour SourceCodeMaker",
         "introduction": "Le {date_start}}, vous avez demandé la création d'un nouveau compte sur mon site web: SourceCodeMaker.",
-        "text": "Vous devez valider la création du compte avant le {date_end}} pour que celui-ci soit opérationel."
+        "text": "Vous devez valider la création du compte avant le {{date_end}} pour que celui-ci soit opérationel."
       },
       "link_label": "Cliquez sur ce lien pour valider vôte compte",
+      "submit_text": "Validez le compte",
       "error": {
         "name": "Erreur de validation de compte",
         "text": "Vôtre compte a déjà été validé"
@@ -22,7 +23,18 @@
         "introduction": "Le {{date_now}}, vous avez oublié vôtre mot de passe sur vôtre compte du site SourceCodeMaker. Vous avez demandé d'en créer un nouveau.",
         "text": "Vous devez confirmer, avant {{date_end}}, que vous voulez vraiment créer un nouveau mot de passe sur vôtre compte lié à cet email sur SourceCodeMaker."
       },
+      "submit_text": "Validez le nouveau mot de passe",
       "link_label": "Cliquez sur ce lien pour créer un nouveau mot de passe"
+    },
+    "email": {
+      "title": "SourceCodeMaker: modification sur vôtre compte",
+      "subject": "Mise à jour de l'email de vôtre compte",
+      "content": {
+        "title": "Utilisez une autre adresse email pour vôtre compte",
+        "introduction":  "Validez le changement d'adresse email utilisé pour vôtre compte d'utilisateur: {{username}}",
+        "text": "Vous devez confirmer ce changement d'adresse email du compte. Ancienne: {{old_email}}, nouvelle à valider: {{email}}"
+      },
+      "submit_text": "Validez la nouvelle adresse email"
     }
   }
 }

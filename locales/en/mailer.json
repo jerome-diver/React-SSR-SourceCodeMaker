@@ -9,6 +9,7 @@
         "text": "You should confirm your new account before the {{date_end}} by clicking the next link."
       },
       "link_label": "Click this link to validate account",
+      "submit_text": "Valid your account",
       "error": {
         "name": "Account validation error",
         "text": "Your account is already validated"
@@ -23,7 +24,18 @@
         "introduction": "The {{date_now}}, you forget your password and asked for reset this one to setup a new one on SourceCodeMaker web site.",
         "text": "You should confirm before {{date_end}}, that you want to create a new password for your linked account on SourceCodeMaker web site."
       },
-      "link_label": "Click this link to settup a new password online"
+      "link_label": "Click this link to settup a new password online",
+      "submit_text": "Valid new password"
+    },
+    "email": {
+      "title": "SourceCodeMaker: modify account",
+      "subject": "Update account email",
+      "content": {
+        "title": "Use an other one email account address on your account",
+        "introduction":  "Valid new email change for user account: {{username}}",
+        "text": "You have to confirm change to apply modification. Old email is: {{old_email}}, new one to validate is: {{email}}"
+      },
+      "submit_text": "Valid new email address"
     }
   }
 }

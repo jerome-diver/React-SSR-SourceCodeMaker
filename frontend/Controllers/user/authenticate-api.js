@@ -43,7 +43,7 @@ const resetPassword = async (user) => {
 
 /* POST request to send email to validate new account */
 const validateAccount = async (user) => {
-    console.log("Start to send email with validation link inside for ", username)
+    console.log("Start to send email with account validation action to", user.username)
     try {
         let response = await fetch(`/api/mailer/account/validate`, {
             method: 'POST',
@@ -54,17 +54,16 @@ const validateAccount = async (user) => {
 }
 
 const modifyEmail = async (user) => {
+    console.log("Start to send email with validation email modify action to", user.username)
     try {
         let response = await fetch('/api/mailer/account/modify_email', {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify( {newEmail: user.email } ) } )
+            body: JSON.stringify( {newEmail: user.new_email, 
+                                   oldEmail: user.old_email, 
+                                   username: user.username } ) } )
         return response.json() 
     } catch(error) { return{error: error} }
-}
-
-const cancelEmailUpdate = (user) => {
-    
 }
 
 export { signin, signout, 

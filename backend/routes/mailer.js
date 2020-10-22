@@ -33,7 +33,7 @@ router.post('/account/validate', (req, res) => {
                 introduction: req.i18n.t('mailer:account.validation.content.introduction', {date_start: date_start}),
                 text: req.i18n.t('mailer:account.validation.content.text' ,{date_end: date_end}),
                 link_validate: validation_link,
-                validation_text: req.i18n.t('mailer:account.validation.link_label')
+                submit_text: req.i18n.t('mailer:account.validation.submit_text')
             }, (error) => {
                 if (error) { return res.status(401).json( 
                     {error: {name: 'Email failed', message: error}, sent: false} ) }
@@ -60,15 +60,22 @@ router.post('/account/reset_password', (req, res) => {
                 introduction: req.i18n.t('mailer:account.password.content.introduction', {date_now: date_now}),
                 text: req.i18n.t('mailer:account.password.content.text', {date_end: date_end}),
                 link_validate: setup_password_link,
-                validation_text: req.i18n.t('mailer:account.password.link_label')
+                submit_text: req.i18n.t('mailer:account.password.submit_text')
             }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
                                            : res.status(200).json({sent: true})    } )
     } )
 } )
 
-/* POST to send email to modify account email by rich destination to email setup page */
+/* POST to send email to 
+    _ modify account email 
+    _ by send an email to:
+        _ actual email box
+        _ and new email box 
+   with form action button to call frontend PageSwitcher router component,
+   then final destination to ModifyEmail frontend component page to show validation status updated*/
 router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res) => {
     const new_email = req.body.newEmail
+    const old_email = req.body.oldEmail
     User.findOne({_id: req.user_id}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
@@ -78,19 +85,20 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
             const url = 'http:/localhost:3000/modify_email'
             const setup_email_link = `${url}/${user.id}/${user.ticket}/${new_email}`
-            const email_box = [user.email, new_email]
-            email_box.forEach(mail => {
+            [old_email, new_email].email_box.forEach(mail => {
                 res.app.mailer.send('send_email_to_user', {
                     to: mail,
                     subject: req.i18n.t('mailer:account.email.subject'),
                     title: req.i18n.t('mailer:account.email.title'),
                     content_title: req.i18n.t('mailer:account.email.content.title'),
-                    introduction: req.i18n.t('mailer:account.email.content.introduction', {date_now: date_now}),
-                    text: req.i18n.t('mailer:account.email.content.text', {date_end: date_end}),
+                    introduction: req.i18n.t('mailer:account.email.content.introduction', 
+                                             {username: req.body.username, date_now: date_now}),
+                    text: req.i18n.t('mailer:account.email.content.text', 
+                                     {email: new_email, old_email: old_email, date_end: date_end}),
                     link_validate: setup_email_link,
-                    validation_text: req.i18n.t('mailer:account.email.link_label')
+                    submit_text: req.i18n.t('mailer:account.email.submit_text')
                 }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                            : res.status(200).json({sent: true})    } )
+                                               : res.status(200).json({sent: true})    } )
             })
     } )
 } )
