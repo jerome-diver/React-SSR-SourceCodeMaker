@@ -61,6 +61,7 @@ var config = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({ process: ['process'] }),
         new webpack.NoEmitOnErrorsPlugin(),
         new MiniCssExtractPlugin({
             filename: (mode === 'production') ? 'css/[contentHash].css' : 'css/[id].css',
@@ -78,6 +79,9 @@ const clientConfig = Object.assign({}, config, {
     target: "web",
     entry: {
         client: [ './frontend/client.js' ],
+    },
+    resolve: { 
+      fallback: { "crypto": require.resolve("crypto-browserify") }
     },
     output: {
         path: path.resolve(__dirname, 'build/public/'),

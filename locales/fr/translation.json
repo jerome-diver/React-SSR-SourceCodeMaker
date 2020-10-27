@@ -2,8 +2,10 @@
   "head": {
     "title": "SourceCode Maker (infos)",
     "meta": {
-      "name": "Source Code Maker (infos) mon site auto-entrepreneur",
-      "content": "Voici un exemple de ce que je peux faire pour vous et donnez moi un travail, cela sera ma mission dans les jours à venir."
+      "author": "Jérôme Lanteri",
+      "application": "Source Code Maker (infos)",
+      "description": "Voici un exemple de ce que je peux faire pour vous et donnez moi un travail, cela sera ma mission dans les jours à venir.",
+      "keywords": "SourceCodeMaker, Web-designer, Applications designer, Android Applications designer, Freelance remote developper"
     }
   },
   "general": {
@@ -17,6 +19,11 @@
     "content": "<p>Bienvenue sur mon site web.</p><p>Mon nom est Jérôme Lanteri, je suis un informaticien français en status d'auto-entrepreneur (micro-entreprise).</p><p>Mon site est construit avec du code Javascript et avec un serveur Express et un code côté client avec React.</p><p>Je peux aussi construire un site avec du code Python (Django ou Flask) ou du code Ruby (RubyOnRails).i</p><p>Les bases de données peuvent être MySQL ou Postgresql ou MongoDB. Je peux aussi installer le code du site sur un serveur distant (que je peux commander et installer pour vous, mais aussi maintenir) avec un serveur HTTP Nginx.</p><p>Et bien d'autres choses, il suffit de demander.</p>"
   },
   "profile": {
+    "origin": {
+      "title": "Vôtre outil d'accès d'origine",
+      "device": "Matériel: ",
+      "browser": "Application: "
+    },
     "title": "Édite le profile de {{username}}",
     "header": {
       "title": "{{username}} a un ",
@@ -175,6 +182,20 @@
         }
       },
       "change": {
+        "succeed": {
+          "title": "Validation de l'email du  compte",
+          "content": "<div class='alert alert-info'><p>L'addresse email de vôtre compte a été modifiée. Un email a été envoyé avec succès pour que vous puissiez valider ce changement et qu'il prenne effet.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Validation de l'email du compte",
+          "content": "<div class='danger danger-info'><p>L'envoi de l'email pour valider le changement de l'adresse email a échoué. Celle ci ne sera pas modifiée.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
         "text": "<p>Vous pouvez changer d'email, et une fois le profile à modifier validé, vous recevrez un email contenant un lien à cliquer avant deux jours après son envoi pour valider le changement.</p><p>Un autre email sera envoyé aussi à l'ancienne boite mail pour signaler le changement en cours pour des raisons évidentes de sécurité, avec un lien d'annulation.</p",
         "title": "Protocole pour changer d'email",
         "button": {

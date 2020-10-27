@@ -1,34 +1,33 @@
-import Crypto from 'crypto'
+const CryptoJS = require('crypto-js')
 import Swal from 'sweetalert2'
 import { validateAccount, modifyEmail, resetPassword } from '../../Controllers/user/authenticate-api'
 import { i18n } from '../../../backend/i18n'
 
 const cypher = (password) => {
-    return Crypto.createHash('sha256').update(password).digest('hex')
+    return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)
 }
 
  const checkPassword = (password) => {
-    const checkChar = {
+    return {
         minimum: (password.length >= 8),
-        special: password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/),
-        upper_case: password.match(/(?=.*[A-Z])/),
-        lower_case: password.match(/(?=.*[a-z])/),
-        number: password.match(/(?=.*[0-9])/),
+        special: (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) != null),
+        upper_case: (password.match(/(?=.*[A-Z])/) != null),
+        lower_case: (password.match(/(?=.*[a-z])/) != null),
+        number: (password.match(/(?=.*[0-9])/) != null)
     }
-    return checkChar
 }
 
 const validatePassword = (password) => {
-    var message = `<h6>${i18n.t('sanitizer.backend.request')}</h6>`
+    let message = `<h6>${i18n.t('sanitizer.backend.request')}</h6>`
     const check_char = checkPassword(password)
     for (const [key, value] of Object.entries(check_char)) {
         if (!value) message += `<p>${i18n.t('sanitizer.backend.password.' + key)}</p>` }
-    const passwordNotValidated = Object.values(check_char).reduce((passwordValidated, value) => 
-        passwordValidated || value) 
-    const error = (passwordNotValidated) 
-        ? {name: i18n.t('sanitizer.backend.password.title'), message: message} 
-        : false
-    return [ error, !passwordNotValidated ]
+    let passwordValidated = false
+    passwordValidated = Object.values(check_char).reduce(value => passwordValidated || value ) 
+    const error = (passwordValidated) 
+        ? false
+        : {name: i18n.t('sanitizer.backend.password.title'), message: message} 
+    return [ error, passwordValidated ]
 }
 
 const sendEmailLink = (target, user_data) => {    
@@ -73,5 +72,5 @@ const afterAction = (data) => {
 
 const fireError = (title, text) => Swal.fire(title, text, 'error')
 
-export { cypher, checkPassword, validatePassword, validateEmail, 
-         sendEmailLink, fireError, emailHasBeenSent }
+export { cypher, checkPassword, validatePassword, 
+         sendEmailLink, fireError }

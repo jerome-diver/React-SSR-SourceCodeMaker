@@ -26,8 +26,10 @@ router.get('*', function(req, res) {
         res.render('layout', { 
         title: req.t('head.title'),
         lang: req.language,
-        name: req.t('head.meta.name'),
-        content: req.t('head.meta.content'),
+        application: req.t('head.meta.application'),
+        description: req.t('head.meta.description'),
+        author: req.t('head.meta.author'),
+        keywords: req.t('head.meta.keywords'),
         }, (err, html) => {
             res.write(html.replace(
                 /(<div id="root">)(<\/div>)/, 

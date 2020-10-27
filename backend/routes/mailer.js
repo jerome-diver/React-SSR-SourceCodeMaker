@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 import moment from 'moment'
+const emailValidator = require('email-deep-validator')
 import User from '../models/user.model'
 import { isValid } from '../controllers/authentication'
 import { checkEmail, sanitizer } from '../helpers/sanitizer'
@@ -15,8 +16,10 @@ router.post('/account/validate', (req, res) => {
             console.log("=== validate router (/ POST): User doesn't exist: ", err)
             res.json( { error: err, accepted: false } )
         } else {
-            if (user.validated) { return res.status(401).json({error: {name: req.i18n.t('mailer:account.validation.error.name'), 
-                                                                       message: req.i18n.t('mailer:account.validation.error.text')}})}
+            if (user.validated) { return res.status(401).json(
+                { error: {
+                    name: req.i18n.t('mailer:account.validation.error.name'), 
+                    message: req.i18n.t('mailer:account.validation.error.text')}})}
             console.log('Find user: ', user)
             const date_start = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
@@ -46,8 +49,10 @@ router.post('/account/reset_password', (req, res) => {
     User.findOne({username: req.body.username}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( {error: { name: req.i18n.t('error:router.users.delete.missing.name'),
-                                                               message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
+            if(!user) { return res.status(401).json( 
+                { error: { 
+                    name: req.i18n.t('error:router.users.delete.missing.name'),
+                    message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
             const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
             const url = 'http:/localhost:3000/setup_password'
@@ -66,42 +71,58 @@ router.post('/account/reset_password', (req, res) => {
     } )
 } )
 
-/* POST to send email to 
-    _ modify account email 
-    _ by send an email to:
+/* POST to send email to modify account email by:
+    _ send an email to:
         _ actual email box
         _ and new email box 
    with form action button to call frontend PageSwitcher router component,
-   then final destination to ModifyEmail frontend component page to show validation status updated*/
+   then final destination to ModifyEmail frontend component page 
+   to show validation status updated. */
 router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res) => {
-    const new_email = req.body.newEmail
-    const old_email = req.body.oldEmail
+    const { newEmail, oldEmail, username } = req.body
     User.findOne({_id: req.user_id}, 
         (err, user) => { 
             if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( {error: { name: req.i18n.t('error:router.users.delete.missing.name'),
-                                                               message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-            const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            if(!user) { return res.status(401).json( 
+                { error: { 
+                    name: req.i18n.t('error:router.users.delete.missing.name'),
+                    message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
+            const dateNow = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+            const dateEnd = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
             const url = 'http:/localhost:3000/modify_email'
-            const setup_email_link = `${url}/${user.id}/${user.ticket}/${new_email}`
-            [old_email, new_email].email_box.forEach(mail => {
+            const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
+            [oldEmail, newEmail].email_box.forEach(mail => {
                 res.app.mailer.send('send_email_to_user', {
                     to: mail,
                     subject: req.i18n.t('mailer:account.email.subject'),
                     title: req.i18n.t('mailer:account.email.title'),
                     content_title: req.i18n.t('mailer:account.email.content.title'),
                     introduction: req.i18n.t('mailer:account.email.content.introduction', 
-                                             {username: req.body.username, date_now: date_now}),
+                                             {username: username, date_now: dateNow}),
                     text: req.i18n.t('mailer:account.email.content.text', 
-                                     {email: new_email, old_email: old_email, date_end: date_end}),
-                    link_validate: setup_email_link,
+                                     {email: newEmail, old_email: oldEmail, date_end: dateEnd}),
+                    link_validate: actionLink,
                     submit_text: req.i18n.t('mailer:account.email.submit_text')
                 }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                               : res.status(200).json({sent: true})    } )
+                                               : res.status(200).json({sent: true})})
             })
     } )
 } )
+
+const verifyEmailExist = async (email) => {
+    try {
+        const checkEmail = new emailValidator()
+        const { wellFormed, validDomain, validMailbox } = await checkEmail.verify(email)
+        return (wellFormed && validDomain && validMailbox)
+    } catch(e) {return JSON.stringify({error: e})}
+}
+
+router.post('/email/check', isValid, (req, res) => {
+    const { email } = req.body
+    verifyEmailExist(email)
+        .then(status => { return res.status(200).json({status: status}) })
+        .catch(error => { return res.status(400).json({error: error}) })
+})
 
 
 module.exports = router

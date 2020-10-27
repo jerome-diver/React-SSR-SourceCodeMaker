@@ -4,7 +4,10 @@ const signin = async (identifier, type, password) => {
     console.log('--- signin with', identifier, type)
     try {
         const hpasswd = cypher(password)
-        const data = (type === 'Email') ? {email: identifier, password: hpasswd} : {username: identifier, password: hpasswd}
+        const data = (type === 'Email') 
+            ? {email: identifier, password: hpasswd} 
+            : {username: identifier, password: hpasswd}
+    console.log('--- signin with', data)
         let response = await fetch('/api/auth/signin/', {
             method: 'POST',
             credentials: 'include',
@@ -58,6 +61,7 @@ const modifyEmail = async (user) => {
     try {
         let response = await fetch('/api/mailer/account/modify_email', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify( {newEmail: user.new_email, 
                                    oldEmail: user.old_email, 
@@ -66,7 +70,20 @@ const modifyEmail = async (user) => {
     } catch(error) { return{error: error} }
 }
 
+const checkEmail = async (email) => {
+    console.log("Check email: %s (POST api/mailer/email/check)", email)
+    try {
+        let response = await fetch('api/mailer/email/check', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: email})
+        } )
+        return response.json()
+    } catch (error) { return JSON.stringify({error: error}) }
+}
+
 export { signin, signout, 
          resetPassword, 
          validateAccount, 
-         modifyEmail }
+         modifyEmail, checkEmail }

@@ -3,10 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import parse from 'html-react-parser'
 import Loading from './Loading.component'
+import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
 
 const Home = (props) => {
   const { i18n } = useTranslation()
+  const { getLanguage } = useAuthenticate()
   const [home, setHome] = useState({ title: "", content: "" })
   const [load, setLoad] = useState(false)
 
@@ -18,7 +20,7 @@ const Home = (props) => {
         .then(respond => {
           setHome( { title: respond.title, content: respond.content } )
           setLoad(true) } )
-  }, [i18n.language] )
+  }, [getLanguage()] )
 
   if (load) {
     return (

@@ -2,8 +2,10 @@
   "head": {
     "title": "Source Code Maker (infos)",
     "meta": {
-      "name": "Source Code Maker (infos) by freelanc web site",
-      "content": "Let me show you example of my job's done and feel welcome to hire me up there."
+      "author": "Jerome Lanteri",
+      "application": "Source Code Maker (infos) by freelanc web site",
+      "description": "Let me show you example of my job's done and feel welcome to hire me up there.",
+      "keywords": "SourceCodeMaker, Web-designer, Applications designer, Android Applications designer, Freelance remote developper"
     }
   },
   "general": {
@@ -17,6 +19,11 @@
     "content": "<p>Welcome to my web site.</p><p>My name is Jérôme Lanteri and i'm french dev freelance. This web site is build with Express.js backend simple framework and React.js frontend framework.</p><p>I can also build other backend code with Ruby (Rails-5 framework) or Python-3 (Flask or Django-3 framework). I can link them as you want with any ORM database (MySQL/MariaDB, Postgresql, MongoDB).</p><p> I can install your web site on a remote server for you on Nginx http server</p>"
   },
   "profile": {
+    "origin": {
+      "title": "Your origin tool's access",
+      "device": "Device: ",
+      "browser": "Application: "
+    },
     "title": "Edit profile for {{username}}",
     "header": {
       "title": "{{username}} has an ",
@@ -175,6 +182,20 @@
         }
       },
       "change": {
+        "succeed": {
+          "title": "Email account validation",
+          "content": "<div class='alert alert-info'><p>Email has been sentr to your account email address to validate new email account address to apply.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Email account validation",
+          "content": "<div class='danger danger-info'><p>Email validation failed to be sent to your account email address. Email will not be modified.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
         "text": "<p>You can edit email, but after to submit, you will have to click to the link receipt on the new email box within 2 days to apply the new email changed</p><p>An email will be sent to the old email to signal the edition with a link to cancel the change.</p",
         "title": "Process to change email",
         "button": {

@@ -39,23 +39,22 @@ const SignIn = (props) => {
     const [ form, setForm ] = useState({email:'', username: '', password: ''})
     const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
                                                    error: '', from: '/login', user: {} })
-    const { setSession } = useAuthenticate()
+    const { setSession, getUser } = useAuthenticate()
     const location = useLocation()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
   
     useEffect( () => {
-        console.log("UseEffect of Signin Page component call")
-        console.log('Location is', location)
+        console.log("--- SignIn component useEffect")
+        console.log('\tLocation is', location)
         setLoaded(!submit)
         focusOnSelectedIdEntry()    // put the cursor at the end of the input entry of selected one
     }, [submit, selectIdentifier, i18n.language] )
 
     const getError = (error) => { 
-        console.log("FAILED to signed in")
+        console.log("\tFAILED to signed in")
         dispatch({isLogged: false, error: error, hasError: true})
         setSubmit(false) }
     const getLoggedUser = (data) => {
-        console.log("OK, signed in for ", data.user.username)
+        console.log("\tOK, signed in for ", data)
         const go_to = (location.state) ? location.state.from : '/profile'
         dispatch({from: go_to, isLogged: true})
         setSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
@@ -79,12 +78,13 @@ const SignIn = (props) => {
             e.preventDefault();
             e.stopPropagation();
         } else {
+            console.log("form is ok, next...")
             e.preventDefault()
             setSubmit(true)
             const id = (selectIdentifier == 'Email') ? form.email : form.username
             signin(id, selectIdentifier, form.password)
-                .then(data => (data.error) ? getError(data.error) : getLoggedUser(data) )
-                .catch(error => { getError(error) } )
+                .then(data => (data.error) ? getError(data.error) : getLoggedUser(data))
+                .catch(error => getError(error) )
         }
         setValidated(true)
     }
@@ -95,7 +95,7 @@ const SignIn = (props) => {
 
     if (loaded) {
         if (sign.isLogged) return <> <Redirect to={sign.from}/> </>
-        if (cookies.session && cookies.session.user) return <> <Redirect to='/' /> </>
+        if (getUser()) return <> <Redirect to='/' /> </>
         else {
           return <>  
               <Modal show={sign.hasError}>
@@ -110,36 +110,36 @@ const SignIn = (props) => {
                   </Modal.Footer>
               </Modal>
               <Card id='sign'>
+                <Form onSubmit={clickSubmit} noValidate validated={validated}>
                   <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> {t('signin.title')}</h2></Card.Header>
                   <Card.Body>
                       <Card.Title>{t('signin.header.title')}</Card.Title>
                       <Card.Subtitle className='mb-2 text-muted'>{t('signin.header.intro')}</Card.Subtitle> 
                       <Card.Text>{t('signin.header.description')}</Card.Text>
-                      <Form noValidate validated={validated}>
-                          <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
-                                               selection={selectIdentifier} handleChange={handleChange} />
-                          <Form.Group controlId="formBasicPassword">
-                              <Form.Label>{t('signin.password.label')} </Form.Label>
-                              <InputGroup>
-                                  <InputGroup.Prepend>
-                                      <InputGroup.Text id="inputGroupPrepend">
-                                          <FontAwesomeIcon icon={ faKey }/>
-                                      </InputGroup.Text>
-                                  </InputGroup.Prepend>
-                                  <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
-                                                onChange={handleChange('password')} />
-                                  <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
-                              </InputGroup>
-                              <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
-                          </Form.Group>
-                      </Form>
+                      <FormIdEntrySelector email={form.email} username={form.username} switcher={switchIdentifier}
+                                           selection={selectIdentifier} handleChange={handleChange} />
+                      <Form.Group controlId="formBasicPassword">
+                          <Form.Label>{t('signin.password.label')} </Form.Label>
+                          <InputGroup>
+                              <InputGroup.Prepend>
+                                  <InputGroup.Text id="inputGroupPrepend">
+                                      <FontAwesomeIcon icon={ faKey }/>
+                                  </InputGroup.Text>
+                              </InputGroup.Prepend>
+                              <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
+                                            onChange={handleChange('password')} />
+                              <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
+                          </InputGroup>
+                          <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
+                      </Form.Group>
                   </Card.Body>
                   <Card.Footer>
-                      <Button type='submit' onClick={clickSubmit}>
+                      <Button type='submit' variant='warning'>
                           <FontAwesomeIcon icon={ faUserCheck }/> {t('signin.button_submit')}
                       </Button>
                       <FixProblem username={form.username} email={form.email} password={form.password} />
                   </Card.Footer>
+                </Form>
               </Card> 
         </> }
   } else return <><Loading/></>

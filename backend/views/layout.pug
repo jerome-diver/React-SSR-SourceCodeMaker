@@ -2,12 +2,16 @@ doctype html
 html()
   head
     meta(charset="utf-8")
+    meta(name='color-scheme', content='dark light')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     meta(name="theme-color", content="#000000")
-    meta(name=name, content=content)
+    meta(name='author', content=author)
+    meta(name='application-name', content=application)
+    meta(name='description', content=description)
+    meta(name='keywords', content=keywords)
     link(rel="stylesheet", href='/css/client.css')
     title= title
-  body
+  body(lang=lang)
     #root
     noscript You need to enable JavaScript to run this app.
     script(src="/js/client.js")

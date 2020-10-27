@@ -13,7 +13,6 @@ import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
 
 const getFlagFromLng = (lng) => {
-  console.log("LNG IS ", lng)
     switch(lng) {
         case 'fr':
             return FlagFR
@@ -59,24 +58,14 @@ const I18nSelector = (props) => {
     const [ flagSelected, setFlagSelected ] = useState(getFlagFromLng(flagLng))
 
     useEffect(() => {
-        console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", getLanguage(), i18n.language), flagLng
+        console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", getLanguage(), i18n.language)
     },[flagSelected])
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng)
         setFlagSelected(getFlagFromLng(lng))
-        setLanguage(lng)
         setFlagLng(lng)
-        fetch('/api/language', { method: 'POST', 
-                                 headers: {'Accept': 'application/json', 
-                                           'Content-type': 'application/json'},
-                                 body: JSON.stringify({language: lng}) })
-             .then(response => response.json())
-             .then(response => {
-                if (response.language) {
-                  console.log("OK, language change done with", response.language)
-                }
-             })
+        setLanguage(lng)
     }
 
     return <>
@@ -141,18 +130,18 @@ const Navigation = (props) => {
     const { i18n, t } = useTranslation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
     const { getUser, getRole, getLanguage } = useAuthenticate()
-    const [ flagLng, setFlagLng ] = useState('')
+    const [ flagLng, setFlagLng ] = useState(getLanguage())
     console.log("--- Navigation component")
     const [ session, dispatch ] = useReducer(reducer, {username: '', role: '', language: i18n.language})
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole(), language: getLanguage()})
-    fetch('http://localhost:3000/api/language')
-        .then(res => res.json())
-        .then(res => { 
-          console.log("--- Navigation [useEffect], language is:", session.language)
-        })
-  }, [getUser(), i18n.language] )
+  //  fetch('http://localhost:3000/api/language')
+  //      .then(res => res.json())
+  //      .then(res => { 
+  //        console.log("--- Navigation [useEffect], language is:", res.language)
+  //      })
+  }, [getUser(), getLanguage()] )
 
   return (
     <>

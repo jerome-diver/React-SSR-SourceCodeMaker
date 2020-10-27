@@ -113,7 +113,6 @@ const updatePassword = async (id, ticket, password) => {
     } catch (error) { return JSON.stringify({error: error}) }
 }
 
-
 export { create, list, read, update, remove, 
          getRoleID, 
          updateAccount, updateEmail, updatePassword }
