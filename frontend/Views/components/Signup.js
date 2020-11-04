@@ -35,7 +35,7 @@ const SignUp = (props) => {
                     .then(response => {
                         if (response.error) fireError(response.error.name, response.error.message)
                         else if (!response.accepted) fireError(t('popup.signup.failed.title'), t('popup.signup.failed.user'))
-                        else sendEmailLink('newAccount', user, emailSuccess, emailFailed)
+                        else sendEmailLink('newAccount', user)
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)

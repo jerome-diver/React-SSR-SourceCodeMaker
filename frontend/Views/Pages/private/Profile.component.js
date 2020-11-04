@@ -15,24 +15,6 @@ const navigatorInfo = require('navigator-info')
 const _ = require('lodash')
 import Loading from '../public/Loading.component'
 
-const userReduce = (state, action) => {
-    switch(action.type) {
-        case 'session':
-            return { ...state, session: action.value }
-        case 'form':
-            return { ...state, form: action.value }
-        case 'origin':
-            return { ...state, origin: action.value }
-    }
-}
-
-const passwordReducer = (state, action) => {
-    return { 
-        first: action.first, 
-        second: action.second,
-        match: ((state.first === state.second) && state.first != '') }
-}
-
 const messageReducer = (state, action) => {
     return {
         text: (action.text) ? action.text : state.text,
@@ -71,7 +53,7 @@ const Profile = (props) => {
     console.log("--- Profile.component start function point")
     const { userProfile, userRole } = props
     const { t } = useTranslation()
-    const { getUser, getRole, setSession } = useAuthenticate()
+    const { getUser, getRole, getStatus, setStatus, setSession } = useAuthenticate()
 
     const initMessage = { text: {}, state: false }
 
@@ -117,13 +99,21 @@ const Profile = (props) => {
                         const user_data = { username: userForm.username,
                                             old_email: userProfile.email,
                                             new_email: userForm.email }
-                        sendEmailLink('updateEmail', user_data)
+                        const sentEmail = sendEmailLink('updateEmail', user_data)
+                        if (sentEmail.oldEmail.sent && sentEmail.newEmail.sent) { 
+                            setStatus({email: sentEmail.newEmail.email}) }
+
                     }
                     const password = cypher(userForm.password)
-                    const parsedUser = (passwordToUpdate === '') 
-                            ? prepareCleanUser(userForm) 
-                            : prepareUpdatePasswordUser(userForm, passwordToUpdate)
-                    update(parsedUser, password, userSession.id)
+
+                    /* Need to first check password is OK to then sendEmailLink to update password process */
+                    if (passToUpdate) {
+                        sendEmailLink('updatePassword', prepareUpdatePasswordUser(userForm, passwordToUpdate))
+                    }
+                    const parsedUser = prepareCleanUser(userForm) 
+                    
+                    
+                            update(parsedUser, password, userSession.id)
                         .then(response => {
                             if (response.error) setMessage( {text: response.error} )
                             else {
@@ -182,9 +172,11 @@ const Profile = (props) => {
     )
 
     if (loaded && userSession) {
-        return (<>
+        return <>
             <Messenger message={message} setMessage={setMessage} />
-            <PasswordUpdateModal show={showPasswordModal} setPasswordToUpdate={setPasswordToUpdate} />
+            <PasswordUpdateModal showModal={showPasswordModal} 
+                                 setShowModal={setShowPasswordModal} 
+                                 setPasswordToUpdate={setPasswordToUpdate} />
             <Jumbotron>
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: userForm.username})}&nbsp;&nbsp; 
@@ -212,7 +204,7 @@ const Profile = (props) => {
                                                     overlay={changeEmailTooltip}>
                                         <Button size='sm' variant='outline-light' onClick={changeEmail}>
                                             {t('profile.email.button')}
-                                            </Button>
+                                        </Button>
                                     </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Control type='email' 
@@ -259,7 +251,7 @@ const Profile = (props) => {
                                                     overlay={changePasswordTooltip}>
                                         <Button size='sm' variant='outline-light' onClick={changePassword}>
                                             {t('profile.password.button')}
-                                            </Button>
+                                        </Button>
                                     </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Control type='password' 
@@ -279,12 +271,12 @@ const Profile = (props) => {
                     </Card.Body>
                 </Card>
             </Jumbotron>
-        </>)
+        </>
     } else {
-        return (<>
+        return <>
             <Messenger message={message} setMessage={setMessage} />
             <Loading />
-        </>)
+        </>
     }
 }
 
@@ -293,7 +285,7 @@ const Messenger = (props) => {
 
     const closeModal = () => { setMessage({}) }
 
-    return (<>
+    return <>
             <Modal show={message.state}>
                 <Modal.Header closeButton>
                     <Modal.Title>{message.text.name}</Modal.Title>
@@ -305,27 +297,47 @@ const Messenger = (props) => {
                     <Button onClick={closeModal}>OK</Button>
                 </Modal.Footer>
             </Modal>
-    </>)
+    </>
+}
+
+const initPassword = { first: '', second: '', match: false }
+const passwordReducer = (state, action) => {
+    console.log("GET =>", state, action)
+    switch(action.type) {
+        case 'first':
+            console.log("get FRIST")
+            return { second: state.second , 
+                     first: action.value, 
+                     match: ((action.value === state.second) && (state.second != '')) }
+        case 'second':
+            return { first: state.first, 
+                     second: action.value, 
+                     match: ((action.value === state.first) && (state.first != '')) }
+        default:
+            return initPassword
+    }
 }
 
 const PasswordUpdateModal = (props) => {
-    const { showModal, setPasswordToUpdate } = props
+    const { showModal, setShowModal, setPasswordToUpdate } = props
     const { t } = useTranslation()
-    const [ password, setPassword ] = useReducer(passwordReducer, { first: '', second: '' }) 
-    const [ show, setShow ] = useState(showModal)
+    const [ password, setPassword ] = useReducer(passwordReducer, initPassword) 
 
-    const closeModal = () => { setShow(false) }
-    const updatePasswordSubmit = () => {
+    console.log("--- Profile <PasswordUpdateModal> component")
+
+    const close = () => { setShowModal(false) }
+    const submit = () => {
         if (password.match) { 
             setPasswordToUpdate(password.first)
-            closeModal() }
+            close() }
     }
     const handleChange = name => event => { 
-        setPassword( {...password, [name]: event.target.value } )
+        setPassword( {type: name, value: event.target.value } )
+        console.log("this =>", password[name])
     }
 
     return <>
-        <Modal show={show}>
+        <Modal show={showModal}>
             <Modal.Header closeButton>
                 <Modal.Title>{t('profile.modal.update.password.title')}</Modal.Title>
             </Modal.Header>
@@ -333,21 +345,31 @@ const PasswordUpdateModal = (props) => {
                 <Form>
                     <Form.Group controlId="formPassword">
                         <Form.Label>{t('profile.modal.update.password.first.label')}</Form.Label>
-                        <Form.Control type='password' placeholder={t('profile.modal.update.password.first.placeholder')}
+                        <Form.Control type='password' 
+                                      placeholder={t('profile.modal.update.password.first.placeholder')}
                                       onChange={handleChange('first')} />
-                        <Form.Text className='text-muted'>{t('profile.modal.update.password.first.helper')}</Form.Text>
+                        <Form.Text className='text-muted'>
+                            {t('profile.modal.update.password.first.helper')}
+                        </Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formPassword">
                         <Form.Label>{t('profile.modal.update.password.second.label')}</Form.Label>
-                        <Form.Control type='password' placeholder={t('profile.modal.update.password.second.placeholder')}
+                        <Form.Control type='password' 
+                                      placeholder={t('profile.modal.update.password.second.placeholder')}
                                       onChange={handleChange('second')} />
-                        <Form.Text className='text-muted'>{t('profile.modal.update.password.second.helper')}</Form.Text>
+                        <Form.Text className='text-muted'>
+                            {t('profile.modal.update.password.second.helper')}
+                        </Form.Text>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={updatePasswordSubmit}>{t('profile.modal.update.password.button.submit')}</Button>
-                <Button onClick={closeModal}>{t('profile.modal.update.password.button.cancel')}</Button>
+                <Button onClick={submit}>
+                    {t('profile.modal.update.password.button.submit')}
+                </Button>
+                <Button onClick={close}>
+                    {t('profile.modal.update.password.button.cancel')}
+                </Button>
             </Modal.Footer>
         </Modal>
     </>

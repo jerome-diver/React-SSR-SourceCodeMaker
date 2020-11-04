@@ -80,32 +80,35 @@ router.post('/account/reset_password', (req, res) => {
    to show validation status updated. */
 router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res) => {
     const { newEmail, oldEmail, username } = req.body
-    User.findOne({_id: req.user_id}, 
-        (err, user) => { 
-            if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( 
-                { error: { 
-                    name: req.i18n.t('error:router.users.delete.missing.name'),
-                    message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-            const dateNow = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-            const dateEnd = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
-            const url = 'http:/localhost:3000/modify_email'
-            const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
-            [oldEmail, newEmail].email_box.forEach(mail => {
-                res.app.mailer.send('send_email_to_user', {
-                    to: mail,
-                    subject: req.i18n.t('mailer:account.email.subject'),
-                    title: req.i18n.t('mailer:account.email.title'),
-                    content_title: req.i18n.t('mailer:account.email.content.title'),
-                    introduction: req.i18n.t('mailer:account.email.content.introduction', 
-                                             {username: username, date_now: dateNow}),
-                    text: req.i18n.t('mailer:account.email.content.text', 
-                                     {email: newEmail, old_email: oldEmail, date_end: dateEnd}),
-                    link_validate: actionLink,
-                    submit_text: req.i18n.t('mailer:account.email.submit_text')
-                }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                               : res.status(200).json({sent: true})})
-            })
+    User.findOne({_id: req.user_id}, (err, user) => { 
+        if (err) { return res.status(401).json({error: err, sent: false}) }
+        if(!user) { return res.status(401).json({sent: false, 
+            error: { 
+                name: req.i18n.t('error:router.users.delete.missing.name'),
+                message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
+        const dateNow = moment(user.created).format('DD/MM/YYY [at] HH:mm')
+        const dateEnd = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+        const url = 'http:/localhost:3000/modify_email'
+        const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
+        let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }
+        for (const [key, value] of Object.entries(emailSent)) {
+            res.app.mailer.send('send_email_to_user', {
+                to: value.email,
+                subject: req.i18n.t('mailer:account.email.subject'),
+                title: req.i18n.t('mailer:account.email.title'),
+                content_title: req.i18n.t('mailer:account.email.content.title'),
+                introduction: req.i18n.t('mailer:account.email.content.introduction', 
+                                         {username: username, date_now: dateNow}),
+                text: req.i18n.t('mailer:account.email.content.text', 
+                                 {email: newEmail, old_email: oldEmail, date_end: dateEnd}),
+                link_validate: actionLink,
+                submit_text: req.i18n.t('mailer:account.email.submit_text')
+            }, (error) => { emailSent[key] = (error) 
+                                        ? {...value, error: error, sent: false }
+                                        : {...value, sent: true } } 
+        ) }
+        const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 200 : 401
+        return res.status(status).json(emailSent) 
     } )
 } )
 

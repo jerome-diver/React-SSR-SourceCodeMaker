@@ -25,16 +25,14 @@ const App = (props) => {
       console.log("--- App component, Reset session cookie")
       removeCookies('session') }
   }
-  const setLanguage  = (lng) => {
-      let data
-      if (cookies.session) {
-          data = (!lng) 
-              ? (isBrowser) 
-                  ? { ...cookies.session, language: navigatorLanguage } 
-                  : { ...cookies.session, language: 'en' }
-              : { ...cookies.session, language: lng }
-          console.log("--- App component, Define session language cookie to", data.language)
-      } else { data = { language: (lng) ? lng : navigatorLanguage } }
+  const setLanguage  = (language) => {
+      let data = (!language) 
+                  ? (isBrowser) 
+                    ? { language: navigatorLanguage } 
+                    : { language: 'en' }
+                  : { language }
+      if (cookies.session) { data = {...cookies.session, data } }
+      setCookies('session', data)
       fetch('/api/language', { method: 'POST', 
                                headers: {'Accept': 'application/json', 
                                          'Content-type': 'application/json'},
@@ -42,23 +40,31 @@ const App = (props) => {
           .then(response => response.json())
           .then(response => {
               if (response.language) {
-                  console.log("--- App Component, SetLanguage fetch server side POST with", response.language)
+                  console.log("--- App, (SetLanguage POST request), response:", response.language)
               }
-            })
-      console.log("--- App component, no Cookies session to define Language, then =>", navigatorLanguage)
-      setCookies('session', data)
+          })
   }
+  const setStatus = (status) => { 
+    let data
+    if (cookies.session) {
+        data = (cookies.session.status) 
+            ? {...cookies.session, status: { ...cookies.session.status, ...status } } 
+            : {...cookies.session, status }
+    } else { data = { status: status } }
+    setCookies('session', data)
+}
   const getUser = () => { if (cookies.session && cookies.session.user) return cookies.session.user }
   const getRole = () => { if (cookies.session && cookies.session.role) return cookies.session.role }
   const getLanguage = () => { 
       if (cookies.session && cookies.session.language) return cookies.session.language
       else return (isBrowser) ? navigatorLanguage : 'en'
   }
+  const getStatus = () => { if(cookies.session && cookies.session.status) return cookies.session.status }
 
   return (
     <>
-      <AuthenticateContext.Provider value={{ getUser: getUser, getRole: getRole, getLanguage: getLanguage,
-                                             setSession: setSession, setLanguage: setLanguage }}>
+      <AuthenticateContext.Provider value={{ getUser, getRole, getLanguage, getStatus,
+                                             setSession, setLanguage, setStatus }}>
         <header>
           <Navigation className="menu"/></header>
         <main><PageSwitcher/></main>

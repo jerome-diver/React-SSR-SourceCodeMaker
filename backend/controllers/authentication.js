@@ -1,4 +1,3 @@
-import expressJwt from 'express-jwt'
 var jwt = require('jsonwebtoken')
 import moment from 'moment'
 require('dotenv').config('../../')
@@ -26,7 +25,8 @@ const isRole = (req, res, next) => {
     const role_session = JSON.parse(req.cookies.session).role
     console.log("=== isRole middleware for user role: %s", role_session.name) 
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
-    const authorized = (role_session.name === role_to_authorize) && (decoded.role_name === role_session.name)
+    const authorized = (role_session.name === role_to_authorize) && 
+                       (decoded.role_name === role_session.name)
     if (!authorized) return res.status(403).json({authorized: false})
     next()
 }
@@ -51,10 +51,8 @@ const isValid = (req, res, next) => {
     const { token } = req.cookies
     console.log("=== isValid middleware check body token to be sign validated and not expired")
     jwt.verify(token, secret, (error, decoded) => {
-        if (error) return res.status(403).json( {
-            validated: 'failed',
-            error: error
-                 } )
+        if (error) return res.status(403).json( { validated: 'failed',
+                                                  error: error } )
         if (decoded.valid_util <= moment().valueOf()) 
             return res.status(401).send( {
                 validated: 'failed', 

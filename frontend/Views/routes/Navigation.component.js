@@ -7,7 +7,6 @@ import { faUsers, faUserPlus, faUserCircle, faUserTie,
         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
-import { useCookies } from 'react-cookie'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
@@ -25,6 +24,11 @@ const getFlagFromLng = (lng) => {
     }
 }
 
+const imgFlag = (lang, size) => {
+    const sized = `${size}px;`
+    return (<img src={getFlagFromLng(lang)} height={sized}/>)
+}
+
 const reducer = (state, action) => {
     switch (action.user) {
         case undefined:
@@ -36,43 +40,30 @@ const reducer = (state, action) => {
     }
 }
 
-const ActualFlagLanguage = (props) => {
-  const { flagLng } = props
-  const [ flag, setFlag ] = useState(getFlagFromLng(flagLng))
-
-  useEffect (() => {
-    setFlag(getFlagFromLng(flagLng))
-  }, [flagLng])
-
-  return <>
-      <img src={flag} height='20px' />
-  </>
-}
-
 const I18nSelector = (props) => {
     const { flagLng, setFlagLng } = props
     console.log("--- I18nSelector (Navigation sub-component) flagLng props is", flagLng)
     const { i18n } = useTranslation()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
-    const { getLanguage, setLanguage } = useAuthenticate()
-    const [ flagSelected, setFlagSelected ] = useState(getFlagFromLng(flagLng))
+    const { setLanguage } = useAuthenticate()
+    const [ flagSelected, setFlagSelected ] = useState(imgFlag(i18n.language))
 
     useEffect(() => {
-        console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", getLanguage(), i18n.language)
-    },[flagSelected])
+        console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", i18n.language)
+        setFlagSelected(imgFlag(i18n.language, 20))
+    },[i18n.language])
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng)
-        setFlagSelected(getFlagFromLng(lng))
+        setFlagSelected(imgFlag(lng, 20))
         setFlagLng(lng)
         setLanguage(lng)
     }
 
     return <>
-        <NavDropdown title={<ActualFlagLanguage flagLng={flagLng} />} id="basic-nav-dropdown">
-            <Link to='#' onClick={() => { changeLanguage('fr') } }><img src={FlagFR} height='30px' /></Link>
-            <Link to='#' onClick={() => { changeLanguage('us') } }><img src={FlagUS} height='30px' /></Link>
-            <Link to='#' onClick={() => { changeLanguage('en') } } ><img src={FlagUK} height='30px' /></Link>
+        <NavDropdown title={flagSelected} id="basic-nav-dropdown">
+            <Link to='#' onClick={() => { changeLanguage('fr') } }>{imgFlag('fr',30)}</Link>
+            <Link to='#' onClick={() => { changeLanguage('us') } }>{imgFlag('us', 30)}</Link>
+            <Link to='#' onClick={() => { changeLanguage('en') } }>{imgFlag('uk', 30)}</Link>
         </NavDropdown>
     </>
 }
@@ -128,7 +119,6 @@ const UserLoggedEntries = (props) => {
 const Navigation = (props) => {
 
     const { i18n, t } = useTranslation()
-    const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
     const { getUser, getRole, getLanguage } = useAuthenticate()
     const [ flagLng, setFlagLng ] = useState(getLanguage())
     console.log("--- Navigation component")
@@ -136,11 +126,7 @@ const Navigation = (props) => {
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole(), language: getLanguage()})
-  //  fetch('http://localhost:3000/api/language')
-  //      .then(res => res.json())
-  //      .then(res => { 
-  //        console.log("--- Navigation [useEffect], language is:", res.language)
-  //      })
+    setFlagLng(session.language)
   }, [getUser(), getLanguage()] )
 
   return (
