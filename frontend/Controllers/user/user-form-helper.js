@@ -21,9 +21,8 @@ const validatePassword = (password) => {
     let message = `<h6>${i18n.t('sanitizer.backend.request')}</h6>`
     const check_char = checkPassword(password)
     for (const [key, value] of Object.entries(check_char)) {
-        if (!value) message += `<p>${i18n.t('sanitizer.backend.password.' + key)}</p>` }
-    let passwordValidated = false
-    passwordValidated = Object.values(check_char).reduce(value => passwordValidated || value ) 
+        if (value == false) message += `<p>${i18n.t('sanitizer.backend.password.' + key)}</p>` }
+    const passwordValidated = Object.values(check_char).every(val => val == true)
     const error = (passwordValidated) 
         ? false
         : {name: i18n.t('sanitizer.backend.password.title'), message: message} 
@@ -38,6 +37,18 @@ const sendEmailLink = (target, user_data) => {
         case 'newAccount':
             action = validateAccount
             htmlText = i18n.t('popup.signup.validate')
+            success = {
+                title: i18n.t(''),
+                content: i18n.t(''),
+                link_ok: i18n.t(''),
+                icon: 'success'
+            }
+            failed = {
+                title: i18n.t(''),
+                content: i18n.t(''),
+                link_ok: i18n.t(''),
+                icon: 'danger'
+            }
             break
         case 'updateEmail':
             action = modifyEmail
@@ -57,6 +68,18 @@ const sendEmailLink = (target, user_data) => {
         case 'updatePassword':
             action = resetPassword
             htmlText = i18n.t('popup.password.modify') 
+            success = {
+                title: i18n.t(''),
+                content: i18n.t(''),
+                link_ok: i18n.t(''),
+                icon: 'success'
+            }
+            failed = {
+                title: i18n.t(''),
+                content: i18n.t(''),
+                link_ok: i18n.t(''),
+                icon: 'danger'
+            }
             break
     }
     action(user_data)

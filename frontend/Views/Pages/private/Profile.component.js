@@ -96,12 +96,20 @@ const Profile = (props) => {
                                                                         _ new account email to update 
                                                                     (with two links to accept or reject update) */
                         console.log("--- Profile component [clickSubmit -modify email-]")
-                        const user_data = { username: userForm.username,
-                                            old_email: userProfile.email,
-                                            new_email: userForm.email }
-                        const sentEmail = sendEmailLink('updateEmail', user_data)
-                        if (sentEmail.oldEmail.sent && sentEmail.newEmail.sent) { 
-                            setStatus({email: sentEmail.newEmail.email}) }
+                        // Verify email is existing.... 
+                        checkEmail(userForm.email).then(response => {
+                            if (response.status) {
+                                const user_data = { username: userForm.username,
+                                                    old_email: userProfile.email,
+                                                    new_email: userForm.email }
+                                const sentEmail = sendEmailLink('updateEmail', user_data)
+                                if (sentEmail.oldEmail.sent && sentEmail.newEmail.sent) { 
+                                    setStatus({email: sentEmail.newEmail.email}) }
+                            } else {
+                                setMessage({text: {
+                                                name: t(''),
+                                                message: t('') }})
+                            } }) 
 
                     }
                     const password = cypher(userForm.password)
@@ -132,8 +140,9 @@ const Profile = (props) => {
         setValidated(true)
     }
     const editUserRole = (e) => { console.log("Edit user Role") }
-    const changeEmail = (e) => { 
-        checkEmail(userForm.email).then(response => (response.status) ? editEmail() : emailNoEdit() )
+    const changeEmail = (e) => {
+        // toggle email edit form input
+
     }
     const editEmail = () => { setEmailReadOnly(false) }
     const emailNoEdit = () => {

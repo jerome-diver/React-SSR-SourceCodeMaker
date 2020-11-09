@@ -117,14 +117,14 @@ const verifyEmailExist = async (email) => {
         const checkEmail = new emailValidator()
         const { wellFormed, validDomain, validMailbox } = await checkEmail.verify(email)
         return (wellFormed && validDomain && validMailbox)
-    } catch(e) {return JSON.stringify({error: e})}
+    } catch(error) {return JSON.stringify({error})}
 }
 
 router.post('/email/check', isValid, (req, res) => {
     const { email } = req.body
     verifyEmailExist(email)
-        .then(status => { return res.status(200).json({status: status}) })
-        .catch(error => { return res.status(400).json({error: error}) })
+        .then(status => { return res.status(200).json({status}) })
+        .catch(error => { return res.status(400).json({error}) })
 })
 
 
