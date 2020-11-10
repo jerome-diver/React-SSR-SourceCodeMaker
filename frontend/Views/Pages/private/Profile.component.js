@@ -68,6 +68,8 @@ const Profile = (props) => {
     const [ message, setMessage ] = useReducer(messageReducer, initMessage)
     const [ passwordToUpdate, setPasswordToUpdate ] = useState('')
     const [ showPasswordModal, setShowPasswordModal ] = useState(false)
+    const [ toggleEmail, setToggleEmail ] = useState('outline-light')
+    const [ togglePwd, setTogglePwd ] = useState('outline-light')
 
     useEffect( () => {
         if (!userSession) setUserSession(washUser(getUser()))
@@ -115,7 +117,7 @@ const Profile = (props) => {
                     const password = cypher(userForm.password)
 
                     /* Need to first check password is OK to then sendEmailLink to update password process */
-                    if (passToUpdate) {
+                    if (passwordToUpdate.length === 0) {
                         sendEmailLink('updatePassword', prepareUpdatePasswordUser(userForm, passwordToUpdate))
                     }
                     const parsedUser = prepareCleanUser(userForm) 
@@ -140,19 +142,29 @@ const Profile = (props) => {
         setValidated(true)
     }
     const editUserRole = (e) => { console.log("Edit user Role") }
-    const changeEmail = (e) => {
-        // toggle email edit form input
-
+    const changeEmail = (e) => { (emailReadOnly) ? editEmail() : emailNoEdit() }
+    const editEmail = () => { 
+        setEmailReadOnly(false) 
+        setToggleEmail("outline-warning")
     }
-    const editEmail = () => { setEmailReadOnly(false) }
     const emailNoEdit = () => {
         const emailInput = document.getElementById("formEmail")
         emailInput.value = userProfile.email
         emailInput.style.color = 'grey'
         setUserForm(uf => { return {...uf, email: userProfile.email} })
         setEmailReadOnly(true)
+        setToggleEmail('outline-light')
     }
-    const changePassword = (e) => { setShowPasswordModal(true) }
+    const changePassword = (e) => { 
+        const updatePwd = (passwordToUpdate.length !== 0)
+        if (updatePwd) {
+            setPasswordToUpdate('')
+            setTogglePwd('outline-light')
+         } else {
+            setShowPasswordModal(true)
+            setTogglePwd('outline-warning')
+         }
+    }
     const handleChange = (name, origin) => event => { 
         if ((name === 'email') && (!emailReadOnly)) {
             event.target.style.color = (event.target.value == origin.email) ? 'black' : 'red' }
@@ -169,14 +181,14 @@ const Profile = (props) => {
             {(role.name === "Admin") ? t('profile.role.can_edit') : t('profile.role.admin_only')}
         </Tooltip>
     )
-    const changeEmailTooltip = (props) => (
-        <Tooltip id="email-tooltip" {...props}>
-            {t('profile.email.button_tooltip')}
-        </Tooltip>
-    )
+    const changeEmailTooltip = (props) => {
+        const text = (emailReadOnly) ? t('profile.email.button.tooltip.on') : t('profile.email.button.tooltip.off')
+        return ( <Tooltip id="email-tooltip" {...props}>{text}</Tooltip> )
+    }
+
     const changePasswordTooltip = (props) => (
         <Tooltip id="email-tooltip" {...props}>
-            {t('profile.password.button_tooltip')}
+            { (passwordToUpdate.length === 0) ? t('profile.password.button.tooltip.on') : t('profile.password.button.tooltip.off')}
         </Tooltip>
     )
 
@@ -185,7 +197,8 @@ const Profile = (props) => {
             <Messenger message={message} setMessage={setMessage} />
             <PasswordUpdateModal showModal={showPasswordModal} 
                                  setShowModal={setShowPasswordModal} 
-                                 setPasswordToUpdate={setPasswordToUpdate} />
+                                 setPasswordToUpdate={setPasswordToUpdate}
+                                 setVariant={setTogglePwd} />
             <Jumbotron>
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: userForm.username})}&nbsp;&nbsp; 
@@ -211,8 +224,8 @@ const Profile = (props) => {
                                     <OverlayTrigger placement="right" 
                                                     delay={{ show: 250, hide: 400 }} 
                                                     overlay={changeEmailTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changeEmail}>
-                                            {t('profile.email.button')}
+                                        <Button size='sm' variant={toggleEmail} onClick={changeEmail}>
+                                            {t('profile.email.button.edit')}
                                         </Button>
                                     </OverlayTrigger>
                                 </Form.Label>
@@ -258,8 +271,8 @@ const Profile = (props) => {
                                     <OverlayTrigger placement="right" 
                                                     delay={{ show: 250, hide: 400 }} 
                                                     overlay={changePasswordTooltip}>
-                                        <Button size='sm' variant='outline-light' onClick={changePassword}>
-                                            {t('profile.password.button')}
+                                        <Button size='sm' variant={togglePwd} onClick={changePassword}>
+                                            {t('profile.password.button.edit')}
                                         </Button>
                                     </OverlayTrigger>
                                 </Form.Label>
@@ -314,7 +327,6 @@ const passwordReducer = (state, action) => {
     console.log("GET =>", state, action)
     switch(action.type) {
         case 'first':
-            console.log("get FRIST")
             return { second: state.second , 
                      first: action.value, 
                      match: ((action.value === state.second) && (state.second != '')) }
@@ -328,7 +340,7 @@ const passwordReducer = (state, action) => {
 }
 
 const PasswordUpdateModal = (props) => {
-    const { showModal, setShowModal, setPasswordToUpdate } = props
+    const { showModal, setShowModal, setPasswordToUpdate, setVariant } = props
     const { t } = useTranslation()
     const [ password, setPassword ] = useReducer(passwordReducer, initPassword) 
 
@@ -338,7 +350,12 @@ const PasswordUpdateModal = (props) => {
     const submit = () => {
         if (password.match) { 
             setPasswordToUpdate(password.first)
-            close() }
+            setVariant('outline-warning')
+        } else {
+            setPasswordToUpdate('')
+            setVariant('outline-light')
+        }
+        close() 
     }
     const handleChange = name => event => { 
         setPassword( {type: name, value: event.target.value } )

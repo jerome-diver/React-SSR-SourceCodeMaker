@@ -30,8 +30,13 @@
       "description": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte."
     },
     "email": {
-      "button": "email",
-      "button_tooltip": "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
+      "button": {
+        "edit": "email",
+        "tooltip": {
+         "on":  "Cliquez pour pouvoir changer vôtre adresse mail, puis suivez les instructions pour mettre à jour.",
+         "off": "Annulez le changement d'adresse email"
+        }
+      },
       "correct_error": "Choisissez une adresse email avec une syntaxe correcte",
       "helper": "Si vous modifiez vôtre email, un email de confirmation sera envoyé et à valider dans les deux jours à venir."
     },
@@ -49,8 +54,13 @@
       "correct_error": "Vôtre prénom doit être acceptable."
     },
     "password": {
-      "button": "Mot de passe",
-      "button_tooltip": "Cliquez pour pouvoir modifiez vôtre mot de passe, puis suivez les instuctions pour le mettre à jour.",
+      "button": {
+        "edit": "Mot de passe",
+        "tooltip": {
+          "on": "Cliquez pour pouvoir modifiez vôtre mot de passe, puis suivez les instuctions pour le mettre à jour.",
+          "off": "Annuler la modification du mot de passe"
+        }
+      },
       "placeholder": "Écrivez ici le mot de passe",
       "helper": "Le mot de passe ne s'affiche pas, seul vous le connaissez. Vous pouvez le changer en cliquant sur le bouton du haut..."
     },

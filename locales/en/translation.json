@@ -30,8 +30,13 @@
       "description": "You can edit your profile there but you will have then to indicate your password and confirm it to apply."
     },
     "email": {
-      "button": "eMail",
-      "button_tooltip": "Click to be able to modify email address, and read instructions to apply update process.",
+      "button": {
+        "edit": "eMail",
+        "tooltip": {
+          "on": "Click to be able to modify email address, and read instructions to apply update process.",
+          "off": "Cancel email modification"
+        }
+      },
       "correct_error": "Please choose a valid email syntax",
       "helper": "In case of email modification, you will receipt an email in this mail box with a link to confirm within 2 days to apply update changed."
     },
@@ -49,8 +54,13 @@
       "correct_error": "Your second name should be acceptable."
     },
     "password": {
-      "button": "Password",
-      "button_tooltip": "Click to be able to update your password, then follow instructions to apply update.",
+      "button": {
+        "edit": "Password",
+        "tooltip": {
+          "on": "Click to be able to update your password, then follow instructions to apply update.",
+          "off": "Cancel password edition"
+        }
+      },
       "placeholder": "Write password there",
       "helper": "Password doesn't print for safety reason. You can modify it by first click the button upper..."
     },
