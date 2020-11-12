@@ -50,7 +50,7 @@ const App = (props) => {
         data = (cookies.session.status) 
             ? {...cookies.session, status: { ...cookies.session.status, ...status } } 
             : {...cookies.session, status }
-    } else { data = { status: status } }
+    } else { data = { status } }
     setCookies('session', data)
 }
   const getUser = () => { if (cookies.session && cookies.session.user) return cookies.session.user }

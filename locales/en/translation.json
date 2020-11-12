@@ -74,6 +74,7 @@
     },
     "modal": {
       "update": {
+        "title": "Profile update status",
         "password": {
           "title": "Change account password",
           "first": {
@@ -93,7 +94,6 @@
         }
       },
       "success": {
-        "title": "Updated user",
         "text": "Successfuly updated user"
       }
     }

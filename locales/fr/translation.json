@@ -74,6 +74,7 @@
     },
     "modal": {
       "update": {
+        "title": "Status de mise à jour du profile",
         "password": {
           "title": "Changez de mot de passe du compte",
           "first": {
@@ -93,7 +94,6 @@
         }
       },
       "success": {
-        "title": "Utilisateur mis à jour",
         "text": "La modification des données utiliseteurs est un succès"
       }
     }

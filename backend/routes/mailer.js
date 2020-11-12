@@ -67,7 +67,7 @@ router.post('/account/reset_password', (req, res) => {
                 link_validate: setup_password_link,
                 submit_text: req.i18n.t('mailer:account.password.submit_text')
             }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                           : res.status(200).json({sent: true})    } )
+                                           : res.status(200).json({sent: true, start: date_now, end: date_end})    } )
     } )
 } )
 

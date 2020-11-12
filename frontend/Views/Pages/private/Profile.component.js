@@ -92,6 +92,8 @@ const Profile = (props) => {
                 const [ haveError, validated ] = validatePassword(userForm.password)
                 if (haveError) setMessage( {text: haveError} )
                 else if (validated) {
+                    let name = t('profile.modal.update.title')
+                    let message = ''
                     if (userForm.email != userProfile.email) {  /*    M o d i f y   e m a i l 
                                                                     --> send email to:
                                                                         _ actual account email
@@ -107,18 +109,15 @@ const Profile = (props) => {
                                 const sentEmail = sendEmailLink('updateEmail', user_data)
                                 if (sentEmail.oldEmail.sent && sentEmail.newEmail.sent) { 
                                     setStatus({email: sentEmail.newEmail.email}) }
-                            } else {
-                                setMessage({text: {
-                                                name: t(''),
-                                                message: t('') }})
-                            } }) 
-
+                            } else { message += response.error + '\n' }
+                        }) 
                     }
                     const password = cypher(userForm.password)
-
                     /* Need to first check password is OK to then sendEmailLink to update password process */
-                    if (passwordToUpdate.length === 0) {
-                        sendEmailLink('updatePassword', prepareUpdatePasswordUser(userForm, passwordToUpdate))
+                    if (passwordToUpdate.length != 0) {
+                        const preparedUser = prepareUpdatePasswordUser(userForm, passwordToUpdate)
+                        const sentEmail = sendEmailLink('updatePassword', preparedUser)
+                        //
                     }
                     const parsedUser = prepareCleanUser(userForm) 
                     
@@ -130,11 +129,11 @@ const Profile = (props) => {
                                 setUserSession(washUser(response.user))
                                 setUserForm(washUser(response.user))
                                 setSession(response)
-                                setMessage( {text: {name: t('profile.modal.success.title'), 
-                                                    message: t('profile.modal.success.text')}})
+                                message += t('profile.modal.success.text') + "\n"
                             }
                             setLoaded(true)
                         } ) 
+                    setMessage( {text: { name, message }})
                 }
             } else setMessage( {text: { name:t('sanitizer.frontend.password.missing.title'), 
                                         message: t('sanitizer.frontend.password.missing.text')} } )
@@ -186,11 +185,12 @@ const Profile = (props) => {
         return ( <Tooltip id="email-tooltip" {...props}>{text}</Tooltip> )
     }
 
-    const changePasswordTooltip = (props) => (
-        <Tooltip id="email-tooltip" {...props}>
-            { (passwordToUpdate.length === 0) ? t('profile.password.button.tooltip.on') : t('profile.password.button.tooltip.off')}
-        </Tooltip>
-    )
+    const changePasswordTooltip = (props) => {
+        const text = (passwordToUpdate.length === 0) 
+                ? t('profile.password.button.tooltip.on') 
+                : t('profile.password.button.tooltip.off')
+        return ( <Tooltip id="email-tooltip" {...props}>{text}</Tooltip> )
+    }
 
     if (loaded && userSession) {
         return <>
