@@ -98,7 +98,7 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res
                 title: req.i18n.t('mailer:account.email.title'),
                 content_title: req.i18n.t('mailer:account.email.content.title'),
                 introduction: req.i18n.t('mailer:account.email.content.introduction', 
-                                         {username: username, date_now: dateNow}),
+                                         {username, date_now: dateNow}),
                 text: req.i18n.t('mailer:account.email.content.text', 
                                  {email: newEmail, old_email: oldEmail, date_end: dateEnd}),
                 link_validate: actionLink,

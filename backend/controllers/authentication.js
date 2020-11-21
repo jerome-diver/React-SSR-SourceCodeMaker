@@ -5,7 +5,8 @@ require('dotenv').config('../../')
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */
 
 /* check authorized session httpOnly:
-   _ cookies.token id == cookies.session user.id */
+   _ cookies.token id == cookies.session user.id
+*/
 const hasAuthorization = (req, res, next) => {
     const user_session = JSON.parse(req.cookies.session).user
     console.log("=== hasAuthorization middleware for user : %s", user_session.username) 
@@ -19,7 +20,8 @@ const hasAuthorization = (req, res, next) => {
 
 /* check :role params to be:
    _ cookies.session role.name == :role params
-   _ cookies.session role.name == cookies.token role_name */
+   _ cookies.session role.name == cookies.token role_name
+*/
 const isRole = (req, res, next) => {
     const role_to_authorize = req.params.role
     const role_session = JSON.parse(req.cookies.session).role
@@ -33,7 +35,8 @@ const isRole = (req, res, next) => {
 
 /* check cookies for admin by:
    _ cookies.session role.name == 'Admin'
-   _ cookies.token role_name == 'Admin' */
+   _ cookies.token role_name == 'Admin' 
+*/
 const isAdmin = (req, res, next) => {
     const role_session = JSON.parse(req.cookies.session).role
     console.log("=== isAdmin middleware for user role: %s", role_session.name) 
@@ -45,7 +48,8 @@ const isAdmin = (req, res, next) => {
 
 /* check validity from body.token for:
    _ token signed correct
-   _ token.valid_until not expired */
+   _ token.valid_until not expired
+*/
 const isValid = (req, res, next) => {
     const secret = process.env.JWT_SECRET
     const { token } = req.cookies

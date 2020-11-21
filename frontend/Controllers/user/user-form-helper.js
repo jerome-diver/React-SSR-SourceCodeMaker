@@ -65,7 +65,7 @@ const sendEmailLink = (target, user_data) => {
                 icon: 'danger'
             }
             break
-        case 'updatePassword':
+        case 'resetPassword':
             action = resetPassword
             htmlText = i18n.t('popup.password.modify') 
             success = {

@@ -6,8 +6,8 @@ import { faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
-import { validatePassword, cypher, sendEmailLink } from '../../../Controllers/user/user-form-helper'
-import { update } from '../../../Controllers/user/action-CRUD'
+import { validatePassword, cypher, sendEmailLink, fireError } from '../../../Controllers/user/user-form-helper'
+import { update, updatePassword } from '../../../Controllers/user/action-CRUD'
 import { checkEmail } from '../../../Controllers/user/authenticate-api'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
@@ -113,16 +113,13 @@ const Profile = (props) => {
                         }) 
                     }
                     const password = cypher(userForm.password)
-                    /* Need to first check password is OK to then sendEmailLink to update password process */
-                    if (passwordToUpdate.length != 0) {
-                        const preparedUser = prepareUpdatePasswordUser(userForm, passwordToUpdate)
-                        const sentEmail = sendEmailLink('updatePassword', preparedUser)
-                        //
-                    }
-                    const parsedUser = prepareCleanUser(userForm) 
+                    /* Need to first check password to prepare user with/without password to update */
+                    const parsedUser = (updatePwd()) 
+                            ? prepareUpdatePasswordUser(userForm, passwordToUpdate) 
+                            : prepareCleanUser(userForm) 
                     
                     
-                            update(parsedUser, password, userSession.id)
+                    update(parsedUser, password, userSession.id)
                         .then(response => {
                             if (response.error) setMessage( {text: response.error} )
                             else {
@@ -154,9 +151,10 @@ const Profile = (props) => {
         setEmailReadOnly(true)
         setToggleEmail('outline-light')
     }
+    const updatePwd = () => { return (passwordToUpdate.length !== 0) }
     const changePassword = (e) => { 
-        const updatePwd = (passwordToUpdate.length !== 0)
-        if (updatePwd) {
+        console.log("password to update is", passwordToUpdate, updatePwd())
+        if (updatePwd()) {
             setPasswordToUpdate('')
             setTogglePwd('outline-light')
          } else {
@@ -325,15 +323,18 @@ const Messenger = (props) => {
 const initPassword = { first: '', second: '', match: false }
 const passwordReducer = (state, action) => {
     console.log("GET =>", state, action)
+    const [ error, passwordValidated ] = validatePassword(action.value)
     switch(action.type) {
         case 'first':
-            return { second: state.second , 
+            return { error,
                      first: action.value, 
-                     match: ((action.value === state.second) && (state.second != '')) }
+                     second: state.second , 
+                     match: ((action.value === state.second) && (state.second != '') && passwordValidated) }
         case 'second':
-            return { first: state.first, 
+            return { error,
+                     first: state.first, 
                      second: action.value, 
-                     match: ((action.value === state.first) && (state.first != '')) }
+                     match: ((action.value === state.first) && (state.first != '') && passwordValidated) }
         default:
             return initPassword
     }
@@ -346,20 +347,23 @@ const PasswordUpdateModal = (props) => {
 
     console.log("--- Profile <PasswordUpdateModal> component")
 
-    const close = () => { setShowModal(false) }
+    const close = () => { 
+        setVariant('outline-light')
+        setShowModal(false) }
     const submit = () => {
+        console.log("password :", password.first, password.match, password.error)
         if (password.match) { 
             setPasswordToUpdate(password.first)
             setVariant('outline-warning')
         } else {
             setPasswordToUpdate('')
             setVariant('outline-light')
+            fireError(password.error.name, password.error.message)
         }
-        close() 
+        setShowModal(false)
     }
     const handleChange = name => event => { 
         setPassword( {type: name, value: event.target.value } )
-        console.log("this =>", password[name])
     }
 
     return <>
