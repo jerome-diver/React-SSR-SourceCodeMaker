@@ -182,6 +182,24 @@
         "password": "Password confirmation rejected"
       }
     },
+    "account": {
+      "new": {
+        "succeed": {
+          "title": "New account validation process",
+          "content": "Validation succeed, validation has been sent by email",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "New account failed",
+          "content": "Validation email has not been sent.",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      }
+    },
     "email": {
       "modified": {
         "text": "<div class='alert alert-info'><p>Email account has been changed, you need to validate to apply change.</p></div>",
@@ -215,6 +233,22 @@
       }
     },
     "password": {
+      "reset": {
+        "succeed": {
+          "title": "Reset password process running",
+          "content": "You should receipt an email with a linkt o follow.",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Process to reset password failed",
+          "content": "Email with link has not been sent. A problem did occur.",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
       "modify": "<div class='alert alert-info'><p>Password has been changed, you need to validate to apply.</p></div>"
     }
   },

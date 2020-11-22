@@ -182,6 +182,24 @@
       },
       "validate": "<div class='alert alert-info'><p>Un nouveau compte utilisateur vient d'être créé, vous devez le valider pour accepter la création.</p></div>"
     },
+    "account": {
+      "new": {
+        "succeed": {
+          "title": "Procédé de validation de création de compte",
+          "content": "La validation se passe correctement, un email a été envoyé pour validation",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Création du nouveau compte échoué",
+          "content": "L'email de validation n'a pas pu être envoyé, de fait la validation ne pourra pas se faire.",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      }
+    },
     "email": {
       "modified": {
         "text": "<div class='alert alert-info'><p>L'email de vôtre compte a été mis à jour, vous devez valider la modification pour qu'elle soit appliquée.</p></div>",
@@ -215,6 +233,22 @@
       }
     },
     "password": {
+      "reset": {
+        "succeed": {
+          "title": "Changement du mot de passe en cours",
+          "content": "Un email vous a été envoyé avec un lien à suivre pour continuer la procédure.",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Problème lors de la procédure de changement de mot de passe",
+          "content": "L'email avec son lien n'a pas pu être envoyé. De fait vous ne pouvez pas modifier le mot de passe sans ce lien.",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
       "modify": "<div class='alert alert-info'><p>Le mot de passse de vôtre compte a été mis à jour, vous devez valider le changement pour qu'il soit appliqué.</p></div>"
     }
   },

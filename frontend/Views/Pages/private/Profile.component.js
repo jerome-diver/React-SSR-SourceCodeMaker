@@ -100,7 +100,7 @@ const Profile = (props) => {
                                                                         _ new account email to update 
                                                                     (with two links to accept or reject update) */
                         console.log("--- Profile component [clickSubmit -modify email-]")
-                        // Verify email is existing.... 
+                        // Verify email is existing and apply to send email links to accept to modify (or not) 
                         checkEmail(userForm.email).then(response => {
                             if (response.status) {
                                 const user_data = { username: userForm.username,

@@ -24,8 +24,6 @@ const SignUp = (props) => {
     }, [submit, t] )
     
     const handleChange = name => event => { setUser({...user, [name]: event.target.value}) }
-    const emailFailed = () => { setRedirect(location.state.from) }
-    const emailSuccess = () => { setRedirect('/signin') }
     const clickSubmit = () => {
         if (user.pass1 === user.pass2) {
             const [ error, passwordValidated ] = validatePassword(user.pass1)
@@ -33,9 +31,14 @@ const SignUp = (props) => {
                 setSubmit(true)
                 create(user)
                     .then(response => {
-                        if (response.error) fireError(response.error.name, response.error.message)
-                        else if (!response.accepted) fireError(t('popup.signup.failed.title'), t('popup.signup.failed.user'))
-                        else sendEmailLink('newAccount', user)
+                        if (response.error) {
+                            fireError(response.error.name, response.error.message)
+                        } else if (response.accepted) {
+                            const emailSent = endEmailLink('validateAccount', user)
+                            if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
+                        } else {
+                            fireError(t('popup.signup.failed.title'), t('popup.signup.failed.user'))
+                        }
                         setSubmit(false) } )
                     .catch(error => fireError(error.name, error.message))
             } else fireError(error.name, error.message)
