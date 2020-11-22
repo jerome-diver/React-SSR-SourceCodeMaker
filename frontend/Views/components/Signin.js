@@ -4,12 +4,11 @@ import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faMailBulk, faKey } from '@fortawesome/free-solid-svg-icons'
 import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
-         Collapse, Form, Spinner, Alert, Modal } from 'react-bootstrap'
+         Collapse, Form, Alert, Modal } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
-import { useCookies } from 'react-cookie'
-import { signin, resetPassword, validateAccount } from '../../Controllers/user/authenticate-api'
-import { validatePassword, emailHasBeenSent, fireError } from '../../Controllers/user/user-form-helper'
+import { signin } from '../../Controllers/user/authenticate-api'
+import { validatePassword, sendEmailLink } from '../../Controllers/user/user-form-helper'
 import validator from 'validator'
 import Loading from '../Pages/public/Loading.component'
 
@@ -205,21 +204,13 @@ const FixProblem = (props) => {
 
     const toggle = () => { setCollapse(!collapse)}
     const forgetPassword = () => {
-        const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on reset password link to setup a new one.</p></div>"
-        resetPassword({username: username}).then(response => {
-            (response.error) ? getError(response.error) : emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent) } )
+        const emailSent = sendEmailLink('resetPassword', {username})
+        if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
     }
     const sendValidationAgain = () => { 
-        const htmlEmailSent = "<div class='alert alert-success'><p>Check your email account, then click on validate link to get account up.</p></div>"
-        validateAccount({username: username})
-            .then(response => { 
-                console.log('GET BACK: ', response.sent, response.error)
-                if(response.sent) emailHasBeenSent(emailValidateSuccess, emailValidateFailed, htmlEmailSent)
-                else fireError(response.error.name, response.error.message) } )
-            .catch(error => fireError(error.name, error.message))
+        const emailSent = sendEmailLink('validateAccount', {username})
+        if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
     }
-    const emailValidateFailed = () => { setRedirect(location.state.from) }
-    const emailValidateSuccess = () => { setRedirect('/signin') }
 
     if (redirect != '') { return ( <Redirect to={redirect} /> )}
     if (username || (email && validator.isEmail(email))) {

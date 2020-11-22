@@ -34,19 +34,18 @@ const sendEmailLink = (target, user_data) => {
     let failed = null
     let action = null
     switch (target) {
-        case 'newAccount':
+        case 'validateAccount':
             action = validateAccount
-            htmlText = i18n.t('popup.signup.validate')
             success = {
-                title: i18n.t(''),
-                content: i18n.t(''),
-                link_ok: i18n.t(''),
+                title: i18n.t('popup.account.new.succeed.title'),
+                content: i18n.t('popup.account.new.succeed.content'),
+                link_ok: i18n.t('popup.account.new.succeed.link.ok'),
                 icon: 'success'
             }
             failed = {
-                title: i18n.t(''),
-                content: i18n.t(''),
-                link_ok: i18n.t(''),
+                title: i18n.t('popup.account.new.failed.title'),
+                content: i18n.t('popup.account.new.failed.content'),
+                link_ok: i18n.t('popup.account.new.failed.link.ok'),
                 icon: 'danger'
             }
             break
@@ -67,17 +66,16 @@ const sendEmailLink = (target, user_data) => {
             break
         case 'resetPassword':
             action = resetPassword
-            htmlText = i18n.t('popup.password.modify') 
             success = {
-                title: i18n.t(''),
-                content: i18n.t(''),
-                link_ok: i18n.t(''),
+                title: i18n.t('popup.password.reset.succeed.title'),
+                content: i18n.t('popup.password.reset.succeed.content'),
+                link_ok: i18n.t('popup.password.reset.succeed.link.ok'),
                 icon: 'success'
             }
             failed = {
-                title: i18n.t(''),
-                content: i18n.t(''),
-                link_ok: i18n.t(''),
+                title: i18n.t('popup.password.reset.failed.title'),
+                content: i18n.t('popup.password.reset.failed.content'),
+                link_ok: i18n.t('popup.password.reset.failed.link.ok'),
                 icon: 'danger'
             }
             break
