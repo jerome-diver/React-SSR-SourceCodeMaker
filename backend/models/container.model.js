@@ -1,15 +1,14 @@
-
 import mongoose, { Schema, model } from 'mongoose'
 
-/* Schema for document user for collection "categories" */
-const CategorySchema = new Schema({
+/* Schema for document user for collection "subjects" */
+const ContainerSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Category name is required',
+        required: 'Container name is required',
         minLength: 3,
         maxLength: 32,
-        unique: 'Category already exists'
+        unique: 'Container already exists'
     },
     description: {
         type: String,
@@ -17,6 +16,10 @@ const CategorySchema = new Schema({
         required: "Description is required"
     },
     parent_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: false
+    },
+    type_id: {
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
@@ -28,9 +31,9 @@ const CategorySchema = new Schema({
         type: Date,
         default: Date.now
     },
-}, { collection: 'categories' } )
+}, { collection: 'containers' } )
 
-CategorySchema.options.toJSON = {
+ContainerSchema.options.toJSON = {
     transform: function(doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
@@ -40,4 +43,4 @@ CategorySchema.options.toJSON = {
 };
 
 /* Export Schema to Model User */
-export default model('Role', CategorySchema)
+export default model('Container', ContainerSchema)

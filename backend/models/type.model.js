@@ -1,27 +1,27 @@
+
 import mongoose, { Schema, model } from 'mongoose'
 
-/* Schema for document user for collection "subjects" */
-const SubjectSchema = new Schema({
+/* Schema for document user for collection "categories" */
+const TypeSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: 'Subject name is required',
+        required: 'Type name is required',
         minLength: 3,
         maxLength: 32,
-        unique: 'Subject already exists'
+        unique: 'Type already exists'
     },
     description: {
         type: String,
         trim: true,
         required: "Description is required"
     },
-    parent_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        unique: false
-    },
-    category_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        unique: false
+    rules: {
+        type: String,
+        trim: true,
+        required: 'Type rules is/are required',
+        minLength: 3,
+        maxLength: 32,
     },
     enable: {
         type: Boolean,
@@ -31,9 +31,9 @@ const SubjectSchema = new Schema({
         type: Date,
         default: Date.now
     },
-}, { collection: 'Subject' } )
+}, { collection: 'types' } )
 
-SubjectSchema.options.toJSON = {
+TypeSchema.options.toJSON = {
     transform: function(doc, ret, options) {
         ret.id = ret._id;
         delete ret._id;
@@ -43,4 +43,4 @@ SubjectSchema.options.toJSON = {
 };
 
 /* Export Schema to Model User */
-export default model('Subject', SubjectSchema)
+export default model('Type', TypeSchema)

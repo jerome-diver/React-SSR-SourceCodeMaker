@@ -186,14 +186,14 @@
       "new": {
         "succeed": {
           "title": "New account validation process",
-          "content": "Validation succeed, validation has been sent by email",
+          "content": "<div class='alert alert-info'><p>Validation succeed, validation has been sent by email.</p></div>",
           "link": {
             "ok": "OK"
           }
         },
         "failed": {
           "title": "New account failed",
-          "content": "Validation email has not been sent.",
+          "content": "<div class='danger danger-info'><p>Validation email has not been sent.</p></div>",
           "link": {
             "ok": "OK"
           }
@@ -236,14 +236,14 @@
       "reset": {
         "succeed": {
           "title": "Reset password process running",
-          "content": "You should receipt an email with a linkt o follow.",
+          "content": "<div class='alert alert-info'><p>You should receipt an email with a linkt o follow.</p></div>",
           "link": {
             "ok": "OK"
           }
         },
         "failed": {
           "title": "Process to reset password failed",
-          "content": "Email with link has not been sent. A problem did occur.",
+          "content": "<div class='danger danger-info'><p>Email with link has not been sent. A problem did occur.</p></div>",
           "link": {
             "ok": "OK"
           }

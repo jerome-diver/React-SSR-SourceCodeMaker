@@ -186,14 +186,14 @@
       "new": {
         "succeed": {
           "title": "Procédé de validation de création de compte",
-          "content": "La validation se passe correctement, un email a été envoyé pour validation",
+          "content": "<div class='alert alert-info'><p>La validation se passe correctement, un email a été envoyé pour validation.</p></div>",
           "link": {
             "ok": "OK"
           }
         },
         "failed": {
           "title": "Création du nouveau compte échoué",
-          "content": "L'email de validation n'a pas pu être envoyé, de fait la validation ne pourra pas se faire.",
+          "content": "<div class='danger danger-info'><p>L'email de validation n'a pas pu être envoyé, de fait la validation ne pourra pas se faire.</p></div>",
           "link": {
             "ok": "OK"
           }
@@ -236,14 +236,14 @@
       "reset": {
         "succeed": {
           "title": "Changement du mot de passe en cours",
-          "content": "Un email vous a été envoyé avec un lien à suivre pour continuer la procédure.",
+          "content": "<div class='alert alert-info'><p>Un email vous a été envoyé avec un lien à suivre pour continuer la procédure.</p></div>",
           "link": {
             "ok": "OK"
           }
         },
         "failed": {
           "title": "Problème lors de la procédure de changement de mot de passe",
-          "content": "L'email avec son lien n'a pas pu être envoyé. De fait vous ne pouvez pas modifier le mot de passe sans ce lien.",
+          "content": "<div class='danger danger-info'><p>L'email avec son lien n'a pas pu être envoyé. De fait vous ne pouvez pas modifier le mot de passe sans ce lien.</p></div>",
           "link": {
             "ok": "OK"
           }
