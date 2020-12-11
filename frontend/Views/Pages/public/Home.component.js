@@ -16,11 +16,9 @@ const useFetch = (url, trigger) => {
         console.log("FETCHING NOW lng")
         fetch(url)
             .then(res => res.json())
-            .then(respond => {
-                setResponse(respond)
-            .catch(err => { setError({state: true, content: err}) })
-            .finally(() => setLoading(false) )
-            } )
+            .then(respond => setResponse(respond))
+            .catch(err => setError({state: true, content: err}))
+            .finally(() => setLoading(false))
     }, [trigger] )
     
     return { loading, error, response }
