@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next"
 import { truncateSync } from 'fs'
 
 const useFetch = (url, trigger) => {
-    const [ loaded, setLoaded ] = useState(false)
+    const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, message: ""})
     const [ response, setResponse ] = useState({})
 
@@ -18,25 +18,29 @@ const useFetch = (url, trigger) => {
             .then(res => res.json())
             .then(respond => {
                 setResponse(respond)
-                setLoaded(true)
-            .catch((err) => { setError({state: true, content: err}) })
+            .catch(err => { setError({state: true, content: err}) })
+            .finally(() => setLoading(false) )
             } )
     }, [trigger] )
     
-    return { loaded, error, response }
+    return { loading, error, response }
 }
 
 const Home = (props) => {
   const { t } = useTranslation()
   const { getLanguage } = useAuthenticate()
   const url = 'http://localhost:3000/api/home/' + getLanguage()
-  const { loaded, error, response } = useFetch(url, getLanguage)
+  const { loading, error, response } = useFetch(url, getLanguage)
 
   useEffect(() => {
       console.log("This is the responses:", response)
   }, [])
 
-  if (loaded) {
+  if (loading) return <><Loading /></>
+  else if(error.state) return <><Error title={t('error:home.title')} 
+                                       name={error.content.name}
+                                       message={error.content.message}/></>
+  else {
     return (
       <>
           <h1><FontAwesomeIcon icon={faCoffee} size="xs" color="blue" /> { response.title }</h1>
@@ -44,10 +48,7 @@ const Home = (props) => {
           <div id="home_article">{ parse(response.content) }</div>
       </>
     )
-  } else if(error.state) return <><Error title={t('error:home.title')} 
-                                         name={error.content.name}
-                                         message={error.content.message}/></>
-  else return <><Loading /></>
+  }
 }
 
 export default Home
