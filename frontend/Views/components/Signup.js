@@ -31,11 +31,11 @@ const SignUp = (props) => {
                 setSubmit(true)
                 create(user)
                     .then(response => {
-                        if (response.error) {
-                            fireError(response.error.name, response.error.message)
-                        } else if (response.accepted) {
+                        if (response.accepted) {
                             const emailSent = endEmailLink('validateAccount', user)
                             if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
+                        } else if (response.error) {
+                            fireError(response.error.name, response.error.message)
                         } else {
                             fireError(t('popup.signup.failed.title'), t('popup.signup.failed.user'))
                         }

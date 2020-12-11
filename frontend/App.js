@@ -10,11 +10,11 @@ import useNavigatorLanguage from '@rooks/use-navigator-language'
 
 const App = (props) => {
   const [ cookies, setCookies, removeCookies ] = useCookies(['session', 'token'])
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigatorLanguage = useNavigatorLanguage()
+      console.log("--- App component: language is %s, navigator language is %s", i18n.language, navigatorLanguage)
 
   useEffect( () => {
-      console.log("--- App component: language is %s, navigator language is %s", getLanguage(), navigatorLanguage)
   }, [])
   
   const setSession = (data) => {  /// data: {user: ___, role: ___, language: ___}
@@ -26,6 +26,7 @@ const App = (props) => {
       removeCookies('session') }
   }
   const setLanguage  = (language) => {
+      console.log("--- App (Provider), fetch language process")
       let data = (!language) 
                   ? (isBrowser) 
                     ? { language: navigatorLanguage } 
@@ -65,8 +66,7 @@ const App = (props) => {
     <>
       <AuthenticateContext.Provider value={{ getUser, getRole, getLanguage, getStatus,
                                              setSession, setLanguage, setStatus }}>
-        <header>
-          <Navigation className="menu"/></header>
+        <header><Navigation className="menu"/></header>
         <main><PageSwitcher/></main>
         <footer>
             <hr />

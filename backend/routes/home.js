@@ -2,9 +2,9 @@ var express = require('express')
 var router = express.Router()
 
 /* GET home page. */
-router.get('/', function(req, res) {
-    const cookie_lng = (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.language || 'en'
-    req.i18n.changeLanguage(cookie_lng)
+router.get('/:lng', function(req, res) {
+    const lng = req.params.lng || (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.language
+    req.i18n.changeLanguage(lng)
     console.log("=== /api/home, GET request, language is", req.language)
     const home_title = req.t('home.title')
     const home_content = req.t('home.content')

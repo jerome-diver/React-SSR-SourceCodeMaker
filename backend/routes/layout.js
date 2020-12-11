@@ -10,8 +10,8 @@ import App from '../../frontend/App'
 router.get('*', function(req, res) {
     const context = {}
     const cookie_lng = (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.language || 'en'
-    req.i18n.changeLanguage(cookie_lng)
-    console.log("=== / layout, GET request, language is", req.language)
+    //req.i18n.changeLanguage(cookie_lng)
+    console.log("=== / layout, GET request, language is %s, but cookies language is", req.language, cookie_lng)
     const appContent = renderToString(
         <I18nextProvider i18n={req.i18n}>
             <StaticRouter location={req.url} context={context}>

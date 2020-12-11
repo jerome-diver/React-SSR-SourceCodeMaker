@@ -23,5 +23,5 @@ const BaseAppI18n = () => {
 }
 
 hydrate(
-  <BaseAppI18n/>
-  , document.getElementById('root'));
+  <BaseAppI18n/>,
+  document.getElementById('root'));

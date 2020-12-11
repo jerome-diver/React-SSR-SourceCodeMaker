@@ -1,3 +1,11 @@
+@import url(https://fonts.googleapis.com/css?family=Numito|Grenze+Gotisch|Pacifico|Piedra|Baloo+2|NerkoOne+Regular|Poppins|Bershire+Swash)
+$font-title: Poppins
+$font-text: Poppins
+$font-header: NerkoOne
+$font-brand: 'Berkshire Swash'
+$font-card: 'Baloo 2'
+$font-jumbo: Pacifico
+
 body
   position: relative
   background-color: #000
@@ -7,6 +15,8 @@ body
   width: 100%
   h1
     padding-left: 10px
+    font-family: $font-title
+    font-weight: 800
 
 #root
   width: 100%
@@ -17,11 +27,17 @@ body
 
 header 
   width: 100%
+  font-family: $font-header
+  font-weight: 700
   background-image: url("../img/source_code_maker_HEADER.png")
   background-clip: border-box
   background-repeat: no-repeat
   background-size: 100% 250px
   height: 250px
+  #brand
+    font-family: $font-brand
+    font-size: 150%
+    color: rgb(171, 60, 23)
 
 main
   grid-row-start: 2
@@ -64,9 +80,16 @@ article
 #submit_form_message
    margin-top: 10px
 
+.card-body
+  font-family: $font-card
+  .card-title
+    font-weight: 800
+
+
 #home_article
   position: relative
-  font-family: 'Roboto', sans-serif
+  font-family: $font-text
+  font-weight: 200
   display: block
   margin-left: 2%
   padding: 8px
@@ -120,3 +143,4 @@ article
 .jumbotron
   background-image: url('../img/background_dark_canvas.png')
   background-size: 150% 150%
+  font-family: $font-jumbo

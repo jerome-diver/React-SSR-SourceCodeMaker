@@ -132,7 +132,7 @@ const Navigation = (props) => {
   return (
     <>
         <Navbar expand="lg" bg="dark" fg="light" fixed="top">
-            <Navbar.Brand href="">SourceCodeMaker</Navbar.Brand>
+            <Navbar.Brand id='brand' href="">SourceCodeMaker</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
