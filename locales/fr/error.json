@@ -47,6 +47,11 @@
       }
     }
   },
+  "modal": {
+    "button": {
+      "close": "fermer"
+    }
+  },
   "home": {
     "title": "Erreur de communication server"
   },

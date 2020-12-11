@@ -41,29 +41,31 @@ const reducer = (state, action) => {
 }
 
 const I18nSelector = (props) => {
-    const { flagLng, setFlagLng } = props
-    console.log("--- I18nSelector (Navigation sub-component) flagLng props is", flagLng)
     const { i18n } = useTranslation()
-    const { setLanguage } = useAuthenticate()
+    const { getUser, setLanguage } = useAuthenticate()
     const [ flagSelected, setFlagSelected ] = useState(imgFlag(i18n.language))
+    console.log("--- I18nSelector (Navigation sub-component) flagLng props is", i18n.language)
 
     useEffect(() => {
         console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", i18n.language)
         setFlagSelected(imgFlag(i18n.language, 20))
     },[i18n.language])
 
-    const changeLanguage = (lng) => {
+    const changeLanguage = lng => () => {
+        console.log("CHANGING language to", lng)
         i18n.changeLanguage(lng)
+        if (getUser()) {
+          console.log("We got a user session existing...")
+          setLanguage(lng)
+        }
         setFlagSelected(imgFlag(lng, 20))
-        setFlagLng(lng)
-        setLanguage(lng)
     }
 
     return <>
         <NavDropdown title={flagSelected} id="basic-nav-dropdown">
-            <Link to='#' onClick={() => { changeLanguage('fr') } }>{imgFlag('fr',30)}</Link>
-            <Link to='#' onClick={() => { changeLanguage('us') } }>{imgFlag('us', 30)}</Link>
-            <Link to='#' onClick={() => { changeLanguage('en') } }>{imgFlag('uk', 30)}</Link>
+            <Link to='#' onClick={changeLanguage('fr')}>{imgFlag('fr',30)}</Link>
+            <Link to='#' onClick={changeLanguage('us')}>{imgFlag('us', 30)}</Link>
+            <Link to='#' onClick={changeLanguage('en')}>{imgFlag('uk', 30)}</Link>
         </NavDropdown>
     </>
 }
@@ -120,13 +122,11 @@ const Navigation = (props) => {
 
     const { i18n, t } = useTranslation()
     const { getUser, getRole, getLanguage } = useAuthenticate()
-    const [ flagLng, setFlagLng ] = useState(getLanguage())
     console.log("--- Navigation component")
     const [ session, dispatch ] = useReducer(reducer, {username: '', role: '', language: i18n.language})
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole(), language: getLanguage()})
-    setFlagLng(session.language)
   }, [getUser(), getLanguage()] )
 
   return (
@@ -147,7 +147,7 @@ const Navigation = (props) => {
                                id="basic-nav-dropdown">
                       <UserLoggedEntries username={session.username} role={session.role} />
                   </NavDropdown>
-                  <I18nSelector flagLng={flagLng} setFlagLng={setFlagLng}/>
+                  <I18nSelector/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

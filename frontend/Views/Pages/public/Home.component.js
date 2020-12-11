@@ -5,34 +5,33 @@ import parse from 'html-react-parser'
 import { Loading, Error} from './Printers.component'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
-import { truncateSync } from 'fs'
+//import { truncateSync } from 'fs'
 
 const useFetch = (url, trigger) => {
     const [ loading, setLoading ] = useState(true)
-    const [ error, setError ] = useState({state: false, message: ""})
+    const [ error, setError ] = useState({state: false, content: ""})
     const [ response, setResponse ] = useState({})
 
     useEffect( () => {
-        console.log("FETCHING NOW lng")
-        fetch(url)
-            .then(res => res.json())
-            .then(respond => setResponse(respond))
-            .catch(err => setError({state: true, content: err}))
-            .finally(() => setLoading(false))
+        console.log("FETCHING NOW Home to get translated content")
+        if (url) {
+          fetch(url)
+              .then(res => res.json())
+              .then(respond => setResponse({title: respond.title, content: parse(respond.content)}))
+              .catch(err => setError({state: true, content: err}))
+              .finally(() => setLoading(false))
+        }
     }, [trigger] )
     
     return { loading, error, response }
 }
 
 const Home = (props) => {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
   const { getLanguage } = useAuthenticate()
-  const url = 'http://localhost:3000/api/home/' + getLanguage()
+  const url = 'http://localhost:3000/api/home/' + i18n.language
+  console.log("--- Home url is", url)
   const { loading, error, response } = useFetch(url, getLanguage)
-
-  useEffect(() => {
-      console.log("This is the responses:", response)
-  }, [])
 
   if (loading) return <><Loading /></>
   else if(error.state) return <><Error title={t('error:home.title')} 
@@ -43,7 +42,7 @@ const Home = (props) => {
       <>
           <h1><FontAwesomeIcon icon={faCoffee} size="xs" color="blue" /> { response.title }</h1>
           <hr />
-          <div id="home_article">{ parse(response.content) }</div>
+          <div id="home_article">{ response.content }</div>
       </>
     )
   }

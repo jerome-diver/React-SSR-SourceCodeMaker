@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Spinner, Alert } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Spinner, Alert, Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 
 const Loading = (props) => {
@@ -17,7 +17,8 @@ const Loading = (props) => {
 
 const Error = (props) => {
     const { title, name, message } = props
-    const [ show, setShow ] = useEffect(true)
+    const { t } = useTranslation()
+    const [ show, setShow ] = useState(true)
 
     const handleClose = () => { setShow(false) }
 
@@ -33,13 +34,13 @@ const Error = (props) => {
                 </Alert>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose()}>
-                    {t('setup.email.modal.button.home')}
+                <Button variant="secondary" onClick={handleClose}>
+                    {t('error:modal.button.close')}
                 </Button>
             </Modal.Footer>
         </Modal>
     </> )
 }
 
-export default { Loading, Error }
+export { Loading, Error }
 

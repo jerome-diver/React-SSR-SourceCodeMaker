@@ -1,10 +1,10 @@
 var express = require('express')
 var router = express.Router()
 
-router.post('/', (req, res)=> {
-    const { language } = req.body
+router.post('/:lng', (req, res)=> {
+    const { lng } = req.params
     const cookie_lng = (req.cookies.session) ? JSON.parse(req.cookies.session).language : '(no session cookies)'
-    req.i18n.changeLanguage(language)
+    if (lng) req.i18n.changeLanguage(lng)
     console.log("=== /api/language, POST request, language selected is %s, but session language is %s", 
                 req.language, cookie_lng)
     return res.status(200)

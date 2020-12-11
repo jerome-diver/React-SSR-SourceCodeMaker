@@ -47,6 +47,11 @@
       }
     }
   },
+  "modal": {
+    "button": {
+      "close": "close"
+    }
+  },
   "home": {
     "title": "Server communication failure"
   },

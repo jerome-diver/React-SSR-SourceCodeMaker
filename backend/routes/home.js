@@ -3,7 +3,7 @@ var router = express.Router()
 
 /* GET home page. */
 router.get('/:lng', function(req, res) {
-    const lng = req.params.lng || (req.cookies.session) ? JSON.parse(req.cookies.session).language : req.language
+    const lng = req.params.lng
     req.i18n.changeLanguage(lng)
     console.log("=== /api/home, GET request, language is", req.language)
     const home_title = req.t('home.title')
