@@ -13,7 +13,7 @@ import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
 const navigatorInfo = require('navigator-info')
 const _ = require('lodash')
-import Loading from '../public/Loading.component'
+import { Loading } from '../public/Printers.component'
 
 const messageReducer = (state, action) => {
     return {

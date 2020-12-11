@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { Modal, Spinner, Alert, Button } from 'react-bootstrap'
 import { signout } from '../../Controllers/user/authenticate-api'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
-import Loading from '../Pages/public/Loading.component'
+import { Loading } from '../Pages/public/Printers.component'
 
 const reducer = (state, action) => {
     return { loaded: action.loaded,

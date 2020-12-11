@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
 import { Jumbotron, ListGroup, Spinner, Badge, Alert } from 'react-bootstrap'
 import { variant } from '../../helpers/config'
-import Loading from './Loading.component'
+import { Loading } from './Printers.component'
 import '../../../stylesheet/users.sass'
 
 const User = (props) => {

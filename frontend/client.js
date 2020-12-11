@@ -6,7 +6,7 @@ import "./stylesheet/awesome.sass"
 import './stylesheet/index.sass'
 import './stylesheet/app.sass'
 import App from './App'
-import Loading from './Views/Pages/public/Loading.component'
+import { Loading } from './Views/Pages/public/Printers.component'
 import { CookiesProvider } from 'react-cookie'
 
 const BaseAppI18n = () => {

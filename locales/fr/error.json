@@ -47,6 +47,9 @@
       }
     }
   },
+  "home": {
+    "title": "Erreur de communication server"
+  },
   "validation": {
     "title": "Validation du compte de {{username}}",
     "status": "La validation du compte est $t(error:validation.{{validated}})",

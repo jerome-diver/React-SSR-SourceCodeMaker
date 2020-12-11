@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { signin } from '../../Controllers/user/authenticate-api'
 import { validatePassword, sendEmailLink } from '../../Controllers/user/user-form-helper'
 import validator from 'validator'
-import Loading from '../Pages/public/Loading.component'
+import { Loading } from '../Pages/public/Printers.component'
 
 const reducer = (state, action) => {
     switch (action.isLogged) {

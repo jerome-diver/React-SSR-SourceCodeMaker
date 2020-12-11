@@ -2,32 +2,35 @@ import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import parse from 'html-react-parser'
-import Loading from './Loading.component'
+import { Loading, Error} from './Printers.component'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "react-i18next"
+import { truncateSync } from 'fs'
 
 const useFetch = (url, trigger) => {
-    const { i18n } = useTranslation()
     const [ loaded, setLoaded ] = useState(false)
-    //const [ error, setError ] = useState({state: false, message: ""})
+    const [ error, setError ] = useState({state: false, message: ""})
     const [ response, setResponse ] = useState({})
 
     useEffect( () => {
-        console.log("FETCHING NOW lng is", i18n.language)
-        fetch(url + "/" + i18n.language)
+        console.log("FETCHING NOW lng")
+        fetch(url)
             .then(res => res.json())
             .then(respond => {
                 setResponse(respond)
                 setLoaded(true)
+            .catch((err) => { setError({state: true, content: err}) })
             } )
     }, [trigger] )
     
-    return { loaded, response }
+    return { loaded, error, response }
 }
 
 const Home = (props) => {
+  const { t } = useTranslation()
   const { getLanguage } = useAuthenticate()
-  const { loaded, response } = useFetch('http://localhost:3000/api/home/', getLanguage)
+  const url = 'http://localhost:3000/api/home/' + getLanguage()
+  const { loaded, error, response } = useFetch(url, getLanguage)
 
   useEffect(() => {
       console.log("This is the responses:", response)
@@ -41,7 +44,10 @@ const Home = (props) => {
           <div id="home_article">{ parse(response.content) }</div>
       </>
     )
-  } else return <><Loading /></>
+  } else if(error.state) return <><Error title={t('error:home.title')} 
+                                         name={error.content.name}
+                                         message={error.content.message}/></>
+  else return <><Loading /></>
 }
 
 export default Home

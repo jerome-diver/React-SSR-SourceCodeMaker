@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKey, faUserEdit } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
 import parse from 'html-react-parser'
-import Loading from '../public/Loading.component'
+import { Loading } from '../public/Printers.component'
 
 const reducer = (state, action) => {
     switch (action.validated) {

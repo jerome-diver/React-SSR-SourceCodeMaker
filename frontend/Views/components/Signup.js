@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { fireError, validatePassword, sendEmailLink } from '../../Controllers/user/user-form-helper'
 import { create } from '../../Controllers/user/action-CRUD'
 import { useCookies } from 'react-cookie'
-import Loading from '../Pages/public/Loading.component'
+import { Loading } from '../Pages/public/Printers.component'
 
 const SignUp = (props) => {
     const { t } = useTranslation()

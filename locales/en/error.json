@@ -47,6 +47,9 @@
       }
     }
   },
+  "home": {
+    "title": "Server communication failure"
+  },
   "validation": {
     "title": "{{username}} account validation",
     "status": "Validation account has $t(error:validation.{{validated}})",

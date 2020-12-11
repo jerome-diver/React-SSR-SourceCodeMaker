@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
-import Loading from './Loading.component'
+import { Loading } from './Printers.component'
 
 const FormContact = (props) => {
 
