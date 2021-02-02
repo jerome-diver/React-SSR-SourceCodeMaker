@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
+import Gravatar from 'react-gravatar'
 
 const getFlagFromLng = (lng) => {
     switch(lng) {
@@ -55,8 +56,8 @@ const I18nSelector = (props) => {
         console.log("CHANGING language to", lng)
         i18n.changeLanguage(lng)
         if (getUser()) {
-          console.log("We got a user session existing...")
-          setLanguage(lng)
+            console.log("We got a user session existing...")
+            setLanguage(lng)
         }
         setFlagSelected(imgFlag(lng, 20))
     }
@@ -148,6 +149,7 @@ const Navigation = (props) => {
                       <UserLoggedEntries username={session.username} role={session.role} />
                   </NavDropdown>
                   <I18nSelector/>
+                  <Gravatar email="jerome.archlinux@gmail.com" size={28} />
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

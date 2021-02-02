@@ -18,33 +18,33 @@ const sanitizer = (req, res, next) => {
 const checkPassword = [
     check('password')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.password.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.password.missing'))
       .isLength({ min: 8 })
-      .withMessage(i18n.t('sanitizer.backend.password.minimum'))
+      .withMessage(i18n.t('sanitizer:backend.user.password.minimum'))
       .matches(/\d/)
-      .withMessage(i18n.t('sanitizer.backend.password.number'))
+      .withMessage(i18n.t('sanitizer:backend.user.password.number'))
       .matches(/[\/\\\.\@\!\:\;\,\+\-\*\}\]\)]/)
-      .withMessage(i18n.t('sanitizer.backend.password.special'))
+      .withMessage(i18n.t('sanitizer:backend.user.password.special'))
 ]
 
 const checkEmail = [
     check('email')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.email.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.email.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.email.empty'))
+      .withMessage(i18n.t('sanitizer:backend.user.email.empty'))
       .isEmail()
-      .withMessage(i18n.t('sanitizer.backend.email.valid')),
+      .withMessage(i18n.t('sanitizer:backend.user.email.valid')),
 ]
 
 const checkNewUser = [
     check('username')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.username.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.username.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.username.empty')),
+      .withMessage(i18n.t('sanitizer:backend.user.username.empty')),
       ...checkEmail,
       ...checkPassword
 ]
@@ -55,25 +55,43 @@ const checkNewUser = [
  const checkUpdateUser = [
     check('username')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.username.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.username.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.username.empty')),
+      .withMessage(i18n.t('sanitizer:backend.user.username.empty')),
     check('email')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.email.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.email.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.email.empty'))
+      .withMessage(i18n.t('sanitizer:backend.user.email.empty'))
       .isEmail()
-      .withMessage(i18n.t('sanitizer.backend.email.valid')),
+      .withMessage(i18n.t('sanitizer:backend.user.email.valid')),
     check('id')
       .exists()
-      .withMessage(i18n.t('sanitizer.backend.id.missing'))
+      .withMessage(i18n.t('sanitizer:backend.user.id.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer.backend.id.empty')),
+      .withMessage(i18n.t('sanitizer:backend.user.id.empty')),
 ]
+
+  /**
+   * Validate new and update container
+   */
+  const checkContainer = [
+    check('name')
+      .exists()
+      .withMessage(i18n.t('sanitizer:backend.container.name.missing'))
+      .not()
+      .isEmpty()
+      .withMessage(i18n.t('sanitizer:backend.container.name.empty')),
+    check('description')
+      .exists()
+      .withMessage()
+      .not()
+      .isEmpty()
+      .withMessage()
+  ]
   
   /**
    * Validates get item request
@@ -102,4 +120,5 @@ const checkDeleteItem = [
 export { checkNewUser, checkUpdateUser, 
          checkGetItem, checkDeleteItem,
          checkPassword, checkEmail,
+         checkContainer,
          sanitizer }

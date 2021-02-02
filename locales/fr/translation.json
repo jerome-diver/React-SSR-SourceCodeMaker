@@ -252,41 +252,6 @@
       "modify": "<div class='alert alert-info'><p>Le mot de passse de vôtre compte a été mis à jour, vous devez valider le changement pour qu'il soit appliqué.</p></div>"
     }
   },
-  "sanitizer": {
-    "backend": {
-      "request": "Vous devez indiquer:",
-      "username": {
-        "missing": "Vous devez indiquer un nom d'utilisateur",
-        "empty": "Le champ utilisateur est vide, c'est inacceptable"
-      },
-      "email": {
-        "missing": "Vous devez indiquer un email",
-        "empty": "Le champ d'email est vide, c'est inacceptable",
-        "valid": "Le champ d'email n'est pas valide"
-      },
-      "password": {
-        "title": "Format du mot de passe éronné",
-        "missing": "Vous devez indiquer un mot de passe",
-        "upper_case": "au moins un caractère minuscule",
-        "lower_case": "au moins un caractère majuscule",
-        "minimum": "au minimum de 8 caractères.",
-        "number": "au moins un chiffre.",
-        "special": "au moins un des caractères spéciaux: [\/)]}@?.!+-*]"
-      },
-      "id": {
-        "missing": "Il n'existe aucun ID",
-        "empty": "L'ID est vide"
-      }
-    },
-    "frontend": {
-      "password": {
-        "missing": {
-          "title": "Champ incomplet",
-          "text": "Le mot de passe doit être renseigné"
-        }
-      }
-    }
-  },
   "setup": {
     "password": {
       "header": "Mot de passe utilisateur",

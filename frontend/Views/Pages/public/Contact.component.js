@@ -3,6 +3,9 @@ import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-boots
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
 import { Loading } from './Printers.component'
+require('dotenv').config('../../../../')
+
+const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
 
 const FormContact = (props) => {
 
@@ -65,7 +68,7 @@ const Contact = (props) => {
 
   useEffect( () =>{   // get HTML content from Pug contacts template
     console.log("did Mount contacts component")
-    fetch('http://localhost:3000/template/contact')
+    fetch(host + '/template/contact')
       .then(res => res.json())
       .then(data => { setData( data ); setLoad(true); } )
   }, [] )

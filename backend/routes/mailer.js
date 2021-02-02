@@ -8,6 +8,8 @@ import { checkEmail, sanitizer } from '../helpers/sanitizer'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 
+const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
+
 /* POST to send email to validate new user account */
 router.post('/account/validate', (req, res) => {
     const username = req.body.username
@@ -26,7 +28,7 @@ router.post('/account/validate', (req, res) => {
             const ticket = user.ticket
             const username = user.username
             const token = jwt.sign({ user_id: user.id, valid_until: date_end },process.env.JWT_SECRET)
-            const validation_link = `http:/localhost:3000/validate/${username}/${token}/${ticket}`
+            const validation_link = `${host}/validate/${username}/${token}/${ticket}`
             /* send an email to ask confirmation */
             res.app.mailer.send('send_email_to_user', {
                 to: user.email,
@@ -55,7 +57,7 @@ router.post('/account/reset_password', (req, res) => {
                     message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
             const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
             const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
-            const url = 'http:/localhost:3000/setup_password'
+            const url = host + '/setup_password'
             const setup_password_link = `${url}/${user.id}/${user.ticket}`
             res.app.mailer.send('send_email_to_user', {
                 to: user.email,
@@ -88,7 +90,7 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res
                 message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
         const dateNow = moment(user.created).format('DD/MM/YYY [at] HH:mm')
         const dateEnd = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
-        const url = 'http:/localhost:3000/modify_email'
+        const url = host + '/modify_email'
         const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
         let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }
         for (const [key, value] of Object.entries(emailSent)) {

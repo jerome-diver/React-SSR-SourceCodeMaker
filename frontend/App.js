@@ -28,7 +28,7 @@ const useFetch = (trigger) => {
 const App = (props) => {
   const [ cookies, setCookies, removeCookies ] = useCookies(['session', 'token'])
   const { t, i18n } = useTranslation()
-  const { error, fetchLanguage } = useFetch(i18n.language)
+  const { error } = useFetch(i18n.language)
   const navigatorLanguage = useNavigatorLanguage()
   console.log("--- App component: language is %s, navigator language is %s", i18n.language, navigatorLanguage)
 

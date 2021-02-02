@@ -31,7 +31,8 @@ router.get('/:name', (req, res) => {
 
 /* GET roles listing. */
 router.get('/', (req, res) => {
-    Role.find({}, (err, o) => { res.json(o.map((u) => { return u.toObject() })) })
+    Role.find({}, (err, o) => { 
+        return res.json(o.map((u) => { u.toObject() })) })
 })
 
 /* POST to create new role */
@@ -43,8 +44,8 @@ router.post('/', jsonParser, (req, res) => {
         color: req.body.color,
         description: req.body.description },
       (error, r) => {
-        if (error) { res.json({accepted: false, error: error.message}) }
-        else { res.json( {error: '', accepted: true} ) } } )
+        if (error) { return res.json({accepted: false, error: error.message}) }
+        else { return res.json( {error: '', accepted: true} ) } } )
 } )
 
 module.exports = router

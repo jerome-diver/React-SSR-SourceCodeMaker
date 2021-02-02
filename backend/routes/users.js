@@ -18,7 +18,7 @@ const decodeJWT = (token) => {
 router.get('/', [hasAuthorization, isAdmin], (req, res) => {
     User.find({}, (err, users) => {
         if (err) return res.status(401).json({error: err})
-        res.status(200).json(users.map((user) => { return user.toJSON() })) })
+        return res.status(200).json(users.map((user) => { user.toJSON() })) })
 })
 
 /* GET user profile. */
@@ -57,7 +57,7 @@ router.post('/', [checkNewUser, sanitizer], (req, res) => {
                 return res.status(401).json({error: {
                                                  name: req.i18n.t('error:database.users.create.failed.validation'), 
                                                  message: message} }) } })
-        res.status(201).json( {accepted: true} ) } )
+        return res.status(201).json( {accepted: true} ) } )
 })
 
 /* PUT update user */

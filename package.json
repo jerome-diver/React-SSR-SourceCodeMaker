@@ -68,6 +68,7 @@
     "react-cookie": "^4.0.3",
     "react-device-detect": "^1.14.0",
     "react-dom": "^16.13.1",
+    "react-gravatar": "^2.6.3",
     "react-hot-loader": "^4.12.21",
     "react-html-parser": "^2.0.2",
     "react-i18next": "^11.7.2",

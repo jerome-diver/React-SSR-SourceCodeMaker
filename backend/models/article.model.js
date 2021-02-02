@@ -7,7 +7,7 @@ const ArticleSchema = new Schema({
         trim: true,
         required: 'Article name is required',
         minLength: 3,
-        maxLength: 32,
+        maxLength: 64,
         unique: 'Article already exists'
     },
     description: {
@@ -20,7 +20,7 @@ const ArticleSchema = new Schema({
         trim: true,
         unique: false
     },
-    subject_id: {
+    container_id: {
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
@@ -33,9 +33,7 @@ const ArticleSchema = new Schema({
         default: Date.now
     },
     modified: {
-        type: Date,
-        default: Date.now
-    },
+        type: Date    },
 }, { collection: 'articles' } )
 
 ArticleSchema.options.toJSON = {

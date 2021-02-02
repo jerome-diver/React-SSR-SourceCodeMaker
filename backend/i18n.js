@@ -15,7 +15,7 @@ const options = {
     whiteList: ['en', 'fr', 'th'],
     fallbackLng: 'en',
     preload: ['en', 'fr'],
-    ns: ['translation', 'mailer', 'error'],
+    ns: ['translation', 'mailer', 'error', 'sanitizer'],
     defaultNS: 'translation',
     load: 'languageOnly',
     react: { useSuspense: false },

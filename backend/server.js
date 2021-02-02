@@ -32,7 +32,10 @@ const layoutRouter = require('./routes/layout')
 const homeRouter = require('./routes/home')
 const usersRouter = require('./routes/users')
 const contactsRouter = require('./routes/contacts')
-const subjectRouter = require('./routes/subject')
+const containerRouter = require('./routes/containers')
+const typeRouter = require('./routes/types')
+const articleRouter = require('./routes/articles')
+const commentRouter = require('./routes/comments')
 const adminRouter = require('./routes/admin')
 const sendMailRouter = require('./routes/mailer')
 const rolesRouter = require('./routes/roles')
@@ -59,7 +62,6 @@ i18n
     app.use(cors())                                 // Cross sites able
     app.use(express.json())                         // JSON Express module used
     app.use(express.static('build/public'))          // read dir as public
-//  app.use('/locales', express.static('../locales'))
     // define route to use and action to respond from own defined requests
     app.use('/api/language', [bodyParser.json(), setLanguage])
     app.use('/api/home', homeRouter)
@@ -67,7 +69,10 @@ i18n
     app.use('/api/users', [bodyParser.json(), usersRouter])
     app.use('/api/roles', [bodyParser.json(), rolesRouter])
     app.use('/template/contact', contactsRouter)
-    app.use('/api/subject/*', [bodyParser.json(), subjectRouter])
+    app.use('/api/containers', [bodyParser.json(), containerRouter])
+    app.use('/api/types', [bodyParser.json(), typeRouter])
+    app.use('/api/articles', [bodyParser.json(), articleRouter])
+    app.use('/api/comments', [bodyParser.json(), commentRouter])
     app.use('/api/admin', [bodyParser.json(), adminRouter])
     app.use('/api/mailer', [bodyParser.json(), sendMailRouter])
     app.use('/', layoutRouter)

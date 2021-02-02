@@ -252,41 +252,6 @@
       "modify": "<div class='alert alert-info'><p>Password has been changed, you need to validate to apply.</p></div>"
     }
   },
-  "sanitizer": {
-    "backend": {
-      "request": "Need:",
-      "username": {
-        "missing": "You have to use a username",
-        "empty": "Username field can not be empty"
-      },
-      "email": {
-        "missing": "You should inform an email",
-        "empty": "The email field can not be empty",
-        "valid": "Email is not valid"
-      },
-      "password": {
-        "title": "Password format failed",
-        "missing": "You have to inform a password",
-        "upper_case": "at least an uppercase character",
-        "lower_case": "at least a lowercase character",
-        "minimum": "minimum 8 characters",
-        "number": "at least one number",
-        "special": "at least one of this special character: [\/)]}@?.!+-*]"
-      },
-      "id": {
-        "missing": "ID is missing",
-        "empty": "ID is empty"
-      }
-    },
-    "frontend": {
-      "password": {
-        "missing": {
-          "title": "Missing field",
-          "text": "Password have to be set."
-        }
-      }
-    }
-  },
   "setup": {
     "password": {
       "header": "User password",
