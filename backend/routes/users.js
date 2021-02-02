@@ -81,6 +81,17 @@ router.put('/:id', [hasAuthorization, checkUpdateUser, sanitizer], (req, res) =>
 })
 
 /* DELETE delete user */
+router.delete('/:id', [hasAuthorization], (req, res) => {
+    if ((req.token.role_name = 'Admin') ||
+        (req.token.id == req.params.id)) {
+        User.deleteOne( { _id: req.params.id }, (error, response) => {
+            if (error) return res.status(401).json( { error: {
+                        name: req.i18n.t('error:router.users.delete.failed'),
+                        message: error.name } } )
+        } ) // should add a user to return and send email to deleted user on next step
+        return res.status(200).json( { accepted: true } )
+    } 
+})
 
 /* POST user account to setup new password */
 router.post('/setup_password/:id/:ticket', [hasAuthorization, checkPassword, sanitizer], (req, res, next) => {
