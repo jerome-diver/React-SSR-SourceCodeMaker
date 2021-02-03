@@ -24,7 +24,17 @@
         "missing": "Il n'existe aucun ID",
         "empty": "L'ID est vide"
       }
-    } 
+    } ,
+    "container": {
+      "name": {
+        "missing": "Vous devez indiquer un nom de container",
+        "empty": "Le champ de nom du container ne peut pas être vide"
+      },
+      "description": {
+        "missing": "Vous devez décrire ce container",
+        "empty" : "Le champ de description du container ne peut pas rester vide."
+      }
+    }
   },
   "frontend": {
     "password": {

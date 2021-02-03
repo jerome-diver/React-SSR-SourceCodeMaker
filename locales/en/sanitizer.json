@@ -24,6 +24,16 @@
         "missing": "ID is missing",
         "empty": "ID is empty"
       }
+    },
+    "container": {
+      "name": {
+        "missing": "You should inform a container name",
+        "empty": "Name field can not be empty"
+      },
+      "description": {
+        "missing": "You should inform a description for the container",
+        "empty": "Description field can not be empty"
+      }
     }
   },
   "frontend": {

@@ -28,6 +28,7 @@
         }
       },
       "delete": {
+        "failed": "Failed",
         "missing": {
           "name": "Users collection error",
           "text": "Unexisting user in database"

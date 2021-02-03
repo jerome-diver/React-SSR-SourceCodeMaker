@@ -1,7 +1,7 @@
 {
   "router": {
     "validation": {
-      "verify": { 
+      "verify": {
         "expired": {
           "name": "Expiration",
           "text": "Le jeton a expiré depuis le {{date_expiry}}"
@@ -28,8 +28,9 @@
         }
       },
       "delete": {
+        "failed": "Échec",
         "missing": {
-          "name": "Erreur pour ce utilisateur",
+          "name": "Erreur pour cet utilisateur",
           "text": "Utilisateur inexistant dans la base de donnée."
         }
       }

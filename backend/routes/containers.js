@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 import { hasAuthorization } from '../controllers/authentication';
 import { checkContainer, sanitizer } from '../helpers/sanitizer'
-import { i18n } from '../i18n';
 import Container from '../models/container.model'
 import Type from '../models/type.model'
 
