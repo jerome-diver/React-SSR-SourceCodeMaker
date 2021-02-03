@@ -6,6 +6,8 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 //const i18nextMiddleware = require('i18next-http-middleware')
 const enI18n = require('../locales/en/translation.json')
 const frI18n = require('../locales/fr/translation.json')
+const enI18nSanitizer = require('../locales/en/sanitizer.json')
+const frI18nSanitizer = require('../locales/fr/sanitizer.json')
 const enI18nMailer = require('../locales/en/mailer.json')
 const frI18nMailer = require('../locales/fr/mailer.json')
 const enI18nError = require('../locales/en/error.json')
