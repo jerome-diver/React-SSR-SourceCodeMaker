@@ -4,14 +4,6 @@ import { hasAuthorization } from '../controllers/authentication';
 import { checkType, sanitizer } from '../helpers/sanitizer'
 import Type from '../models/type.model'
 
-/* GET types list */
-router.get('/', (req, res) => {
-  Type.find({}, (error, types) => {
-    if (error) return res.status(401).json({ error })
-    res.status(200).json(types.map((type) => { return type.toJSON()}))
-  })
-} )
-
 /* POST to create a new type */
 router.post('/', [hasAuthorization], (req, res) => {
   const {user_id, name, description} = req.body
@@ -28,6 +20,23 @@ router.post('/', [hasAuthorization], (req, res) => {
                         message: message } } ) }
         return res.status(200).json( { accepted: true } )
   } ) } 
+} )
+
+/* GET types list */
+router.get('/', (req, res) => {
+  Type.find({}, (error, types) => {
+    if (error) return res.status(401).json({ error })
+    res.status(200).json(types.map((type) => { return type.toJSON()}))
+  })
+} )
+
+/* GET a type from his id */
+router.get('/', (req, res) => {
+  const id = req.body.id
+  Type.findOne({ _id: id }, (error, type) => {
+    if (error) return res.status(401).json({ error })
+    return res.status(200).json( { content: type.toJSON()})
+  })
 } )
 
 /* PUT to update an existing type from his id */

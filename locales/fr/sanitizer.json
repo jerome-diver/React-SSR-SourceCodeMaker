@@ -26,15 +26,26 @@
       }
     } ,
     "container": {
+      "title": {
+        "missing": "Vous devez indiquer un titre pour ce conteneur",
+        "empty": "Le champ de titre du conteneur ne peut pas être vide"
+      },
+      "content": {
+        "missing": "Il doit y avoir du contenu dans ce conteneur",
+        "empty" : "Le champ de contenu du conteneur ne peut pas rester vide."
+      }
+    },
+    "type": {
       "name": {
-        "missing": "Vous devez indiquer un nom de container",
-        "empty": "Le champ de nom du container ne peut pas être vide"
+        "missing": "Vous devez indiquer un nom de type",
+        "empty": "Ce champ de nom ne doit pas rester vide"
       },
       "description": {
-        "missing": "Vous devez décrire ce container",
-        "empty" : "Le champ de description du container ne peut pas rester vide."
+        ""missing": "Vous devez décrire ce type",
+        "empty": "Ce champ ne doit pas rester vide"
       }
     }
+
   },
   "frontend": {
     "password": {

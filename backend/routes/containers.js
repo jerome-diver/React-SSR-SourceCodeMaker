@@ -11,17 +11,6 @@ const get_type_from_name = (name) => {
     return { error: false, ...type.toJSON() }
   })
 }
-/* GET containers list for :type 
-  (can be any [subject, category, ...] 
-   or what ever type you created) */
-router.get('/:type', (req, res) => {
-  let type = get_type_from_name(req.params.type)
-  if (type.error) return res.status(401).json({ error: type.error })
-  Container.find({type_id: type.id}, (error, containers) => {
-    if (error) return res.status(401).json({ error })
-    res.status(200).json(containers.map((container) => { return container.toJSON()}))
-  })
-});
 
 /* POST to create a new container for :type name */
 router.post('/:type', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
@@ -45,6 +34,27 @@ router.post('/:type', [hasAuthorization, checkContainer, sanitizer], (req, res) 
               message: message } } ) }
       return res.status(200).json( { accepted: true } )
   } ) }
+} )
+
+/* GET containers list for :type 
+  (can be any [subject, category, ...] 
+   or what ever type you created) */
+router.get('/:type', (req, res) => {
+  let type = get_type_from_name(req.params.type)
+  if (type.error) return res.status(401).json({ error: type.error })
+  Container.find({type_id: type.id}, (error, containers) => {
+    if (error) return res.status(401).json({ error })
+    res.status(200).json(containers.map((container) => { return container.toJSON()}))
+  } )
+} )
+
+/* GET a container from his id */
+router.get('/', (req, res) => {
+  const id = req.body.id
+  Container.findOne({ _id: id }, (error, container) => {
+    if (error) return res.status(401).json({ error })
+    return res.status(200).json( { content: container.toJSON()})
+  } )
 } )
 
 /* PUT to update an existing container from his title */

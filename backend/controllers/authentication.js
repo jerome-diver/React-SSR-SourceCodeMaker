@@ -4,6 +4,12 @@ require('dotenv').config('../../')
 
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */
 
+/* check Rules ability for a container or a type */
+const hasRules = (req, res, next) => {
+    next()
+}
+
+
 /* check authorized session httpOnly:
    _ cookies.token id == cookies.session user.id
 */
@@ -70,4 +76,4 @@ const isValid = (req, res, next) => {
     next()
 }
 
-export { hasAuthorization, isRole, isAdmin, isValid }
+export { hasRules, hasAuthorization, isRole, isAdmin, isValid }

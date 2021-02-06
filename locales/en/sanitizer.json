@@ -26,13 +26,23 @@
       }
     },
     "container": {
+      "title": {
+        "missing": "You should inform a container title",
+        "empty": "Title field can not be empty"
+      },
+      "content": {
+        "missing": "You should provide a content for the container",
+        "empty": "Content container field can not be empty"
+      }
+    },
+    "type": {
       "name": {
-        "missing": "You should inform a container name",
-        "empty": "Name field can not be empty"
+        "missing": "You have to give a name to this type",
+        "empty": "Name type field should not be empty"
       },
       "description": {
-        "missing": "You should inform a description for the container",
-        "empty": "Description field can not be empty"
+        ""missing": "You have to describe this type",
+        "empty": "Description type field can not be empty"
       }
     }
   },
