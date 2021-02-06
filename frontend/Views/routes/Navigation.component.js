@@ -33,9 +33,10 @@ const imgFlag = (lang, size) => {
 const reducer = (state, action) => {
     switch (action.user) {
         case undefined:
-            return { user: '', username: '', role: '', language: 'en' }
+            return { user: '', username: '', email: '', role: '', language: 'en' }
         default:
             return { username: action.user.username,
+                     email: action.user.email,
                      role: action.role.name,
                      language: action.language }
     }
@@ -93,27 +94,32 @@ const UserRoleEntries = (props) => {
 
 const UserLoggedEntries = (props) => {
 
-    const { username, role } = props
+    const { username, email, role } = props
     const { t } = useTranslation()
   
     console.log("--- UserLogEntries navigation sub-menu users, username is:", username)
     if (username) {
       return (
         <>
-          <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.profile')}</NavLink>
-          <UserRoleEntries role={role} />
-          <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.signout')}</NavLink>
+          <NavDropdown title={<span><Gravatar email={email} size={18} /> {username}</span>}
+                       id="basic-nav-dropdown">
+            <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
+              <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.profile')}</NavLink>
+            <UserRoleEntries role={role} />
+            <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
+              <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.signout')}</NavLink>
+          </NavDropdown>
         </>
       ) 
     } else {
       return (
         <>
-          <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.signin')}</NavLink>
-          <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.signup')}</NavLink>
+          <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user_main')}</span>}>
+            <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
+              <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.signin')}</NavLink>
+            <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
+              <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.signup')}</NavLink>
+          </NavDropdown>
         </>
       )
   }
@@ -124,7 +130,7 @@ const Navigation = (props) => {
     const { i18n, t } = useTranslation()
     const { getUser, getRole, getLanguage } = useAuthenticate()
     console.log("--- Navigation component")
-    const [ session, dispatch ] = useReducer(reducer, {username: '', role: '', language: i18n.language})
+    const [ session, dispatch ] = useReducer(reducer, {username: '', email: '', role: '', language: i18n.language})
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole(), language: getLanguage()})
@@ -143,13 +149,12 @@ const Navigation = (props) => {
                       <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.subjects')}</Nav.Link>
                   <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
                       <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
-                  <NavDropdown title={<span><FontAwesomeIcon 
-                               icon={faUserCircle}/> {t('nav_bar.user_main')}</span>} 
-                               id="basic-nav-dropdown">
-                      <UserLoggedEntries username={session.username} role={session.role} />
-                  </NavDropdown>
+                  <UserLoggedEntries username={session.username} 
+                                     role={session.role} 
+                                     email={session.email} />
+                  
                   <I18nSelector/>
-                  <Gravatar email="jerome.archlinux@gmail.com" size={28} />
+                  
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
