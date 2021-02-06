@@ -59,22 +59,19 @@ router.get('/', (req, res) => {
 
 /* PUT to update an existing container from his title */
 router.put('/:id', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
-  const {user_id, title, content, parent_id, type_id, enable} = req.body
-  if ((req.token.id == user_id) || 
-      (req.token.role_title == 'Writer') || 
+  const {title, content, parent_id, author_id, type_id, enable} = req.body
+  if ((req.token.role_title == 'Writer') || 
       (req.token.role_title == 'Admin')) {
     Container.findOneAndUpdate( { _id: req.params.id }, 
-        { title: title, content: content, enable: enable, 
-          parent_id: parent_id, type_id: type_id } , 
+        { title, content, enable, author_id, parent_id: parent_id, type_id: type_id } , 
         { new: true },
         (error, container) => {
             if (error) return res.status(400).json( 
               { error: 
                     { title: req.i18n.t('error:database.containers.update.failed'), 
                       message: error } } )
-            return res.status(200).json({ accepted: true })
-        } )
-  }
+            return res.status(200).json({ accepted: true, container: container.toJSON() })
+   } ) }
 } )
 
 /* DELETE to remove an existing container from his name */

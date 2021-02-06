@@ -111,32 +111,8 @@ const checkNewUser = [
       .withMessage(i18n.t('sanitizer:backend.type.description.empty'))
   ]
   
-  /**
-   * Validates get item request
-   */
-const checkGetItem = [
-    check('id')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-]
-  
-  /**
-   * Validates delete item request
-   */
-const checkDeleteItem = [
-    check('id')
-      .exists()
-      .withMessage('MISSING')
-      .not()
-      .isEmpty()
-      .withMessage('IS_EMPTY'),
-]
 
 export { checkNewUser, checkUpdateUser, 
-         checkGetItem, checkDeleteItem,
          checkPassword, checkEmail,
          checkContainer,
          checkType,
