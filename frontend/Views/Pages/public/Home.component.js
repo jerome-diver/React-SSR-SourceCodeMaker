@@ -5,10 +5,10 @@ import parse from 'html-react-parser'
 import { Loading, Error} from './Printers.component'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
-require('dotenv').config('../../../../')
+import { TAG, HOST, SERVER_PORT } from '../../helpers/config'
 //import { truncateSync } from 'fs'
 
-const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
+const host = TAG + HOST + ":" + SERVER_PORT
 
 const useFetch = (url, trigger) => {
     const [ loading, setLoading ] = useState(true)

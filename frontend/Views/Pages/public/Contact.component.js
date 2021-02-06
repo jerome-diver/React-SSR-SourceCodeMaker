@@ -3,9 +3,9 @@ import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-boots
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
 import { Loading } from './Printers.component'
-require('dotenv').config('../../../../')
+import { TAG, HOST, SERVER_PORT } from '../../helpers/config'
 
-const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
+const host = TAG + HOST + ":" + SERVER_PORT
 
 const FormContact = (props) => {
 

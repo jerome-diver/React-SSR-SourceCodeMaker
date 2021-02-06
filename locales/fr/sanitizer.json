@@ -45,7 +45,6 @@
         "empty": "Ce champ ne doit pas rester vide"
       }
     }
-
   },
   "frontend": {
     "password": {
