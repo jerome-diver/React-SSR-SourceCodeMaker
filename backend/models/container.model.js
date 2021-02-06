@@ -2,24 +2,28 @@ import mongoose, { Schema, model } from 'mongoose'
 
 /* Schema for document user for collection "subjects" */
 const ContainerSchema = new Schema({
-    name: {
+    title: {
         type: String,
         trim: true,
-        required: 'Container name is required',
+        required: 'Container title is required',
         minLength: 3,
         maxLength: 32,
         unique: 'Container already exists'
     },
-    description: {
+    content: {
         type: String,
         trim: true,
-        required: "Description is required"
+        required: "content is required"
     },
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
     type_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: false
+    },
+    author_id: {  // a user
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
@@ -31,6 +35,8 @@ const ContainerSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    modified: {
+        type: Date    }
 }, { collection: 'containers' } )
 
 ContainerSchema.options.toJSON = {

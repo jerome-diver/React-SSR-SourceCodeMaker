@@ -16,13 +16,6 @@ const TypeSchema = new Schema({
         trim: true,
         required: "Description is required"
     },
-    rules: {
-        type: String,
-        trim: true,
-        required: 'Type rules is/are required',
-        minLength: 3,
-        maxLength: 32,
-    },
     enable: {
         type: Boolean,
         default: false

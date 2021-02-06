@@ -79,18 +79,36 @@ const checkNewUser = [
    * Validate new and update container
    */
   const checkContainer = [
+    check('title')
+      .exists()
+      .withMessage(i18n.t('sanitizer:backend.container.title.missing'))
+      .not()
+      .isEmpty()
+      .withMessage(i18n.t('sanitizer:backend.container.title.empty')),
+    check('content')
+      .exists()
+      .withMessage(i18n.t('sanitizer:backend.container.content.missing'))
+      .not()
+      .isEmpty()
+      .withMessage(i18n.t('sanitizer:backend.container.content.empty'))
+  ]
+
+  /**
+   * Validate new and update type
+   */
+  const checkType = [
     check('name')
       .exists()
-      .withMessage(i18n.t('sanitizer:backend.container.name.missing'))
+      .withMessage(i18n.t('sanitizer:backend.type.name.missing'))
       .not()
       .isEmpty()
-      .withMessage(i18n.t('sanitizer:backend.container.name.empty')),
+      .withMessage(i18n.t('sanitizer:backend.type.name.empty')),
     check('description')
       .exists()
-      .withMessage()
+      .withMessage(i18n.t('sanitizer:backend.type.description.missing'))
       .not()
       .isEmpty()
-      .withMessage()
+      .withMessage(i18n.t('sanitizer:backend.type.description.empty'))
   ]
   
   /**
@@ -121,4 +139,5 @@ export { checkNewUser, checkUpdateUser,
          checkGetItem, checkDeleteItem,
          checkPassword, checkEmail,
          checkContainer,
+         checkType,
          sanitizer }
