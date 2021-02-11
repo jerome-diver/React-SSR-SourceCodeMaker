@@ -1,7 +1,12 @@
 
 import mongoose, { Schema, model } from 'mongoose'
 
-/* Schema for document user for collection "categories" */
+/* Schema for document user for collection "types"
+    A Type describe a container 
+    by types rules relations between them.
+    The name of the type should indicate 
+    the rules to apply by deduction
+*/
 const TypeSchema = new Schema({
     name: {
         type: String,
@@ -15,6 +20,13 @@ const TypeSchema = new Schema({
         type: String,
         trim: true,
         required: "Description is required"
+    },
+    rules: {
+        type: String,
+        trim: true,
+        required: 'Type rules is/are required',
+        minLength: 3,
+        maxLength: 32,
     },
     enable: {
         type: Boolean,

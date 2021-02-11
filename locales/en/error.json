@@ -40,13 +40,21 @@
     "users": {
       "create": {
         "failed": {
-          "validation": "Failed database internal validation"
+          "validation": "Failed database internal validation for 'users' collection"
         }
       },
       "update": {
         "failed": "Update failed"
       }
+    },
+    "containers": {
+      "create": {
+        "failed": {
+          "validation": "Failed database validation for 'containers' collection"
+        }
+      }
     }
+
   },
   "modal": {
     "button": {

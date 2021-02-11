@@ -33,7 +33,6 @@ const Home = (props) => {
   const { i18n, t } = useTranslation()
   const { getLanguage } = useAuthenticate()
   const url = host + '/api/home/' + i18n.language
-  console.log("--- Home url is", url)
   const { loading, error, response } = useFetch(url, getLanguage)
 
   if (loading) return <><Loading /></>

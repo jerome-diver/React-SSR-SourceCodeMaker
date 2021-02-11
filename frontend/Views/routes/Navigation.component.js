@@ -92,7 +92,7 @@ const UserRoleEntries = (props) => {
     }
 }
 
-const UserLoggedEntries = (props) => {
+const UserEntries = (props) => {
 
     const { username, email, role } = props
     const { t } = useTranslation()
@@ -145,16 +145,12 @@ const Navigation = (props) => {
                 <Nav className="mr-auto">
                   <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
                       <FontAwesomeIcon icon={faHome}/> {t('nav_bar.home')}</Nav.Link>
-                  <Nav.Link as={NavLink} to='/subjects' activeClassName="menuselected">
-                      <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.subjects')}</Nav.Link>
+                  <Nav.Link as={NavLink} to='/categories' activeClassName="menuselected">
+                      <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.contents')}</Nav.Link>
                   <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
                       <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
-                  <UserLoggedEntries username={session.username} 
-                                     role={session.role} 
-                                     email={session.email} />
-                  
+                  <UserEntries username={session.username} role={session.role} email={session.email} />
                   <I18nSelector/>
-                  
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

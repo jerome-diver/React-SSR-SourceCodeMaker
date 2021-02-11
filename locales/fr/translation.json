@@ -98,6 +98,19 @@
       }
     }
   },
+  "containers": {
+    "category": "catégorie",
+    "category_plural": "catégories",
+    "subject": "sujet",
+    "subject_plural": "sujets",
+    "article": "article",
+    "article_plural": "articles",
+    "comment": "commentaire",
+    "comment_plural": "commentaires",
+    "list": "Liste des $t(containers.{{type}}, {\"count\": 2})",
+    "link": "Liste des contenus de $t(containers.{{type}}): {{title}}",
+    "child_list": "Liste des $t(containers.{{child_type}}, {\"count\": 2}) de $t(containers.{{type}}) {{name}}"
+  },
   "signup": {
     "title": "Enregistrement",
     "header": {
@@ -163,7 +176,7 @@
   },
   "nav_bar": {
     "home": "Acceuil",
-    "subjects": "Sujets",
+    "contents": "Catégories",
     "contacts": "Contacts",
     "user_main": "Utilisateur",
     "users_list": "Utilisateurs",

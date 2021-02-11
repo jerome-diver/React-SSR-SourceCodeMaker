@@ -6,9 +6,9 @@ import Type from '../models/type.model'
 
 /* POST to create a new type */
 router.post('/', [hasAuthorization], (req, res) => {
-  const {user_id, name, description} = req.body
+  const {user_id, name, description, rules, enable} = req.body
   if ((req.token.id == user_id) || (req.token.role_name == 'Admin')) {
-    const type = new Type( { name, description } )
+    const type = new Type( { name, description, rules, enable } )
     type.save((error) => {
         if (error) {
         let message = ''
@@ -41,18 +41,18 @@ router.get('/', (req, res) => {
 
 /* PUT to update an existing type from his id */
 router.put('/:id', [hasAuthorization, checkType, sanitizer], (req, res) => {
-  const {user_id, name, description, enable} = req.body
+  const {user_id, name, description, rules, enable} = req.body
   if ((req.token.id == user_id) || 
       (req.token.role_name == 'Writer') || 
       (req.token.role_name == 'Admin')) {
     Type.findOneAndUpdate( { _id: req.params.id }, 
-        { name, description, enable, parent_id, type_id } , 
+        { name, description, rules, enable } , 
         { new: true },
         (error, type) => {
             if (error) return res.status(400).json( { error: 
                     { name: req.i18n.t('error:database.types.update.failed'), 
                       message: error } } )
-            return res.status(200).json({ accepted: true })
+            return res.status(200).json({ accepted: true, type: type.toJSON() })
   } ) }
 } )
 

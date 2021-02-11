@@ -6,22 +6,24 @@ import Container from '../models/container.model'
 import Type from '../models/type.model'
 
 const get_type_from_name = (name) => {
+  console.log("searching for type name: ", name)
+  let t
   Type.findOne({name: name}, (error, type) => {
-    if (error) return { error }
-    return { error: false, ...type.toJSON() }
+    if (error) return { error: error }
+    console.log("found type name ==> ", type.toJSON())
+    return type.toJSON()
   })
 }
 
 /* POST to create a new container for :type name */
-router.post('/:type', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
-  let type = get_type_from_title(req.params.type)
-  const { title, content, parent_id, enable } = req.body
+router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
+  const { title, content, image_link,  parent_id, type_id, enable } = req.body
   if (type.error) return res.status(401).json({ error: type.error })
   if ((req.token.id == user_id) || 
       (req.token.role_title == 'Writer') || 
       (req.token.role_title == 'Admin')) {
     const container = new Container( {
-      title, content, parent_id, enable, type_id: type.id, author_id: user_id } )
+      title, content, image_link, parent_id, type_id, enable, author_id: user_id } )
     container.save((error) => {
       if (error) {
         let message = ''
@@ -30,7 +32,7 @@ router.post('/:type', [hasAuthorization, checkContainer, sanitizer], (req, res) 
         } else return res.status(401).json({error: { title: error.title, message: error.code } } )
         return res.status(401).json( 
           { error: {
-              title: req.i18n.t('error:database.users.create.failed.validation'), 
+              title: req.i18n.t('error:database.containers.create.failed.validation'), 
               message: message } } ) }
       return res.status(200).json( { accepted: true } )
   } ) }
@@ -39,10 +41,21 @@ router.post('/:type', [hasAuthorization, checkContainer, sanitizer], (req, res) 
 /* GET containers list for :type 
   (can be any [subject, category, ...] 
    or what ever type you created) */
-router.get('/:type', (req, res) => {
-  let type = get_type_from_name(req.params.type)
-  if (type.error) return res.status(401).json({ error: type.error })
-  Container.find({type_id: type.id}, (error, containers) => {
+router.get('/:type_name', (req, res) => {
+  Type.findOne({name: req.params.type_name}, (error, type) => {
+    if (error) return res.status(401).json({ error })
+    Container.find({type_id: type.id}, (error, containers) => {
+      if (error) return res.status(401).json({ error })
+      res.status(200).json(containers.map((container) => { return container.toJSON()}))
+    } )
+  } )
+} )
+
+/* GET containers child list for container :id 
+  (can be any child: [subject, articles, comments, ...] 
+   or what ever type you created) */
+router.get('/child_of/:id', (req, res) => {
+  Container.find({parent_id: req.params.id}, (error, containers) => {
     if (error) return res.status(401).json({ error })
     res.status(200).json(containers.map((container) => { return container.toJSON()}))
   } )

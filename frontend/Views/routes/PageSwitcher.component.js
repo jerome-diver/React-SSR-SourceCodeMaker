@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom"
 import PrivateRoute from './private/PrivateRoute.component'
 import Home from '../Pages/public/Home.component'
 import Contact from '../Pages/public/Contact.component'
-import Subjects from '../Pages/public/Subjects.component'
+import Containers from '../Pages/public/Containers.component'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 //import Subject from './public/Subject.component'
 import Users from '../Pages/public/Users.component'
@@ -25,7 +25,9 @@ const PageSwitcher = (props) => {
         <Switch>
             <Route exact path="/" component={Home}/>
             <Route path="/contact" component={Contact}/>
-            <Route path="/subjects" component={Subjects}/>
+            <Route path="/categories" component={(props) => <Containers {...props} type="category"/>}/>
+            <Route path="/category/:id/:title"
+                   component={ (props) => <Containers {...props} type=""/> } />
             <PrivateRoute path="/users" component={Users}/>
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
             <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 

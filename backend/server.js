@@ -60,6 +60,7 @@ i18n
     app.use(cors())                                 // Cross sites able
     app.use(express.json())                         // JSON Express module used
     app.use(express.static('build/public'))          // read dir as public
+  //  app.use('./images', express.static('../images'))
     // define route to use and action to respond from own defined requests
     app.use('/api/language', [bodyParser.json(), setLanguage])
     app.use('/api/home', homeRouter)

@@ -7,13 +7,31 @@ const ContainerSchema = new Schema({
         trim: true,
         required: 'Container title is required',
         minLength: 3,
-        maxLength: 32,
+        maxLength: 64,
         unique: 'Container already exists'
     },
     content: {
         type: String,
         trim: true,
         required: "content is required"
+    },
+    title_en: {
+        type: String,
+        trim: true,
+        required: 'Container title is required',
+        minLength: 3,
+        maxLength: 64,
+        unique: 'Container already exists'
+    },
+    content_en: {
+        type: String,
+        trim: true,
+        required: "content is required"
+    },
+    image_link: {
+        type: String,
+        trim: true,
+        required: 'Container should have an image to represent him'
     },
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,

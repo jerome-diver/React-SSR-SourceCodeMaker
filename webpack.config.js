@@ -15,14 +15,8 @@ var config = {
             {
                 test: /\.jsx?$/,
                 use: [ 'babel-loader' ] },
-            {   test: /\.s(a|c)ss$/,
+            {   test: /\.s[ac]ss$/,
                 use: [ 
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: { 
-                            publicPath: '/css',
-                            reloadAll: true }
-                    } ,
                     'css-loader', 'sass-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
                 exclude: [/node_modules/],

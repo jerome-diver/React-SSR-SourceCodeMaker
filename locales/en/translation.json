@@ -98,6 +98,19 @@
       }
     }
   },
+  "containers": {
+    "category": "category",
+    "category_plural": "categories",
+    "subject": "subject",
+    "subject_plural": "subjects",
+    "article": "article",
+    "article_plural": "articles",
+    "comment": "comment",
+    "comment_plural": "comments",
+    "list": "$t(containers.{{type}}, {\"count\": 2}) list",
+    "link": "Content list of $t(containers.{{type}}): {{title}}",
+    "child_list": "$t(containers.{{child_type}}, {\"count\": 2}) list for {{name}} {{type}}"
+  },
   "signup": {
     "title": "Sign up",
     "header": {
@@ -163,7 +176,7 @@
   },
   "nav_bar": {
     "home": "Home",
-    "subjects": "Subjects",
+    "contents": "Categories",
     "contacts": "Contacts",
     "user_main": "User",
     "users_list": "Users list",

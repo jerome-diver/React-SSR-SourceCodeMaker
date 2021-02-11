@@ -40,11 +40,18 @@
     "users": {
       "create": {
         "failed": {
-          "validation": "Problème de validation dans le modèle de la base de donnée"
+          "validation": "Problème de validation dans la collection 'users' de la base de donnée"
         }
       },
       "update": {
         "failed": "La mise à jour a échoué"
+      }
+    },
+    "containers": {
+      "create": {
+        "failed": {
+          "validation": "Problème de validation avec le contenu de la collection 'containers' de la base de données"
+        }
       }
     }
   },
