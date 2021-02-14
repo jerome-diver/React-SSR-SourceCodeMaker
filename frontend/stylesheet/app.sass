@@ -1,10 +1,13 @@
-@import url(https://fonts.googleapis.com/css?family=Numito|Grenze+Gotisch|Pacifico|Piedra|Baloo+2|NerkoOne+Regular|Poppins|Bershire+Swash)
-$font-title: Poppins
-$font-text: Poppins
-$font-header: NerkoOne
-$font-brand: 'Berkshire Swash'
-$font-card: 'Baloo 2'
-$font-jumbo: Pacifico
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans+Medium|Desirel|Source+Code+Pro|Santana|Santana-Black|Nerko+One|Poppins)
+$ff_title: 'Santana-Black'
+$ff_text: Poppins
+$ff_header: 'Nerko One'
+$ff_brand: Desirel
+$ff_card: 'Josefin Sans Medium'
+$ff_jumbo: Santana
+$ff_badge: 'Source Code Pro'
+
+$color-content-background: rgba(33,33,33,0.75)
 
 body
   position: relative
@@ -17,7 +20,7 @@ body
     color: white
   h1
     padding-left: 10px
-    font-family: $font-title
+    font-family: $ff_title
     font-weight: 800
 
 #root
@@ -29,7 +32,7 @@ body
 
 header 
   width: 100%
-  font-family: $font-header
+  font-family: $ff_header
   font-weight: 700
   background-image: url("../img/source_code_maker_HEADER.png")
   background-clip: border-box
@@ -37,7 +40,7 @@ header
   background-size: 100% 250px
   height: 250px
   #brand
-    font-family: $font-brand
+    font-family: $ff_brand
     font-size: 150%
     color: rgb(171, 60, 23)
 
@@ -84,13 +87,13 @@ article
 
 .card-body
   background-color: rgba(33, 33, 33, 0.75)
-  font-family: $font-card
+  font-family: $ff_card
   .card-title
     font-weight: 800
 
 #home_article
   position: relative
-  font-family: $font-text
+  font-family: $ff_text
   font-weight: 200
   display: block
   margin-left: 2%
@@ -142,7 +145,13 @@ article
     .card-title
       border-bottom: 1px solid white
 
-.jumbotron
-  background-image: url('../img/background_dark_canvas.png')
-  background-size: 150% 150%
-  font-family: $font-jumbo
+.jumbotron 
+  font-family: $ff_jumbo
+  #home_article
+    background-image: url('../img/background_dark_canvas.png')
+    background-size: 150% 150%
+  #head-content
+    background-color: $color-content-background
+
+.badge
+  font-family: $ff_badge

@@ -1,27 +1,21 @@
-const Image = require("../models/Image");
+import Container from '../models/container.model'
 
-const getImages = async (req, res) => {  
-    try {    
-        let images = await Image.find({}, " -__v")
-        return res.status(200).json( { images, msg: "image info fetched" } ) }
-    catch (error) {
-        console.error(error)
-        return res.status(500).json( { error: "some error occured" } ) } 
+const getImage = async (req, res) => {  
+  Container.findOne({image_link: req.params.image_link})
+    .then(result => res.status(200).json({success: true}))
+    .catch(error => res.status(401).json({error}))
 }
 
 const uploadImage = async (req, res) => {
-    try {
-        if (req.file && req.file.path) {
-            const image = new Image(
-                { description: req.body.desc, url: req.file.path } )
-            await image.save()
-            return res.status(200).json( { msg: "image successfully saved" } ) }
-        else {
-            console.log(req.file)
-            return res.status(422).json( { error: "invalid" } ) } }
-    catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: "some error occured" }) }
+    if (req.file && req.file.path) {
+      Container.findOneAndUpdate(
+            {_id: req.body.id}, 
+            {image_link: req.file.path} )
+        .then(resolve => res.status(200).json( { success: true } ) )
+        .catch(error => res.status(401).json({error}) )
+    } else {
+      console.log("no path for ", req.file)
+      return res.status(422).json( { error: "invalid" } ) }
 }
 
-module.exports = { getImages,  uploadImage }
+module.exports = { getImage,  uploadImage }

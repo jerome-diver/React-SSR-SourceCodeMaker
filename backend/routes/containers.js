@@ -1,19 +1,10 @@
 const express = require('express');
 const router = express.Router();
+import { promises } from 'fs';
 import { hasAuthorization } from '../controllers/authentication';
 import { checkContainer, sanitizer } from '../helpers/sanitizer'
 import Container from '../models/container.model'
 import Type from '../models/type.model'
-
-const get_type_from_name = (name) => {
-  console.log("searching for type name: ", name)
-  let t
-  Type.findOne({name: name}, (error, type) => {
-    if (error) return { error: error }
-    console.log("found type name ==> ", type.toJSON())
-    return type.toJSON()
-  })
-}
 
 /* POST to create a new container for :type name */
 router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
@@ -38,33 +29,44 @@ router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
   } ) }
 } )
 
-/* GET containers list for :type 
+/* GET containers list for :type_name 
   (can be any [subject, category, ...] 
    or what ever type you created) */
 router.get('/:type_name', (req, res) => {
-  Type.findOne({name: req.params.type_name}, (error, type) => {
+  Container.find({type_name: req.params.type_name}, (error, containers) => {
     if (error) return res.status(401).json({ error })
-    Container.find({type_id: type.id}, (error, containers) => {
-      if (error) return res.status(401).json({ error })
-      res.status(200).json(containers.map((container) => { return container.toJSON()}))
-    } )
+    res.status(200).json(containers.map((container) => { return container.toJSON()}))
   } )
 } )
 
 /* GET containers child list for container :id 
   (can be any child: [subject, articles, comments, ...] 
    or what ever type you created) */
-router.get('/child_of/:id', (req, res) => {
-  Container.find({parent_id: req.params.id}, (error, containers) => {
-    if (error) return res.status(401).json({ error })
-    res.status(200).json(containers.map((container) => { return container.toJSON()}))
-  } )
-} )
+router.get('/children_of/:id', (req, res) => {
+  Container.findOne( { _id: req.params.id } )
+    .then(container => { return { head: { container: container.toJSON() } } })
+    .then(founded => {
+      const type = Type.findOne( { name: founded.head.container.type_name } )
+      const containers = Container.find( { parent_id: founded.head.container.id } )
+      Promise.all([type, containers])
+        .then( (resolve) => {
+          founded.head.type = resolve[0].toJSON()
+          founded.containers = resolve[1].map((container) => { return container.toJSON() })
+          return res.status(200).json(founded) })
+        .catch(error => { return res.status(401).json({ error }) })
+      })
+    .catch(error => { return res.status(401).json({ error }) })
+    /* should return something like:
+    {
+      head: {container: <Container>, type: <Type>},
+      children: [ {container: <Container>, type: <Type>}, ... ]
+    }
+    */
+})
 
 /* GET a container from his id */
-router.get('/', (req, res) => {
-  const id = req.body.id
-  Container.findOne({ _id: id }, (error, container) => {
+router.get('/:id', (req, res) => {
+  Container.findOne({ _id: req.params.id }, (error, container) => {
     if (error) return res.status(401).json({ error })
     return res.status(200).json( { content: container.toJSON()})
   } )

@@ -7,7 +7,7 @@ const TAG = 'http://'
 const HOST = 'localhost'
 const SERVER_PORT = 3000
 
-const cardColorType = (name) => {
+const colorType = (name) => {
   let color
   switch (name) {
     case "category":
@@ -25,5 +25,16 @@ const cardColorType = (name) => {
   return color
 }
 
+/* Translate container title and content by choosing its entry */
+const trContainer = (lng, container) => {
+  switch (lng) {
+    case 'fr':
+      return {title: container.title, content: container.content}
+    case 'en':
+      return {title: container.title_en, content: container.content_en}
+    case 'us':
+      return {title: container.title_en, content: container.content_en}
+  }
+}
 
-export { TAG, HOST, SERVER_PORT, accountEnabled, cardColorType }
+export { TAG, HOST, SERVER_PORT, accountEnabled, colorType, trContainer }

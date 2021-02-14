@@ -37,8 +37,8 @@ const ContainerSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         unique: false
     },
-    type_id: {
-        type: mongoose.Schema.Types.ObjectId,
+    type_name: {
+        type: mongoose.Schema.Types.String,
         unique: false
     },
     author_id: {  // a user

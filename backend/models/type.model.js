@@ -14,7 +14,7 @@ const TypeSchema = new Schema({
         required: 'Type name is required',
         minLength: 3,
         maxLength: 32,
-        unique: 'Type already exists'
+        unique: 'Type already exist'
     },
     description: {
         type: String,

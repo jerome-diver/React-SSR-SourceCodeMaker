@@ -10,8 +10,8 @@ import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
-import { TAG, HOST, SERVER_PORT, cardColorType } from '../../helpers/config'
-import { Card, CardGroup } from 'react-bootstrap'
+import { TAG, HOST, SERVER_PORT, colorType, trContainer } from '../../helpers/config'
+import { Card, CardGroup, Jumbotron, Badge } from 'react-bootstrap'
 
 const host = TAG + HOST + ":" + SERVER_PORT
 
@@ -35,47 +35,91 @@ const useFetch = (url, trigger) => {
     return { loading, error, containers }
 }
 
-/* Translate container title and content by choosing its entry */
-const trContainer = (lng, container) => {
-  switch (lng) {
-    case 'fr':
-      return {title: container.title, content: container.content}
-    case 'en':
-      return {title: container.title_en, content: container.content_en}
-    case 'us':
-      return {title: container.title_en, content: container.content_en}
+const deleteContent = (content) => {}
+
+const editContent = (content) => {}
+
+const cancel = () => {}
+
+const ActionLinks = ( { content } ) => {
+  const { getUser, getRole } = useAuthenticate()
+  const user = getUser()
+  const role = getRole()
+  if ((role.name == 'Admin') || (role.name == 'Writer') || (user.id == content.author_id)) {
+    return (
+      <>
+        <Button onClick={() => editContent(content)} variant="warning">
+          { t('containers.content.edit', { content: content }) }
+        </Button>
+        <Button onClick={() => deleteContent(content)} variant="danger">
+          { t('containers.content.delete', { content: content }) }
+        </Button>
+        <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
+      </>
+    )
   }
 }
 
 /* Print the content of a container on top */
-const HeadContent = ({ data }) => (
+const HeadContent = ( { container, type } ) => {
+  const { i18n, t } = useTranslation()
+  const type_to_translate = "containers." + type.name
+  return (
     <>
+      <style type='text/css'>
+        {` #head-content-title h1 { display: inline-block; }
+           #head-content-text { font-family: 'Santana'; }
+           .badge { 
+             vertical-align: top; 
+             font-family: 'Source Code Pro'; }
+           #head-content {
+             background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
+             background-color: rgba(99,99,99,0.75)
+           }       `}
+      </style>
+      <Jumbotron id='head-content'>
+        <div id='head-content-title'>
+          <h1>{trContainer(i18n.language, container).title} </h1>
+          <Badge variant='info'>{t(type_to_translate)}</Badge>
+        </div>
+        <div id="head-content-text">
+          {parse(trContainer(i18n.language, container).content)}
+        </div>
+      </Jumbotron>
     </>
-)
+  )
+}
 
 /* Print cards with partial content and a link */
-const CardSimple = (props) => {
-  const { data, lng, link, text } = props
-  const color = cardColorType("category")
+const CardSimple = ( { data, link, text, type } ) => {
+  const { i18n, t } = useTranslation()
+  const container_type = "containers." + type
   return (
     <>
       <style type="text/css">
         {`
-        .category {
-          margin: 5px;
-          min-width: 300px;
-          max-width: 450px;
-          border: 1px solid ${color};
-        }
-        .card-body {
-          background-color: rgba(55, 44, 44, 0.85); }
+          .${type} {
+            margin: 5px;
+            min-width: 300px;
+            max-width: 450px;
+            border: 1px solid ${colorType(type)}; }
+          .card-body { 
+            background-color: rgba(55, 44, 44, 0.85); 
+            background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22)); }
+          .card-title .h5 { display: inline; }
+          .badge { 
+            vertical-align: top;  
+            font-family: 'Source Code Pro';}
         `}
       </style>
-      <Card className="category">
+      <Card className={type}>
         <Card.Img variant="top" src={`/uploads/${data.image_link}`} />
         <Card.Body>
-          <Card.Title>{trContainer(lng, data).title}</Card.Title>
-          <Card.Text>{trContainer(lng, data).content}</Card.Text>
+          <Card.Title>
+            {trContainer(i18n.language, data).title}&nbsp;
+            <Badge variant='primary'>{t(container_type)}</Badge>
+          </Card.Title>
+          <Card.Text as="div">{parse(trContainer(i18n.language, data).content)}</Card.Text>
           <Card.Link href={link}>{text}</Card.Link>
         </Card.Body>
       </Card>
@@ -83,10 +127,26 @@ const CardSimple = (props) => {
   )
 }
 
-const CardList = (CardSimple) => (
+const CardList = ( { containers, type, children } ) => {
+  const { i18n, t } = useTranslation()
+  return (
     <>
+      <CardGroup>
+        { containers.map( (container, index) => {
+          console.log("GET TYPE NAME: ", container.type_name)
+          const type_name = (children != undefined) ? container.type_name : type
+          if (container.enable) return ( 
+            <CardSimple data={container}
+              type={type_name}
+              key={index} 
+              link={`/${type_name}/${container.id}`}
+              text={t('containers.link', { type_name, title: trContainer(i18n.language, container).title})} />
+          ) 
+        } ) }
+      </CardGroup>
     </>
-)
+  )
+ }
 
 const CardTree = ({ data, link, text }) => (
     <>
@@ -98,14 +158,13 @@ const CardTree = ({ data, link, text }) => (
    to show children for same and other types.
    head is a boolean value for show params :id container content on head first. */
 const Containers = (props) => {
-  const { type, children, head, } = props
-  const { id, title } = useParams()
+  const { type, children } = props
+  const { id } = useParams()
   console.log("Inside Containers component for ", type)
   const { i18n, t } = useTranslation()
   const language = i18n.language
- // const { getLanguage } = useAuthenticate()
-  const url = (type) ? host + '/api/containers/' + type
-                     : host + '/api/containers/child_of/' + id
+  const url = (children == undefined) ? host + '/api/containers/' + type
+                     : host + '/api/containers/children_of/' + id
   const { loading, error, containers } = useFetch(url, language)
 
   if (loading) return <><Loading /></>
@@ -113,28 +172,25 @@ const Containers = (props) => {
                                        name={error.content.name}
                                        message={error.content.message}/></>
   else {
-    if (type != undefined) { // print categories list only (cards)
+   // let top_head
+   // if (head) { top_head = {<HeadContent />}}
+    if (children == undefined) { // print categories list only (cards)
       return (
         <>
-          <h1>{t('containers.list', {type: type})}</h1>
+          <h1>{t('containers.list', {type})}</h1>
           <hr/>
-          <CardGroup>
-            { containers.map( (container, index) => { 
-              if (container.enable) {
-                return ( <CardSimple data={container} 
-                                     lng={language}
-                                     key={index} 
-                                     link={`/${type}/${container.id}/${trContainer(language, container).title}`}
-                                     text={t('containers.link', { type: type,
-                                                                  title: trContainer(language, container).title})} />) 
-              }
-            } ) }
-          </CardGroup>
+          <CardList containers={containers} type={type} />
         </>
       )
-    } else if (head == true) {
-
-    }
+    } else if (!children.same && children.other) {
+      return (
+        <>
+          <HeadContent container={containers.head.container} type={containers.head.type} />
+          <CardList containers={containers.containers} type={type} children={true} />
+        </>
+      )
+    } else if (children.same && !children.other) { 
+    } else if (!children.same && !children.other) { }
   }
 }
 
@@ -146,6 +202,26 @@ Containers.propTypes = {
               same: PropTypes.bool,
               other: PropTypes.bool }),
   head: PropTypes.bool
+}
+
+CardSimple.propTypes = {
+  data: PropTypes.shape({
+              title: PropTypes.string,
+              content: PropTypes.string,
+              title_en: PropTypes.string,
+              content_en: PropTypes.string,
+              image_link: PropTypes.string
+  }),
+  type: PropTypes.string,
+  lng: PropTypes.string,
+  link: PropTypes.string,
+  text: PropTypes.string
+}
+
+HeadContent.propTypes = {
+  data: PropTypes.object,
+  type: PropTypes.object,
+  lng: PropTypes.string
 }
 
 export default Containers

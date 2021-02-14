@@ -26,8 +26,12 @@ const PageSwitcher = (props) => {
             <Route exact path="/" component={Home}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/categories" component={(props) => <Containers {...props} type="category"/>}/>
-            <Route path="/category/:id/:title"
-                   component={ (props) => <Containers {...props} type=""/> } />
+            <Route path="/category/:id"
+                   component={ (props) => <Containers {...props} type="category"
+                                                                 children={{same: false, other: true}} /> } />
+            <Route path="/subject/:id"
+                   component={ (props) => <Containers {...props} type="subject"
+                                                                 children={{same: false, other: true}}/> } />
             <PrivateRoute path="/users" component={Users}/>
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
             <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 

@@ -1,0 +1,31 @@
+// MongoDB Playground
+// To disable this template go to Settings | MongoDB | Use Default Template For Playground.
+// Make sure you are connected to enable completions and to be able to run a playground.
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// Select the database to use.
+use('SourceCodeMaker');
+
+// Insert a few containers collection at start time.
+db.containers.insertMany([
+  { 'id': new ObjectId(),
+    'title': 'Programmation', 
+    'content': '<p>Les languages de programmations</p>', 
+    'title_en': 'Computer science development',
+    'content_en': '<p><Development computer science languages./p>',
+    'type_id': ObjectId('601fd6ddccc2e234281ede3b'),
+    'parent_id': ObjectId('601b189fae265e2217537542'),
+    'image_link': '.jpg',
+    'enable': true,
+    'created': new Date() },
+  { '_id': new ObjectId(),
+    'title': 'Administration Systèmes', 
+    'content': '<p>Administrer des systèmes informatiques</p>', 
+    'title_en': 'Computer science administration',
+    'content_en': '<p>Administrate computer science systems</p>',
+    'type_id': ObjectId('601fd6ddccc2e234281ede3b'),
+    'parent_id': ObjectId('601b189fae265e2217537542'),
+    'image_link': '.jpg',
+    'enable': true,
+    'created': new Date() },
+]);
