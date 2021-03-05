@@ -99,6 +99,17 @@
     }
   },
   "containers": {
+    "helper": {
+      "title": "Title should contain maximum 64 characters and no injected code.",
+      "content": "Content should be HTML tag able withjout any code injection"
+    },
+    "button_submit": "Submit",
+    "edit": "Edition of $t(containers.{{type}})",
+    "content": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
     "category": "category",
     "category_plural": "categories",
     "subject": "subject",

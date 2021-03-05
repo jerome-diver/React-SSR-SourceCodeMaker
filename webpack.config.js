@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const mode = (process.env.NODE_ENV === 'dev') ? 'development' : 'production'
+const LoadablePlugin = require('@loadable/webpack-plugin')
 const { I18NextHMRPlugin } = require('i18next-hmr/plugin')
 
 /* GENERAL config */
@@ -18,6 +19,8 @@ var config = {
             {   test: /\.s[ac]ss$/,
                 use: [ 
                     'css-loader', 'sass-loader' ] },
+            {   test: /\.css$/,
+                use: [ 'css-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
                 exclude: [/node_modules/],
                 use: [ {
@@ -55,6 +58,7 @@ var config = {
         ]
     },
     plugins: [
+        new LoadablePlugin(),
         new webpack.ProvidePlugin({ process: ['process'] }),
         new webpack.NoEmitOnErrorsPlugin(),
         new MiniCssExtractPlugin({

@@ -9,6 +9,7 @@ import App from './App'
 import { Loading } from './Views/Pages/public/Printers.component'
 import { CookiesProvider } from 'react-cookie'
 
+
 const BaseAppI18n = () => {
   //useSSR(window.initialI18nStore, window.initialLanguage)
   return (

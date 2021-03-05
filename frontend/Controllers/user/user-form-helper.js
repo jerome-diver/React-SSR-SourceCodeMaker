@@ -36,7 +36,7 @@ const sendEmailLink = (target, user_data) => {
     switch (target) {
         case 'validateAccount':
             action = validateAccount
-            success = {
+            succeed = {
                 title: i18n.t('popup.account.new.succeed.title'),
                 content: i18n.t('popup.account.new.succeed.content'),
                 link_ok: i18n.t('popup.account.new.succeed.link.ok'),
@@ -46,7 +46,7 @@ const sendEmailLink = (target, user_data) => {
                 title: i18n.t('popup.account.new.failed.title'),
                 content: i18n.t('popup.account.new.failed.content'),
                 link_ok: i18n.t('popup.account.new.failed.link.ok'),
-                icon: 'danger'
+                icon: 'error'
             }
             break
         case 'updateEmail':
@@ -61,12 +61,12 @@ const sendEmailLink = (target, user_data) => {
                 title: i18n.t('popup.email.change.failed.title'),
                 content: i18n.t('popup.email.change.failed.content'),
                 link_ok: i18n.t('popup.email.change.failed.link.ok'),
-                icon: 'danger'
+                icon: 'error'
             }
             break
         case 'resetPassword':
             action = resetPassword
-            success = {
+            succeed = {
                 title: i18n.t('popup.password.reset.succeed.title'),
                 content: i18n.t('popup.password.reset.succeed.content'),
                 link_ok: i18n.t('popup.password.reset.succeed.link.ok'),
@@ -76,7 +76,7 @@ const sendEmailLink = (target, user_data) => {
                 title: i18n.t('popup.password.reset.failed.title'),
                 content: i18n.t('popup.password.reset.failed.content'),
                 link_ok: i18n.t('popup.password.reset.failed.link.ok'),
-                icon: 'danger'
+                icon: 'error'
             }
             break
     }

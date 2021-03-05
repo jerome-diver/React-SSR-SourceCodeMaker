@@ -32,7 +32,7 @@ const SignUp = (props) => {
                 create(user)
                     .then(response => {
                         if (response.accepted) {
-                            const emailSent = endEmailLink('validateAccount', user)
+                            const emailSent = sendEmailLink('validateAccount', user)
                             if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
                         } else if (response.error) {
                             fireError(response.error.name, response.error.message)

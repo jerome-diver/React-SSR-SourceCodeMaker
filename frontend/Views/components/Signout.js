@@ -39,7 +39,7 @@ const SignOut = (props) => {
             return (<> <Redirect to='/'/> </>)
         } else {
             return ( <>
-                <Modal show={(error != '')}>
+                <Modal show={(state.error != '')}>
                     <Modal.Header closeButton>
                         <Modal.Title>Failed to logout</Modal.Title>
                     </Modal.Header>

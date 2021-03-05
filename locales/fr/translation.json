@@ -99,6 +99,17 @@
     }
   },
   "containers": {
+    "helper": {
+      "title": "Le titre contient 64 caractères maximum et aucun code injecté.",
+      "content": "Le contenu est lisible via des balises HTML et ne doit contenir aucun code injecté."
+    },
+    "button_submit": "Valider",
+    "edit": "Édition de $t(containers.{{type}})",
+    "content": {
+      "edit": "Éditer",
+      "delete": "Supprimer",
+      "cancel": "Annuler"
+    },
     "category": "catégorie",
     "category_plural": "catégories",
     "subject": "sujet",

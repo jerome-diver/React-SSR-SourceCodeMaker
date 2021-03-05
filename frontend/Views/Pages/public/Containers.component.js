@@ -5,13 +5,16 @@
 
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Loading, Error} from './Printers.component'
+import { Loading, Error } from './Printers.component'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { TAG, HOST, SERVER_PORT, colorType, trContainer } from '../../helpers/config'
-import { Card, CardGroup, Jumbotron, Badge } from 'react-bootstrap'
+import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup } from 'react-bootstrap'
+import loadable from '@loadable/component'
+const Editor = loadable(() => import('for-editor'))
+
 
 const host = TAG + HOST + ":" + SERVER_PORT
 
@@ -35,64 +38,119 @@ const useFetch = (url, trigger) => {
     return { loading, error, containers }
 }
 
-const deleteContent = (content) => {}
+const deleteContent = (content, type) => { console.log("DELETE") }
 
-const editContent = (content) => {}
-
-const cancel = () => {}
-
-const ActionLinks = ( { content } ) => {
+const ActionLinks = ( { data, type, callback } ) => {
   const { getUser, getRole } = useAuthenticate()
+  const { t } = useTranslation()
   const user = getUser()
   const role = getRole()
-  if ((role.name == 'Admin') || (role.name == 'Writer') || (user.id == content.author_id)) {
+  const editContent = () => { callback('edit') }
+  const cancel = () => { callback('normal') }
+  if (role != undefined && ((role.name == 'Admin') || (role.name == 'Writer')) || 
+      user != undefined && user.id == data.author_id) {
     return (
       <>
-        <Button onClick={() => editContent(content)} variant="warning">
-          { t('containers.content.edit', { content: content }) }
+        <Button onClick={editContent} variant="warning">
+          { t('containers.content.edit', { content: data.title }) }
         </Button>
-        <Button onClick={() => deleteContent(content)} variant="danger">
-          { t('containers.content.delete', { content: content }) }
+        <Button onClick={() => deleteContent(content, type)} variant="danger">
+          { t('containers.content.delete', { content: data.content }) }
         </Button>
         <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
       </>
     )
-  }
+  } else return null
 }
 
 /* Print the content of a container on top */
 const HeadContent = ( { container, type } ) => {
   const { i18n, t } = useTranslation()
+  const [mode, setMode] = useState('normal')
+  const [ validated, setValidated ] = useState(false)
+  const [ form, setForm ] = useState({ title:   { fr: container.title,   
+                                                  en: container.title_en }, 
+                                       content: { fr: container.content, 
+                                                  en: container.content_en } })
+  const theme = 'snow'
+  const modules = { toolbar: [[ 'bold', 'italic', 'underline', 'strike']] }
+  const placeholder = 'Compose an epic...';
+  const formats = ['bold', 'italic', 'underline', 'strike']
   const type_to_translate = "containers." + type.name
-  return (
-    <>
-      <style type='text/css'>
-        {` #head-content-title h1 { display: inline-block; }
-           #head-content-text { font-family: 'Santana'; }
-           .badge { 
-             vertical-align: top; 
-             font-family: 'Source Code Pro'; }
-           #head-content {
-             background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
-             background-color: rgba(99,99,99,0.75)
-           }       `}
-      </style>
-      <Jumbotron id='head-content'>
-        <div id='head-content-title'>
-          <h1>{trContainer(i18n.language, container).title} </h1>
-          <Badge variant='info'>{t(type_to_translate)}</Badge>
-        </div>
-        <div id="head-content-text">
-          {parse(trContainer(i18n.language, container).content)}
-        </div>
-      </Jumbotron>
-    </>
-  )
+  const change = target => e => {
+    if (target == 'title') setForm({...form, title: { [i18n.language]: e.target.value} })
+    else setForm({...form, content: { [i18n.language]: e } })
+  }
+  const updateContainer = (e) => {
+    console.log("UPDATE CONTAINER EVENT")
+  }
+  useEffect(() => {
+  }, [])
+  switch (mode) {
+    case 'normal':
+      return ( <>
+        <style type='text/css'>
+          {` #head-container-title h1 { display: inline-block; }
+            #head-container-text { font-family: 'Santana'; }
+            .badge { 
+              vertical-align: top; 
+              font-family: 'Source Code Pro'; }
+            #head-container {
+              background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
+              background-color: rgba(99,99,99,0.75)
+            }       `}
+        </style>
+        <Jumbotron id='head-container'>
+          <div id='head-container-title'>
+            {trContainer(i18n.language, container).title}&nbsp;
+            <Badge variant='info'>{t(type_to_translate)}</Badge>
+          </div>
+          <div id="head-container-text">
+            {parse(trContainer(i18n.language, container).content)}
+          </div>
+          <ActionLinks data={container} type={type} callback={setMode}/>
+        </Jumbotron>
+      </> )
+      break
+    case 'edit':
+      return ( <>
+        <Jumbotron id='edit-container'>
+        <Badge variant='warning'>{t('containers.edit', {type: type.name})}</Badge>
+          <Form onSubmit={updateContainer} noValidate validated={validated}>
+            <Form.Group controlId="formBasicText">
+                <Form.Label>Title</Form.Label>
+                <InputGroup>
+                  <Form.Control type='text' 
+                                name="formContainerTitle"
+                                onChange={change('title')}
+                                value={form.title[i18n.language]}/>
+                  <Form.Control.Feedback type="invalid">Please update the title.</Form.Control.Feedback>
+                </InputGroup>
+                <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
+            </Form.Group>
+            <Form.Group controlId="formBasicText">
+                <Form.Label>Content this:</Form.Label>
+                <InputGroup>
+                    
+                    <Editor value={form.content[i18n.language]} onChange={change} language='en' />
+                  <Form.Control.Feedback type="invalid">Please update the content.</Form.Control.Feedback>
+                </InputGroup>
+                <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
+            </Form.Group>
+            <Button type='submit' variant='warning'>
+                {t('containers.button_submit')}
+            </Button>
+          </Form>
+        </Jumbotron>
+      </>)
+      break
+  }
 }
 
 /* Print cards with partial content and a link */
 const CardSimple = ( { data, link, text, type } ) => {
   const { i18n, t } = useTranslation()
+  const [mode, setMode] = useState('normal')
   const container_type = "containers." + type
   return (
     <>
@@ -119,8 +177,12 @@ const CardSimple = ( { data, link, text, type } ) => {
             {trContainer(i18n.language, data).title}&nbsp;
             <Badge variant='primary'>{t(container_type)}</Badge>
           </Card.Title>
-          <Card.Text as="div">{parse(trContainer(i18n.language, data).content)}</Card.Text>
+          <Card.Text as="div">
+            {parse(trContainer(i18n.language, data).content)}
+          </Card.Text>
           <Card.Link href={link}>{text}</Card.Link>
+          <br/>
+          <ActionLinks data={data} type={type} callback={setMode}/>
         </Card.Body>
       </Card>
     </>
