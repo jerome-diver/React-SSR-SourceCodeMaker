@@ -55,19 +55,19 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer, emailModif
     const { newEmail, oldEmail } = req.body
     let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }
     for (const [key, value] of Object.entries(emailSent)) {
-        res.app.mailer.send('send_email_to_user', {
-            to: value.email,
-            subject: req.email.subject,
-            title: req.email.title,
-            content_title: req.email.content_title,
-            introduction: req.email.introduction,
-            text: req.email.text,
-            link_validate: req.email.validation_link,
-            submit_text: req.email.submit_text
-        }, (error) => { emailSent[key] = (error) 
-                                    ? {...value, error: error, sent: false }
-                                    : {...value, sent: true } } 
-    ) }
+        res.app.mailer.send(
+            'send_email_to_user',
+            { to: value.email,
+              subject: req.email.subject,
+              title: req.email.title,
+              content_title: req.email.content_title,
+              introduction: req.email.introduction,
+              text: req.email.text,
+              link_validate: req.email.validation_link,
+              submit_text: req.email.submit_text },
+            (error) => { emailSent[key] = {...value, error, sent: false } })
+        if (emailSent[key] == undefined) emailSent[key] = {...value, sent: true }
+    } 
     const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 200 : 401
     return res.status(status).json(emailSent) 
 } )
