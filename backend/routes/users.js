@@ -3,8 +3,8 @@ const router = express.Router()
 import User from '../models/user.model'
 import Role from '../models/role.model'
 import jwt from 'jsonwebtoken'
-import { checkNewUser, checkUpdateUser, checkPassword, checkEmail, sanitizer } from '../helpers/sanitizer'
-import { hasAuthorization, isRole, isValid, isAdmin } from '../controllers/authentication'
+import { checkNewUser, checkUpdateUser, checkPassword, checkEmail, sanitizer } from './middlewares/sanitizer'
+import { hasAuthorization, isRole, isValid, isAdmin } from './middlewares/authentication'
 require('dotenv').config('../../')
 
 const decodeJWT = (token) => {

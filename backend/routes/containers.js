@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 import { promises } from 'fs';
-import { hasAuthorization } from '../controllers/authentication';
-import { checkContainer, sanitizer } from '../helpers/sanitizer'
+import { hasAuthorization } from './middlewares/authentication';
+import { checkContainer, sanitizer } from './middlewares/sanitizer'
 import Container from '../models/container.model'
 import Type from '../models/type.model'
 

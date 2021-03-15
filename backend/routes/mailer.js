@@ -1,89 +1,47 @@
 const express = require('express')
 const router = express.Router()
-import { addDays, format } from 'date-fns'
-import { fr as localeFR, en as localeEN } from 'date-fns/locale'
+import { emailValidation, emailResetPassword, emailModifyEmail } from './middlewares/emails'
 const emailValidator = require('email-deep-validator')
-import User from '../models/user.model'
-import { isValid } from '../controllers/authentication'
-import { checkEmail, sanitizer } from '../helpers/sanitizer'
-var jwt = require('jsonwebtoken')
-require('dotenv').config('../../')
+import { isValid } from './middlewares/authentication'
+import { checkEmail, sanitizer } from './middlewares/sanitizer'
 
-const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
 
 /* POST to send email to validate new user account */
-router.post('/account/validate', (req, res) => {
-    const { username, locale } = req.body
-    User.findOne({username: username}, (err, user) => {
-        if (err) {
-            console.log("=== validate router (/ POST): User doesn't exist: ", err)
-            res.json( { error: err, accepted: false } )
-        } else {
-            if (user.validated) { return res.status(401).json(
-                { error: {
-                    name: req.i18n.t('mailer:account.validation.error.name'), 
-                    message: req.i18n.t('mailer:account.validation.error.text')}})}
-            console.log('Find user: ', user)
-            const format_date = `iiii, dd MMMM yyyy ${req.i18n.t('mailer:date.at')} HH:mm`
-            var localization
-            switch(locale) {
-                case 'fr':
-                    localization = localeFR
-                    break
-                case 'en':
-                    localization = localeEN
-                    break
-                default:
-                    localization = localeEN
-            }
-            const date_start = format(user.created, format_date, {locale: localization})
-            const date_end = format(addDays(user.created, 2),format_date, {locale: localization})
-            const ticket = user.ticket
-            const username = user.username
-            const token = jwt.sign({ user_id: user.id, valid_until: date_end },process.env.JWT_SECRET)
-            const validation_link = `${host}/validate/${username}/${token}/${ticket}`
-            /* send an email to ask confirmation */
-            res.app.mailer.send('send_email_to_user', {
-                to: user.email,
-                subject: req.i18n.t('mailer:account.validation.subject'),
-                title: req.i18n.t('mailer:account.validation.title'),
-                content_title: req.i18n.t('mailer:account.validation.content.title'),
-                introduction: req.i18n.t('mailer:account.validation.content.introduction', {date_start: date_start}),
-                text: req.i18n.t('mailer:account.validation.content.text' ,{date_end: date_end}),
-                link_validate: validation_link,
-                submit_text: req.i18n.t('mailer:account.validation.submit_text')
-            }, (error) => {
-                if (error) { return res.status(401).json( 
-                    {error: {name: 'Email failed', message: error}, sent: false} ) }
-                else { return res.status(200).json( { error: undefined, sent: true } ) } } )
-    } } )
+router.post('/account/validate', [emailValidation], (req, res) => {
+    res.app.mailer.send('send_email_to_user', {
+            to: req.email.to,
+            subject: req.email.subject,
+            title: req.email.title,
+            content_title: req.email.content_title,
+            introduction: req.email.introduction,
+            text: req.email.text,
+            link_validate: req.email.validation_link,
+            submit_text: req.email.submit_text
+        }, (error) => { return res.status(401).json( 
+                {error: { name: 'Email failed', message: error }, 
+                 sent: false}) })
+    return res.status(200).json( { error: undefined, 
+                                   sent: true,
+                                  start: req.process.date.start, 
+                                  end:   req.process.date.end })
 } )
 
 /* POST to send email to reset account password by rich destination to password setup page */
-router.post('/account/reset_password', (req, res) => {
-    User.findOne({username: req.body.username}, 
-        (err, user) => { 
-            if (err) { return res.status(401).json({error: err}) }
-            if(!user) { return res.status(401).json( 
-                { error: { 
-                    name: req.i18n.t('error:router.users.delete.missing.name'),
-                    message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-            const date_now = format(user.created, "dd/MM/yyyy 'at' HH:mm")
-            const date_end = format(addDays(user.created, 2),"dd/MM/yyyy 'at' HH:mm")
-            const url = host + '/setup_password'
-            const setup_password_link = `${url}/${user.id}/${user.ticket}`
-            res.app.mailer.send('send_email_to_user', {
-                to: user.email,
-                subject: req.i18n.t('mailer:account.password.subject'),
-                title: req.i18n.t('mailer:account.password.title'),
-                content_title: req.i18n.t('mailer:account.password.content.title'),
-                introduction: req.i18n.t('mailer:account.password.content.introduction', {date_now: date_now}),
-                text: req.i18n.t('mailer:account.password.content.text', {date_end: date_end}),
-                link_validate: setup_password_link,
-                submit_text: req.i18n.t('mailer:account.password.submit_text')
-            }, (error) => { return (error) ? res.status(401).json({error: error, sent: false}) 
-                                           : res.status(200).json({sent: true, start: date_now, end: date_end})    } )
-    } )
+router.post('/account/reset_password', [emailResetPassword], (req, res) => {
+    res.app.mailer.send('send_email_to_user', {
+        to: req.email.to,
+        subject: req.email.subject,
+        title: req.email.title,
+        content_title: req.email.content_title,
+        introduction: req.email.introduction,
+        text: req.email.text,
+        link_validate: req.email.validation_link,
+        submit_text: req.email.submit_text
+    }, (error) => { return res.status(401).json({error: error, sent: false}) })
+    return res.status(200).json({ error: undefined, 
+                                  sent:  true, 
+                                  start: req.process.date.start, 
+                                  end:   req.process.date.end })
 } )
 
 /* POST to send email to modify account email by:
@@ -93,38 +51,25 @@ router.post('/account/reset_password', (req, res) => {
    with form action button to call frontend PageSwitcher router component,
    then final destination to ModifyEmail frontend component page 
    to show validation status updated. */
-router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res) => {
-    const { newEmail, oldEmail, username } = req.body
-    User.findOne({_id: req.user_id}, (err, user) => { 
-        if (err) { return res.status(401).json({error: err, sent: false}) }
-        if(!user) { return res.status(401).json({sent: false, 
-            error: { 
-                name: req.i18n.t('error:router.users.delete.missing.name'),
-                message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-        const dateNow = format(user.created, "dd/MM/yyyy 'at' HH:mm")
-        const dateEnd = format(addDays(user.created, 2),"dd/MM/yyyy 'at' HH:mm")
-        const url = host + '/modify_email'
-        const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
-        let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }
-        for (const [key, value] of Object.entries(emailSent)) {
-            res.app.mailer.send('send_email_to_user', {
-                to: value.email,
-                subject: req.i18n.t('mailer:account.email.subject'),
-                title: req.i18n.t('mailer:account.email.title'),
-                content_title: req.i18n.t('mailer:account.email.content.title'),
-                introduction: req.i18n.t('mailer:account.email.content.introduction', 
-                                         {username, date_now: dateNow}),
-                text: req.i18n.t('mailer:account.email.content.text', 
-                                 {email: newEmail, old_email: oldEmail, date_end: dateEnd}),
-                link_validate: actionLink,
-                submit_text: req.i18n.t('mailer:account.email.submit_text')
-            }, (error) => { emailSent[key] = (error) 
-                                        ? {...value, error: error, sent: false }
-                                        : {...value, sent: true } } 
-        ) }
-        const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 200 : 401
-        return res.status(status).json(emailSent) 
-    } )
+router.post('/account/modify_email', [isValid, checkEmail, sanitizer, emailModifyEmail], (req, res) => {
+    const { newEmail, oldEmail } = req.body
+    let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }
+    for (const [key, value] of Object.entries(emailSent)) {
+        res.app.mailer.send('send_email_to_user', {
+            to: value.email,
+            subject: req.email.subject,
+            title: req.email.title,
+            content_title: req.email.content_title,
+            introduction: req.email.introduction,
+            text: req.email.text,
+            link_validate: req.email.validation_link,
+            submit_text: req.email.submit_text
+        }, (error) => { emailSent[key] = (error) 
+                                    ? {...value, error: error, sent: false }
+                                    : {...value, sent: true } } 
+    ) }
+    const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 200 : 401
+    return res.status(status).json(emailSent) 
 } )
 
 const verifyEmailExist = async (email) => {

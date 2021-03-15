@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 import User from '../models/user.model'
 import Role from '../models/role.model'
-import { hasAuthorization, isRole } from '../controllers/authentication'
+import { hasAuthorization, isRole } from './middlewares/authentication'
 //import expressJwt from 'express-jwt'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')

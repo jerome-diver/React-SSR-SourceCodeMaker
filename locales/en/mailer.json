@@ -22,7 +22,7 @@
       "subject": "Confirm you want to reset your SourceCodeMaker password",
       "content": {
         "title": "Reset your password of your SourceCodeMaker web site account",
-        "introduction": "The {{date_now}}, you forget your password and asked for reset this one to setup a new one on SourceCodeMaker web site.",
+        "introduction": "The {{date_start}}, you forget your password and asked for reset this one to setup a new one on SourceCodeMaker web site.",
         "text": "You should confirm before {{date_end}}, that you want to create a new password for your linked account on SourceCodeMaker web site."
       },
       "link_label": "Click this link to settup a new password online",
@@ -34,7 +34,7 @@
       "content": {
         "title": "Use an other one email account address on your account",
         "introduction":  "Valid new email change for user account: {{username}}",
-        "text": "You have to confirm change to apply modification. Old email is: {{old_email}}, new one to validate is: {{email}}"
+        "text": "You have to confirm change to apply modification process started the {{date_start}}.<br>Old email is: {{old_email}}, new one to validate is: {{email}}.<br>You have to validate before the {{date_end}}"
       },
       "submit_text": "Valid new email address"
     }

@@ -21,7 +21,7 @@
       "subject": "Confirmez que vous voulez vraiment créer un nouveau mot de passe SourceCodeMaker.",
       "content": {
         "title": "Créer un nouveau mot de passe pour vôte compte sur SourceCodeMaker.fr",
-        "introduction": "Le {{date_now}}, vous avez oublié vôtre mot de passe sur vôtre compte du site SourceCodeMaker. Vous avez demandé d'en créer un nouveau.",
+        "introduction": "Le {{date_start}}, vous avez oublié vôtre mot de passe sur vôtre compte du site SourceCodeMaker. Vous avez demandé d'en créer un nouveau.",
         "text": "Vous devez confirmer, avant {{date_end}}, que vous voulez vraiment créer un nouveau mot de passe sur vôtre compte lié à cet email sur SourceCodeMaker."
       },
       "submit_text": "Validez le nouveau mot de passe",
@@ -33,7 +33,7 @@
       "content": {
         "title": "Utilisez une autre adresse email pour vôtre compte",
         "introduction":  "Validez le changement d'adresse email utilisé pour vôtre compte d'utilisateur: {{username}}",
-        "text": "Vous devez confirmer ce changement d'adresse email du compte. Ancienne: {{old_email}}, nouvelle à valider: {{email}}"
+        "text": "Vous devez confirmer ce changement d'adresse email du compte qui a commencé le {{date_start}}.<br>L'ancienne adresse est: {{old_email}}, la nouvelle à valider: {{email}}.<br>Faites le avant le {{date_end}}."
       },
       "submit_text": "Validez la nouvelle adresse email"
     }

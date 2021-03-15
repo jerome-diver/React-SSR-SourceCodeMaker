@@ -1,5 +1,5 @@
 import { check, validationResult } from 'express-validator'
-import { i18n } from '../i18n'
+import { i18n } from '../../i18n'
 
 const sanitizer = (req, res, next) => {
     const validationErrors = validationResult(req)

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-import { hasAuthorization } from '../controllers/authentication';
-import { checkType, sanitizer } from '../helpers/sanitizer'
+import { hasAuthorization } from './middlewares/authentication';
+import { checkType, sanitizer } from './middlewares/sanitizer'
 import Type from '../models/type.model'
 
 /* POST to create a new type */
