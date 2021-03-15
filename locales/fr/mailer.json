@@ -1,11 +1,12 @@
 {
+  "date": { "at": "à" },
   "account": {
     "validation": {
       "title": "Validation de compte sur SourceCodeMaker",
       "subject": "Confirmez vôtre email pour valider vôtre compte sur SourceCodeMaker",
       "content": {
         "title": "Lien de validation de compte pour SourceCodeMaker",
-        "introduction": "Le {date_start}}, vous avez demandé la création d'un nouveau compte sur mon site web: SourceCodeMaker.",
+        "introduction": "Le {{date_start}}, vous avez demandé la création d'un nouveau compte sur mon site web: SourceCodeMaker.",
         "text": "Vous devez valider la création du compte avant le {{date_end}} pour que celui-ci soit opérationel."
       },
       "link_label": "Cliquez sur ce lien pour valider vôte compte",

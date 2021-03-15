@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { TAG, HOST, SERVER_PORT, colorType, trContainer } from '../../helpers/config'
+import { getContainer, getContainersOfType, getChildrenContainersOf,
+         createContainer, updateContainer, deleteContainer } from '../../../Controllers/container/action-CRUD'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup } from 'react-bootstrap'
 import loadable from '@loadable/component'
 const Editor = loadable(() => import('for-editor'))
@@ -19,22 +21,40 @@ const Editor = loadable(() => import('for-editor'))
 const host = TAG + HOST + ":" + SERVER_PORT
 
 /* fetching data to get database collection entries back */
-const useFetch = (url, trigger) => {
+const useFetch = (crud_call, data, trigger) => {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, content: ""})
     const [ containers, setContainers ] = useState({})
-
     useEffect(() => {
-        console.log("FETCHING NOW to get container(s) data for language: ", trigger)
-        if (url) {
-          fetch(url)
-            .then( response => response.json() )
-            .then( response => setContainers( response ) )
-            .catch( err => setError( { state: true, content: err } ) )
-            .finally( () => setLoading( false ) )
+        // should call the string crud_call as a function:
+        /*
+        if (crud_call in ['getContainer', 'getChildrenContainersOf', 'getContainersOfType', 
+                          'updateContainer', 'createContainer', 'deleteContainer']) {
+          console.log("FETCHING NOW with %s for language %s", crud_call, trigger)
+          global[crud_call](data, setContainers, setError, setLoading) 
+        }
+        */
+        switch(crud_call) {
+          case 'getContainer':
+            getContainer(data, setContainers, setError, setLoading)
+            break
+          case 'getChildrenContainersOf':
+            getChildrenContainersOf(data, setContainers, setError, setLoading)
+            break
+          case 'getContainersOfType':
+            getContainersOfType(data, setContainers, setError, setLoading)
+            break
+          case 'createContainer':
+            createContainer(data, setContainers, setError, setLoading)
+            break
+          case 'updateContainer':
+            updateContainer(data, setContainers, setError, setLoading)
+            break
+          case 'deleteContainer':
+            deleteContainer(data, setContainers, setError, setLoading)
+            break
         }
     }, [trigger] )
-    
     return { loading, error, containers }
 }
 
@@ -66,23 +86,28 @@ const ActionLinks = ( { data, type, callback } ) => {
 /* Print the content of a container on top */
 const HeadContent = ( { container, type } ) => {
   const { i18n, t } = useTranslation()
-  const [mode, setMode] = useState('normal')
+  const [ mode, setMode ] = useState('normal')
   const [ validated, setValidated ] = useState(false)
   const [ form, setForm ] = useState({ title:   { fr: container.title,   
                                                   en: container.title_en }, 
                                        content: { fr: container.content, 
                                                   en: container.content_en } })
-  const theme = 'snow'
-  const modules = { toolbar: [[ 'bold', 'italic', 'underline', 'strike']] }
-  const placeholder = 'Compose an epic...';
-  const formats = ['bold', 'italic', 'underline', 'strike']
   const type_to_translate = "containers." + type.name
   const change = target => e => {
     if (target == 'title') setForm({...form, title: { [i18n.language]: e.target.value} })
     else setForm({...form, content: { [i18n.language]: e } })
   }
   const updateContainer = (e) => {
-    console.log("UPDATE CONTAINER EVENT")
+    const form_to_submit = e.currentTarget;
+    if (form_to_submit.checkValidity() === false) {
+        e.preventDefault();
+        e.stopPropagation();
+    } else {
+      console.log("UPDATE CONTAINER EVENT")
+      const data = { id: container.id, body: {...container} }
+      const { loading, error } = useFetch('updateContainer', data, i18n.language)
+    }
+    setValidated(true)
   }
   useEffect(() => {
   }, [])
@@ -115,7 +140,7 @@ const HeadContent = ( { container, type } ) => {
     case 'edit':
       return ( <>
         <Jumbotron id='edit-container'>
-        <Badge variant='warning'>{t('containers.edit', {type: type.name})}</Badge>
+          <Badge variant='warning'>{t('containers.edit', {type: type.name})}</Badge>
           <Form onSubmit={updateContainer} noValidate validated={validated}>
             <Form.Group controlId="formBasicText">
                 <Form.Label>Title</Form.Label>
@@ -131,8 +156,10 @@ const HeadContent = ( { container, type } ) => {
             <Form.Group controlId="formBasicText">
                 <Form.Label>Content this:</Form.Label>
                 <InputGroup>
-                    
-                    <Editor value={form.content[i18n.language]} onChange={change} language='en' />
+                    <Editor value={form.content[i18n.language]} 
+                            onChange={change(content)}
+                            language='en'
+                            preview={true} />
                   <Form.Control.Feedback type="invalid">Please update the content.</Form.Control.Feedback>
                 </InputGroup>
                 <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
@@ -225,9 +252,9 @@ const Containers = (props) => {
   console.log("Inside Containers component for ", type)
   const { i18n, t } = useTranslation()
   const language = i18n.language
-  const url = (children == undefined) ? host + '/api/containers/' + type
-                     : host + '/api/containers/children_of/' + id
-  const { loading, error, containers } = useFetch(url, language)
+  const crud_mode = (children == undefined) ? 'getContainersOfType' : 'getChildrenContainersOf'
+  const data = (children == undefined) ? type : id
+  const { loading, error, containers } = useFetch(crud_mode, data, language)
 
   if (loading) return <><Loading /></>
   else if(error.state) return <><Error title={t('error:home.title')} 

@@ -29,7 +29,7 @@ const validatePassword = (password) => {
     return [ error, passwordValidated ]
 }
 
-const sendEmailLink = (target, user_data) => {    
+const sendEmailLink = (target, user_data, local) => {    
     let succeed = null
     let failed = null
     let action = null
@@ -80,7 +80,7 @@ const sendEmailLink = (target, user_data) => {
             }
             break
     }
-    action(user_data)
+    action(user_data, local)
         .then(response => {
             (response.sent) ? afterAction(succeed) : afterAction(failed)
             return (response.sent)

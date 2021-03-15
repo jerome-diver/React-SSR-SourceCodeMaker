@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-import moment from 'moment'
+import { addDays, format } from 'date-fns'
+import { fr as localeFR, en as localeEN } from 'date-fns/locale'
 const emailValidator = require('email-deep-validator')
 import User from '../models/user.model'
 import { isValid } from '../controllers/authentication'
@@ -12,7 +13,7 @@ const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
 
 /* POST to send email to validate new user account */
 router.post('/account/validate', (req, res) => {
-    const username = req.body.username
+    const { username, locale } = req.body
     User.findOne({username: username}, (err, user) => {
         if (err) {
             console.log("=== validate router (/ POST): User doesn't exist: ", err)
@@ -23,8 +24,20 @@ router.post('/account/validate', (req, res) => {
                     name: req.i18n.t('mailer:account.validation.error.name'), 
                     message: req.i18n.t('mailer:account.validation.error.text')}})}
             console.log('Find user: ', user)
-            const date_start = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            const format_date = `iiii, dd MMMM yyyy ${req.i18n.t('mailer:date.at')} HH:mm`
+            var localization
+            switch(locale) {
+                case 'fr':
+                    localization = localeFR
+                    break
+                case 'en':
+                    localization = localeEN
+                    break
+                default:
+                    localization = localeEN
+            }
+            const date_start = format(user.created, format_date, {locale: localization})
+            const date_end = format(addDays(user.created, 2),format_date, {locale: localization})
             const ticket = user.ticket
             const username = user.username
             const token = jwt.sign({ user_id: user.id, valid_until: date_end },process.env.JWT_SECRET)
@@ -55,8 +68,8 @@ router.post('/account/reset_password', (req, res) => {
                 { error: { 
                     name: req.i18n.t('error:router.users.delete.missing.name'),
                     message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-            const date_now = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-            const date_end = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+            const date_now = format(user.created, "dd/MM/yyyy 'at' HH:mm")
+            const date_end = format(addDays(user.created, 2),"dd/MM/yyyy 'at' HH:mm")
             const url = host + '/setup_password'
             const setup_password_link = `${url}/${user.id}/${user.ticket}`
             res.app.mailer.send('send_email_to_user', {
@@ -88,8 +101,8 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer], (req, res
             error: { 
                 name: req.i18n.t('error:router.users.delete.missing.name'),
                 message: req.i18n.t('error:router.users.delete.missing.text')} } ) }
-        const dateNow = moment(user.created).format('DD/MM/YYY [at] HH:mm')
-        const dateEnd = moment().add(2, 'days').format('DD/MM/YYY [at] HH:mm')
+        const dateNow = format(user.created, "dd/MM/yyyy 'at' HH:mm")
+        const dateEnd = format(addDays(user.created, 2),"dd/MM/yyyy 'at' HH:mm")
         const url = host + '/modify_email'
         const actionLink = `${url}/${user.id}/${user.ticket}/${newEmail}`
         let emailSent = { oldEmail: {email: oldEmail} , newEmail: {email: newEmail} }

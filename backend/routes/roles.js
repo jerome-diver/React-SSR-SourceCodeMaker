@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
-import Crypto from 'crypto'
-import moment from 'moment'
 import { db } from '../controllers/database'
 import Role from '../models/role.model'
 import expressJwt from 'express-jwt'

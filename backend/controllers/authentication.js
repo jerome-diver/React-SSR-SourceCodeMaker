@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken')
-import moment from 'moment'
+import { isBefore } from 'date-fns'
 require('dotenv').config('../../')
 
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */
@@ -63,7 +63,7 @@ const isValid = (req, res, next) => {
     jwt.verify(token, secret, (error, decoded) => {
         if (error) return res.status(403).json( { validated: 'failed',
                                                   error: error } )
-        if (decoded.valid_util <= moment().valueOf()) 
+        if (isBefore(decoded.valid_util, Date.now())) 
             return res.status(401).send( {
                 validated: 'failed', 
                 error: { 

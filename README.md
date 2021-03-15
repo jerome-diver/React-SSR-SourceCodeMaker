@@ -17,10 +17,10 @@ This will also be a contact point to my freelance activity contact web site.
 * [Pug](https://pugjs.org/api/getting-started.html) HTML markup template (HTML easier)
 * [node-sass](https://pugjs.org/api/getting-started.html) SASS stylesheet loader
 * [validator](https://github.com/validatorjs/validator.js) and [express-validator](https://express-validator.github.io/docs/) to check entries validation to be sanitized.
-* [moment.js](https://momentjs.com/) to get better time/date library to use with Node.js
+* [date-fns.js](https://date-fns.org/) to get better time/date library to use with Node.js at lower size cost
 * [express-mailer](https://www.npmjs.com/package/express-mailer) to send email easy with express.js Node server
 * [cookie-parser](https://www.npmjs.com/package/cookie-parser) to use cookies server side
-* [Webpack-4](https://v4.webpack.js.org/) bundler tool
+* [Webpack-5](https://v5.webpack.js.org/) bundler tool
   * autoprefixer builder plugin for CSS facility
 * [dotenv](https://www.npmjs.com/package/dotenv) to use files ".env" to embed config and secrets (to not update on version server)
 * [i18next](https://www.i18next.com/) to get server side internationalization from translated entries

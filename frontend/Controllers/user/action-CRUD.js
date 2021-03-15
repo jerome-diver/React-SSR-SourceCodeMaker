@@ -1,5 +1,4 @@
 import { cypher } from './user-form-helper'
-import { get } from 'mongoose'
 
 const create = async (user) => {
     console.log("Create new user with default role")
@@ -54,8 +53,7 @@ const remove = async (params, credentials) => {
             method: 'DELETE',
             credentials: 'include',
             headers: { 'Accept': 'application/json',
-                       'Content-Type': 'application/json',
-                       'Authorization': 'Bearer ' + credentials.t } } )
+                       'Content-Type': 'application/json' } })
         return response.json()
     } catch(error) { return JSON.stringify({error: error}) }
 }
@@ -65,7 +63,7 @@ const getRoleID = async (role_name) => {
     try {
         const url = `/api/roles/${role_name}`
         let response = await fetch(url, {
-            method: get,
+            method: 'GET',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}
         })
         return response.json()

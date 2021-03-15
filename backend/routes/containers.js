@@ -32,10 +32,10 @@ router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
 /* GET containers list for :type_name 
   (can be any [subject, category, ...] 
    or what ever type you created) */
-router.get('/:type_name', (req, res) => {
+router.get('/type/:type_name', (req, res) => {
   Container.find({type_name: req.params.type_name}, (error, containers) => {
     if (error) return res.status(401).json({ error })
-    res.status(200).json(containers.map((container) => { return container.toJSON()}))
+    return res.status(200).json(containers.map((container) => { return container.toJSON()}))
   } )
 } )
 
@@ -72,13 +72,13 @@ router.get('/:id', (req, res) => {
   } )
 } )
 
-/* PUT to update an existing container from his title */
+/* PUT to update an existing container from his id */
 router.put('/:id', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
-  const {title, content, parent_id, author_id, type_id, enable} = req.body
-  if ((req.token.role_title == 'Writer') || 
+  const {title, content, title_en, content_en, parent_id, author_id, type_id, enable} = req.body
+  if (((req.token.role_title == 'Writer') && (req.token.id == author_id)) || 
       (req.token.role_title == 'Admin')) {
     Container.findOneAndUpdate( { _id: req.params.id }, 
-        { title, content, enable, author_id, parent_id: parent_id, type_id: type_id } , 
+        { title, content, title_en, content_en, enable, author_id, parent_id, type_id } , 
         { new: true },
         (error, container) => {
             if (error) return res.status(400).json( 

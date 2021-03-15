@@ -1,13 +1,13 @@
 const Agenda = require('agenda')
 import User from '../models/user.model'
-import moment from 'moment'
+import { subDays } from 'date-fns'
 require('dotenv').config('../../')
 
 /* Jobs to do for schedule Agenda */
 
 const remove_outdated_users = async (job) => {
     console.log('start job', job)
-    const two_days_ago = moment().subtract(2, 'days')
+    const two_days_ago = subDays(Date.now(), 2)
 
     await User.deleteMany({created: {$lte: two_days_ago}, validated: false}, (err) => {
         if (err) { console.log("Schedule User collection removed outdated account failed: ", err) }

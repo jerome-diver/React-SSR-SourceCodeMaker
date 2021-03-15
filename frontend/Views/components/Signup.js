@@ -11,7 +11,7 @@ import { useCookies } from 'react-cookie'
 import { Loading } from '../Pages/public/Printers.component'
 
 const SignUp = (props) => {
-    const { t } = useTranslation()
+    const { i18n, t } = useTranslation()
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
     const [load, setLoad] = useState(false)
     const [submit, setSubmit] = useState(false)
@@ -32,7 +32,7 @@ const SignUp = (props) => {
                 create(user)
                     .then(response => {
                         if (response.accepted) {
-                            const emailSent = sendEmailLink('validateAccount', user)
+                            const emailSent = sendEmailLink('validateAccount', user, i18n.language)
                             if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
                         } else if (response.error) {
                             fireError(response.error.name, response.error.message)
