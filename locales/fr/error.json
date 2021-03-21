@@ -1,4 +1,19 @@
 {
+  "authenticate": {
+    "id": {
+      "missing": "Il manque un email ou un username pour pouvoir s'iddentifier"
+    },
+    "user": {
+      "disabled": {
+        "title": "Problème sur le compte utilisateur",
+        "message": "L'accès au compte est invalide"
+      },
+      "password": {
+        "title": "Authentification par mot de passe",
+        "message": "Le mot de passe est faux."
+      }
+    }
+  },
   "router": {
     "validation": {
       "verify": {

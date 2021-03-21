@@ -1,4 +1,19 @@
 {
+  "authenticate": {
+    "id": {
+      "missing": "Missing email or username to authenticate"
+   },
+    "user": {
+      "disabled": {
+        "title": "User account problem",
+        "message": "Account access is disabled"
+      },
+      "password": {
+        "title": "Password authentification",
+        "message": "Wrong password"
+      }
+    }
+  },
   "router": {
     "validation": {
       "verify": {
