@@ -82,7 +82,8 @@ const sendEmailLink = (target, user_data, local) => {
     }
     action(user_data, local)
         .then(response => {
-            (response.sent) ? afterAction(succeed) : afterAction(failed)
+            const to_do_after = (response.sent) ? succeed : failed
+            afterAction(to_do_after)
             return (response.sent)
         })
 }

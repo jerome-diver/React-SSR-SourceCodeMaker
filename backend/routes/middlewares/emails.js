@@ -15,9 +15,9 @@ require('dotenv').config('../../')
 const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
 
 
-const dates = (created, locale) => {
-    const format_date = `iiii, dd MMMM yyyy ${req.i18n.t('mailer:date.at')} HH:mm`
-    var localization
+const dates = (created, locale, tr) => {
+    const format_date = `iiii, dd MMMM yyyy ${i18n.t('mailer:date.at')} HH:mm`
+    let localization
     switch(locale) {
         case 'fr':
             localization = localeFR
@@ -37,30 +37,31 @@ const dates = (created, locale) => {
    of new account created */
 const emailValidation = (req, res, next) => {
     const { username, locale } = req.body
-    User.findOne({username}).exec()
+    User.findOne({username: username}).exec()
         .then(user => {
-            if (user.validated) { return res.status(401).json(
-                { error: {
+            if (user.validated == true) { 
+                return res.status(401).json( {error: {
                     name: i18n.t('mailer:account.validation.error.name'), 
-                    message: i18n.t('mailer:account.validation.error.text')}})}
+                    message: i18n.t('mailer:account.validation.error.text') }} )}
             const date = dates(user.created, locale)
             const ticket = user.ticket
             const username = user.username
             const token = jwt.sign({ user_id: user.id, valid_until: date.end },process.env.JWT_SECRET)
-            req.process = date
-            req.email.subject         = i18n.t('mailer:account.validation.subject'),
-            req.email.title           = i18n.t('mailer:account.validation.title'),
-            req.email.content_title   = i18n.t('mailer:account.validation.content.title'),
-            req.email.introduction    = i18n.t('mailer:account.validation.content.introduction', 
-                                               {date_start: date.start}),
-            req.email.text            = i18n.t('mailer:account.validation.content.text' ,
-                                               {date_end: date.end}),
-            req.email.validation_link = `${host}/validate/${username}/${token}/${ticket}`
-            req.email.to              = user.email
-            req.email.submit_text     = i18n.t('mailer:account.validation.submit_text')
+            req.date = date
+            req.email = {
+                to              : user.email,
+                subject         : i18n.t('mailer:account.validation.subject'),
+                title           : i18n.t('mailer:account.validation.title'),
+                content_title   : i18n.t('mailer:account.validation.content.title'),
+                introduction    : i18n.t('mailer:account.validation.content.introduction', 
+                                         {date_start: date.start}),
+                text            : i18n.t('mailer:account.validation.content.text' ,
+                                         {date_end: date.end}),
+                validation_link : `${host}/validate/${username}/${token}/${ticket}`,
+                submit_text     : i18n.t('mailer:account.validation.submit_text')
+            }
             next() })
         .catch(err => { return res.status(401).json({error: err, accepted: false}) })
-    next()
 }
 
 /* Find user existing to build req.email content 
@@ -73,16 +74,17 @@ const emailResetPassword = (req, res, next) => {
             const url = host + '/setup_password'
             const setup_password_link = `${url}/${user.id}/${user.ticket}`
             req.process = date
-            req.email.to            = user.email
-            req.email.subject       = i18n.t('mailer:account.password.subject')
-            req.email.title         = i18n.t('mailer:account.password.title')
-            req.email.content_title = i18n.t('mailer:account.password.content.title')
-            req.email.introduction  = i18n.t('mailer:account.password.content.introduction', 
-                                             {date_start: date.start})
-            req.email.text          = i18n.t('mailer:account.password.content.text', 
-                                             {date_end: date.end})
-            req.email.submit_text   = i18n.t('mailer:account.password.submit_text')
-            req.email.link_validate = setup_password_link
+            req.email = {
+                to            : user.email,
+                subject       : i18n.t('mailer:account.password.subject'),
+                title         : i18n.t('mailer:account.password.title'),
+                content_title : i18n.t('mailer:account.password.content.title'),
+                introduction  : i18n.t('mailer:account.password.content.introduction', 
+                                       {date_start: date.start}),
+                text          : i18n.t('mailer:account.password.content.text', 
+                                       {date_end: date.end}),
+                submit_text   : i18n.t('mailer:account.password.submit_text'),
+                link_validate : setup_password_link }
             next() })
         .catch(error => { return res.status(401).json({error}) } )
     next()
@@ -102,17 +104,18 @@ const emailModifyEmail = (req, res, next) => {
             const url = host + '/modify_email'
             const action_link = `${url}/${user.id}/${user.ticket}/${newEmail}`
             req.process = date
-            req.email.subject         = i18n.t('mailer:account.email.subject')
-            req.email.title           = i18n.t('mailer:account.email.title')
-            req.email.content_title   = i18n.t('mailer:account.email.content.title')
-            req.email.introduction    = i18n.t('mailer:account.email.content.introduction', 
-                                            {username, date_start: date.start})
-            req.email.text            = i18n.t('mailer:account.email.content.text', 
+            req.email = {
+                subject         : i18n.t('mailer:account.email.subject'),
+                title           : i18n.t('mailer:account.email.title'),
+                content_title   : i18n.t('mailer:account.email.content.title'),
+                introduction    : i18n.t('mailer:account.email.content.introduction', 
+                                            {username, date_start: date.start}),
+                text            : i18n.t('mailer:account.email.content.text', 
                                             {email: newEmail, 
                                              old_email: oldEmail, 
-                                             date_end: date.end})
-            req.email.validation_link = action_link
-            req.email.submit_text     = i18n.t('mailer:account.email.submit_text')
+                                             date_end: date.end}),
+                validation_link : action_link,
+                submit_text     : i18n.t('mailer:account.email.submit_text') }
             next() })
         .catch(err => {return res.status(401).json({error: err, sent: false})})
     next()

@@ -1,5 +1,8 @@
 {
   "date": { "at": "at" },
+  "failed": {
+    "title": "Email has failed to be sent."
+  },
   "account": {
     "validation": {
       "title": "SourceCodeMaker, account validation process",

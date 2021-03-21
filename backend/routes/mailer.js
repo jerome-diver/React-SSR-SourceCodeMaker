@@ -5,6 +5,15 @@ const emailValidator = require('email-deep-validator')
 import { isValid } from './middlewares/authentication'
 import { checkEmail, sanitizer } from './middlewares/sanitizer'
 
+const failedToSentEmail = (error, res, tr) => {
+    return res.status(401).json( 
+        { error: { 
+            name: tr.t('mailer:failed.title'), 
+            message: error
+          }, 
+          sent: false
+        })
+}
 
 /* POST to send email to validate new user account */
 router.post('/account/validate', [emailValidation], (req, res) => {
@@ -17,13 +26,11 @@ router.post('/account/validate', [emailValidation], (req, res) => {
             text: req.email.text,
             link_validate: req.email.validation_link,
             submit_text: req.email.submit_text
-        }, (error) => { return res.status(401).json( 
-                {error: { name: 'Email failed', message: error }, 
-                 sent: false}) })
+        }, (error) => { failedToSentEmail(error, res, req.i18n) })
     return res.status(200).json( { error: undefined, 
                                    sent: true,
-                                  start: req.process.date.start, 
-                                  end:   req.process.date.end })
+                                   start: req.date.start, 
+                                   end:   req.date.end })
 } )
 
 /* POST to send email to reset account password by rich destination to password setup page */
@@ -37,11 +44,11 @@ router.post('/account/reset_password', [emailResetPassword], (req, res) => {
         text: req.email.text,
         link_validate: req.email.validation_link,
         submit_text: req.email.submit_text
-    }, (error) => { return res.status(401).json({error: error, sent: false}) })
+    }, (error) => { failedToSentEmail(error, res, req.i18n) })
     return res.status(200).json({ error: undefined, 
                                   sent:  true, 
-                                  start: req.process.date.start, 
-                                  end:   req.process.date.end })
+                                  start: req.date.start, 
+                                  end:   req.date.end })
 } )
 
 /* POST to send email to modify account email by:

@@ -48,6 +48,9 @@
       }
     },
     "containers": {
+      "delete": {
+        "failed": "Suppression impossible",
+        "unacknowledged": "Le conteneur est inconnu" },
       "create": {
         "failed": {
           "validation": "Failed database validation for 'containers' collection"

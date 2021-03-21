@@ -1,10 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const bodyParser = require('body-parser')
 import { db } from '../controllers/database'
 import Role from '../models/role.model'
-import expressJwt from 'express-jwt'
-import jwt from 'jsonwebtoken'
 require('dotenv').config('../../')
 
 
@@ -20,30 +17,25 @@ const findMissing = (data) => {
 /* GET role. */
 router.get('/:name', (req, res) => {
     console.log("Searching for Role:", req.params.name)
-    Role.findOne({name: req.params.name}, 
-        (err, role) => { 
-            if (err) { return res.status('401').json({error: err.message, role: null}) } 
-            else { return res.status('200').json( { error: null, role: role.toJSON() } ) }
-    } )
+    Role.findOne({name: req.params.name}).exec()
+        .then(role => { return res.status('200').json({error: null, role: role.toJSON()}) })
+        .catch(err => { return res.status('401').json({error: err.message, role: null}) })
 } )
 
 /* GET roles listing. */
 router.get('/', (req, res) => {
-    Role.find({}, (err, o) => { 
-        return res.json(o.map((u) => { u.toObject() })) })
+    Role.find({}).exec()
+        .then(roles => { return res.status(200).json(role.map((r) => {role.toObject()})) })
+        .catch(error => { return res.status(401).json({error})})
 })
 
 /* POST to create new role */
-const jsonParser = bodyParser.json()
-
-router.post('/', jsonParser, (req, res) => {
-    Role.create( { // Record to MongoDB 
-        name: req.body.name,
-        color: req.body.color,
-        description: req.body.description },
-      (error, r) => {
-        if (error) { return res.json({accepted: false, error: error.message}) }
-        else { return res.json( {error: '', accepted: true} ) } } )
+router.post('/', (req, res) => { // Record to MongoDB 
+    Role.create( { name: req.body.name,
+                   color: req.body.color,
+                   description: req.body.description }).exec()
+        .then(role => { return res.json({error: '', accepted: true}) })
+        .catch(error => { return res.json({accepted: false, error: error.message}) })
 } )
 
 module.exports = router

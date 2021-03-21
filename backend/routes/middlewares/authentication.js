@@ -48,7 +48,11 @@ const isAdmin = (req, res, next) => {
     console.log("=== isAdmin middleware for user role: %s", role_session.name) 
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET)
     const authorized = (role_session.name === 'Admin') && (decoded.role_name === role_session.name)
-    if (!authorized) return res.status(403).json({authorized: false})
+    if (!authorized) return res.status(403).json({
+                authorized: false, 
+                error: {
+                    name: req.i18n.t('error:database.users.update.role.name'),
+                    message: req.i18n.t('error:database.users.update.role.message')} })
     next()
 }
 
@@ -76,4 +80,9 @@ const isValid = (req, res, next) => {
     next()
 }
 
-export { hasRules, hasAuthorization, isRole, isAdmin, isValid }
+/* check if user logged is Owner or his role is Admin */
+const isOwnerOrAdmin = (req, res, next) => {
+    isValid(req, res, next) || isAdmin(req, res, next)
+}
+
+export { hasRules, hasAuthorization, isRole, isAdmin, isValid, isOwnerOrAdmin }

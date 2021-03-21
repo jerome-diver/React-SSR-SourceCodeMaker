@@ -5,8 +5,8 @@ const signin = async (identifier, type, password) => {
     try {
         const hpasswd = cypher(password)
         const data = (type === 'Email') 
-            ? {email: identifier, password: hpasswd, local} 
-            : {username: identifier, password: hpasswd, local}
+            ? {email: identifier, password: hpasswd} 
+            : {username: identifier, password: hpasswd}
         let response = await fetch('/api/auth/signin/', {
             method: 'POST',
             credentials: 'include',

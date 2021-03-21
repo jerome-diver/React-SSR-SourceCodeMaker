@@ -48,6 +48,9 @@
       }
     },
     "containers": {
+      "delete": {
+        "failed": "Delete container failure",
+        "unacknowledged": "Container is unacknowledged" },
       "create": {
         "failed": {
           "validation": "Problème de validation avec le contenu de la collection 'containers' de la base de données"
