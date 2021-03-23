@@ -1,14 +1,43 @@
 var jwt = require('jsonwebtoken')
 import { isBefore } from 'date-fns'
+import User from '../../models/user.model'
 require('dotenv').config('../../')
 
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */
+
+/* emil or username id... */
+const constructIdentifier = (data) => {
+    let id = {}
+    if (data.username) { id = {username: data.username} }
+    if (data.email) { id = {...id, email: data.email} }
+    return id
+}
 
 /* check Rules ability for a container or a type */
 const hasRules = (req, res, next) => {
     next()
 }
 
+/* Check that:
+    _ user account can be found
+    _ user account is enabled
+    _ user password is ok
+*/
+const canConnect  = (req, res, next) => {
+    const id = constructIdentifier(req.body)
+    if (id === {}) { return res.status(400).json({error: req.i18n.t('error:authenticate.id.missing') }) }
+    User.findOne(id).exec()
+        .then(user => {
+            if(!user.authenticate(req.body.password)) throw {
+                name: req.i18n.t('error:authenticate.user.password.title'), 
+                message: req.i18n.t('error:authenticate.user.password.message') }
+            if (!user.validated) throw { 
+                name: req.i18n.t('error:authenticate.user.disabled.title'),
+                message:  req.i18n.t('error:authenticate.user.disabled.message')}
+            req.user = user.toJSON()
+            next() })
+        .catch(error => {return res.status(401).json({error})})
+}
 
 /* check authorized session httpOnly:
    _ cookies.token id == cookies.session user.id
@@ -85,4 +114,4 @@ const isOwnerOrAdmin = (req, res, next) => {
     isValid(req, res, next) || isAdmin(req, res, next)
 }
 
-export { hasRules, hasAuthorization, isRole, isAdmin, isValid, isOwnerOrAdmin }
+export { canConnect, hasRules, hasAuthorization, isRole, isAdmin, isValid, isOwnerOrAdmin }

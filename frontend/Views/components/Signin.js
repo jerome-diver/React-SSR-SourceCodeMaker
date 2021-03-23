@@ -36,8 +36,11 @@ const SignIn = (props) => {
     const [ validated, setValidated ] = useState(false)
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
     const [ form, setForm ] = useState({email:'', username: '', password: ''})
-    const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, hasError:false,
-                                                   error: '', from: '/login', user: {} })
+    const [ sign, dispatch ] = useReducer(reducer, { isLogged: false, 
+                                                     hasError:false,
+                                                     error: '', 
+                                                     from: '/login', 
+                                                     user: {} })
     const { setSession, getUser } = useAuthenticate()
     const location = useLocation()
   
@@ -49,11 +52,11 @@ const SignIn = (props) => {
     }, [submit, selectIdentifier, i18n.language] )
 
     const getError = (error) => { 
-        console.log("\tFAILED to signed in")
-        dispatch({isLogged: false, error: error, hasError: true})
+        console.log("\tFAILED to sign in")
+        dispatch({isLogged: false, error, hasError: true, from: '/login'})
         setSubmit(false) }
     const getLoggedUser = (data) => {
-        console.log("\tOK, signed in for ", data)
+        console.log("\tOK, signed in for ", data.user.username)
         const go_to = (location.state) ? location.state.from : '/profile'
         dispatch({from: go_to, isLogged: true})
         setSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
@@ -82,7 +85,9 @@ const SignIn = (props) => {
             setSubmit(true)
             const id = (selectIdentifier == 'Email') ? form.email : form.username
             signin(id, selectIdentifier, form.password)
-                .then(data => (data.error) ? getError(data.error) : getLoggedUser(data))
+                .then(data => {
+                    if (data.error) throw new Error(data.error)
+                    getLoggedUser(data) })
                 .catch(error => getError(error) )
         }
         setValidated(true)

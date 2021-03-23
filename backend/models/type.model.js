@@ -1,4 +1,3 @@
-
 import mongoose, { Schema, model } from 'mongoose'
 
 /* Schema for document user for collection "types"

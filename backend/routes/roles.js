@@ -1,4 +1,4 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 import { db } from '../controllers/database'
 import Role from '../models/role.model'
