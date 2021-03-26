@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
-import { Jumbotron, ListGroup, Badge } from 'react-bootstrap'
+import { Jumbotron, Badge, Card } from 'react-bootstrap'
 import { colorType } from '../../helpers/config'
 import { useTranslation } from 'react-i18next'
 import { Loading, Error } from './Printers.component'
@@ -11,26 +11,32 @@ const Account = ({ account }) => {
     const { t } = useTranslation()
   //  const promote = user.role.color
     return (
-        <ListGroup.Item id={account.user.id}>
-          <h4>{account.user.username} <Badge pill variant={account.role.color}>{account.role.name}</Badge></h4>
-          <hr/>
-          <table cellPadding='5' cellSpacing='5'>
-            <tbody>
-              <tr>
-                  <td>{t('profile.email.label')}:</td>
-                  <td>{account.user.email}</td>
-              </tr>
-              <tr>
-                  <td>{t('profile.first_name.label')}:</td>
-                  <td>{account.user.first_name}</td>
-              </tr>
-              <tr>
-                  <td>{t('profile.second_name.label')}:</td>
-                  <td>{account.user.second_name}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ListGroup.Item>
+        <Card id={account.user.id} className='mt-2'>
+            <Card.Header style={{ backgroundColor: 'rgb(25,25,25,0.75)' }}>
+                <h4>{account.user.username} <Badge pill variant={account.role.color}>{account.role.name}</Badge></h4>
+            </Card.Header>
+            <Card.Body>
+            <Card.Title>Content</Card.Title>
+            <Card.Text>
+                <table>
+                    <tbody> 
+                        <tr>
+                            <td>{t('profile.email.label')}:</td>
+                            <td>{account.user.email}</td>
+                        </tr>
+                        <tr>
+                            <td>{t('profile.first_name.label')}:</td>
+                            <td>{account.user.first_name}</td>
+                        </tr>
+                        <tr>
+                            <td>{t('profile.second_name.label')}:</td>
+                            <td>{account.user.second_name}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Card.Text>
+          </Card.Body>
+        </Card>
     )
 }
 
@@ -58,9 +64,9 @@ const Accounts = () => {
         return (
             <Jumbotron fluid id="accounts">
                 <h1>{t('nav_bar.user.list')}</h1>    
-                <ListGroup>
+                <div id='accounts'>
                     {accounts.map( (account, index) => { return ( <Account account={account} key={index}/> ) } ) }
-                </ListGroup>
+                </div>
             </Jumbotron>
         )
     }
