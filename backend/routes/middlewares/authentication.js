@@ -100,7 +100,7 @@ const isAdmin = (req, res, next) => {
     console.log("=== isAdmin middleware check user account Role to be Admin")
     const adminRole = checkAdminRole(req)
     if (adminRole.authorized) { console.log("=== is Admin role, success"); next(); }
-    return res.status(adminRole.status).json({
+    else return res.status(adminRole.status).json({
                 authorized: adminRole.authorized, 
                 error: adminRole.error})
 }

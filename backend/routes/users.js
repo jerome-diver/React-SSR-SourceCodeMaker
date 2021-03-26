@@ -16,7 +16,7 @@ router.get('/',
                     return Role.findOne({_id: user.role_id}).exec()
                                .then(role => {
                                     return { user: user.toJSON(), 
-                                            role: role.toJSON() } }) }) )
+                                             role: role.toJSON() } }) }) )
                 .then(result => { return res.status(200).json(result) }) })
         .catch(error => { return res.status(401).json({error}) })
 })
