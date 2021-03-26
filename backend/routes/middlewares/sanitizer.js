@@ -10,7 +10,7 @@ const sanitizer = (req, res, next) => {
         return res.status(403)
                   .json({ error: {
                             name: req.i18n.t('error:router.users.parser.name'), 
-                            message: message } } )
+                            message } } )
     }
     next()
 }
