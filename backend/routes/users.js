@@ -73,19 +73,17 @@ router.put('/',
            [hasAuthorization, isOwnerOrAdmin, checkUpdateUser, sanitizer],
            (req, res) => {
     const { user_form } = req.body
-    console.log("**** try to update user for id:", user_form.id) //* good id
     User.findOneAndUpdate({_id: user_form.id}, 
-                          {$set: user_form},   //? do i need {$set: user_form} instead ?
-                          {new: true}, //? is it the good option ?
-                          (error, user) => { //! null together for any unknown reason 
-        console.log("==> there is error: %s\n==> and user: %s", error, user)
-        if (error) { return res.status(400).json({
-            error: { name: req.i18n.t('error:database.users.update.failed'), 
-                     message: error.message} }) }
-        Role.findOne({_id: user.role_id}).exec()
-            .then(role => { 
-                return res.status('200').json({ user: user.toJSON(), 
+                          {$set: user_form},
+                          {new: true}).exec()
+        .then(user => {
+            Role.findOne({_id: user.role_id}).exec()
+                .then(role => { 
+                    return res.status('200').json({ user: user.toJSON(), 
                                                     role: role.toJSON() }) }) })
+        .catch(error => { return res.status(400).json({
+                          error: { name: req.i18n.t('error:database.users.update.failed'), 
+                                   message: error.message} }) })
 })
 
 /* DELETE delete user */
