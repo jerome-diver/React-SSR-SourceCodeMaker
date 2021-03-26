@@ -82,12 +82,11 @@ const Profile = (props) => {
         setLoaded(false)
         const form_to_submit = e.currentTarget;
         if (form_to_submit.checkValidity() === false) {
-            console.log("I'm in form_submit condition space")
             e.preventDefault();
             e.stopPropagation();
         } else {
             e.preventDefault()
-            console.log("Submit clicked", message, user)
+            console.log("Submit clicked for user: %s, and message: %s", userForm.username, message)
             if (userForm.password) {
                 const [ haveError, validated ] = validatePassword(userForm.password)
                 if (haveError) setMessage( {text: haveError} )
@@ -119,20 +118,18 @@ const Profile = (props) => {
                             : prepareCleanUser(userForm) 
                     
                     
-                    update(parsedUser, password, userSession.id)
+                    update(parsedUser)
                         .then(response => {
-                            if (response.error) setMessage( {text: response.error} )
-                            else {
-                                setUserSession(washUser(response.user))
-                                setUserForm(washUser(response.user))
-                                setSession(response)
-                                message += t('profile.modal.success.text') + "\n"
-                            }
-                            setLoaded(true)
-                        } ) 
+                            setUserSession(washUser(response.user))
+                            setUserForm(washUser(response.user))
+                            setSession(response)
+                            message += t('profile.modal.success.text') + "\n"
+                        })
+                        .catch(error => setMessage({text: error}) )
+                        .finally(() => setLoaded(true))
                     setMessage( {text: { name, message }})
                 }
-            } else setMessage( {text: { name:t('sanitizer.frontend.password.missing.title'), 
+            } else setMessage( {text: { name: t('sanitizer.frontend.password.missing.title'), 
                                         message: t('sanitizer.frontend.password.missing.text')} } )
         }
         setValidated(true)

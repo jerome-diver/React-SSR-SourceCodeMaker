@@ -6,15 +6,25 @@ import { checkNewUser, checkUpdateUser, checkPassword, checkEmail, sanitizer } f
 import { hasAuthorization, isRole, isValid, isAdmin, isOwnerOrAdmin } from './middlewares/authentication'
 require('dotenv').config('../../')
 
-/* GET users listing. */
-router.get('/', [hasAuthorization, isAdmin], (req, res) => {
+/* GET users list */
+router.get('/',
+           [hasAuthorization, isAdmin],
+           (req, res) => {
     User.find({}).exec()
-        .then(users => { return res.status(200).json(users.map((user) => {user.toJSON()})) })
-        .catch(err => { return res.status(401).json({error: err}) })
+        .then(users => { 
+            Promise.all(users.map(user => {
+                    return Role.findOne({_id: user.role_id}).exec()
+                               .then(role => {
+                                    return { user: user.toJSON(), 
+                                            role: role.toJSON() } }) }) )
+                .then(result => { return res.status(200).json(result) }) })
+        .catch(error => { return res.status(401).json({error}) })
 })
 
 /* GET user profile. */
-router.get('/user', [hasAuthorization], (req, res) => {
+router.get('/user',
+           [hasAuthorization],
+           (req, res) => {
     console.log('=== users router (/user GET)')
     User.findOne({_id: req.token.id}).exec()
         .then(user => { 
@@ -34,7 +44,9 @@ const formatMongooseError = (error) => {
     return error
 }
 
-router.post('/', [checkNewUser, sanitizer], (req, res) => {
+router.post('/',
+            [checkNewUser, sanitizer],
+            (req, res) => {
     Role.findOne({name: 'Reader'}).exec()
         .then(role => {  // find Role.id for Reader
             const user = new User( { // Record to MongoDB 
@@ -57,22 +69,29 @@ router.post('/', [checkNewUser, sanitizer], (req, res) => {
 })
 
 /* PUT update user */
-router.put('/:id', [hasAuthorization, isOwnerOrAdmin, checkUpdateUser, sanitizer], (req, res) => {
-    const { user_form, password } = req.body
-    const user_id = req.params.id
-    User.findOneAndUpdate({_id: user_id, password: password}, user_form, {new: true}).exec()
-        .then(user => {
-            Role.findOne({_id: user.role_id}).exec()
-                .then(role => { return res.status('200').json({
-                    user: user.toJSON(), 
-                    role: role.toJSON()}) }) })
-        .catch(error => { return res.status(400).json({
+router.put('/',
+           [hasAuthorization, isOwnerOrAdmin, checkUpdateUser, sanitizer],
+           (req, res) => {
+    const { user_form } = req.body
+    console.log("**** try to update user for id:", user_form.id) //* good id
+    User.findOneAndUpdate({_id: user_form.id}, 
+                          {$set: user_form},   //? do i need {$set: user_form} instead ?
+                          {new: true}, //? is it the good option ?
+                          (error, user) => { //! null together for any unknown reason 
+        console.log("==> there is error: %s\n==> and user: %s", error, user)
+        if (error) { return res.status(400).json({
             error: { name: req.i18n.t('error:database.users.update.failed'), 
-                        message: error} }) })
+                     message: error.message} }) }
+        Role.findOne({_id: user.role_id}).exec()
+            .then(role => { 
+                return res.status('200').json({ user: user.toJSON(), 
+                                                    role: role.toJSON() }) }) })
 })
 
 /* DELETE delete user */
-router.delete('/:id', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
+router.delete('/:id',
+              [hasAuthorization, isOwnerOrAdmin],
+              (req, res) => {
     User.deleteOne( { _id: req.params.id }).exec()
         .then(response => {return res.status(200).json({accepted: true}) })
         .catch(error => {
@@ -83,7 +102,9 @@ router.delete('/:id', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
 })
 
 /* POST user account to setup new password */
-router.post('/setup_password/:id/:ticket', [hasAuthorization, isOwnerOrAdmin, checkPassword, sanitizer], (req, res, next) => {
+router.post('/setup_password/:id/:ticket',
+            [hasAuthorization, isOwnerOrAdmin, checkPassword, sanitizer],
+            (req, res, next) => {
     const password = req.body.password
     const id = req.params.id
     const ticket = req.params.ticket

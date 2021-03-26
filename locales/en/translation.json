@@ -30,6 +30,7 @@
       "description": "You can edit your profile there but you will have then to indicate your password and confirm it to apply."
     },
     "email": {
+      "label": "email",
       "button": {
         "edit": "eMail",
         "tooltip": {
@@ -189,13 +190,15 @@
     "home": "Home",
     "contents": "Categories",
     "contacts": "Contacts",
-    "user_main": "User",
-    "users_list": "Users list",
-    "profile": "Profile",
-    "signout": "Sign Out",
-    "signin": "Sign In",
-    "signup": "Sign Up",
-    "admin": "Administrate"
+    "user": {
+      "main": "User",
+      "signout": "Sign Out",
+      "signin": "Sign In",
+      "signup": "Sign Up",
+      "profile": "Profile",
+      "list": "Users list",
+      "admin": "Administrate"
+    }
   },
   "popup": {
     "signup": {

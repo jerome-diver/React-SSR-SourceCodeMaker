@@ -1,3 +1,5 @@
+/* Fetch Users CRUD actions */
+
 import { cypher } from './user-form-helper'
 
 const create = async (user) => {
@@ -12,7 +14,7 @@ const create = async (user) => {
                        'Content-Type': 'application/json' },
             body: JSON.stringify(newUser) } )
         return response.json()
-    } catch(error) { return JSON.stringify({error: error}) }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
 const list = async (signal) => {
@@ -22,7 +24,7 @@ const list = async (signal) => {
             credentials: 'include',
             signal: signal } )
         return response.json()
-    } catch(error) { return{error: error} }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
 const read = async () => {
@@ -32,19 +34,19 @@ const read = async () => {
             method: 'GET',
             credentials: 'include' } )
         return response.json()
-    } catch(error) { return JSON.stringify({error: error}) }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
-const update = async (user, password, id) => {
+const update = async (user_form) => {
     try {
-        let response = await fetch(`/api/users/${id}`, {
+        let response = await fetch(`/api/users/`, {
             method: 'PUT',
             headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({user_form: user, password: password}) } )
+            body: JSON.stringify({user_form}) } )
         return response.json()
-    } catch(error) { return JSON.stringify({error: error}) }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
 const remove = async (params, credentials) => {
@@ -55,7 +57,7 @@ const remove = async (params, credentials) => {
             headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' } })
         return response.json()
-    } catch(error) { return JSON.stringify({error: error}) }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
 const getRoleID = async (role_name) => {
@@ -67,7 +69,7 @@ const getRoleID = async (role_name) => {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'}
         })
         return response.json()
-    } catch (error) { return JSON.stringify({error: error}) }
+    } catch (error) { return JSON.stringify({error}) }
 }
 
 /* POST request to validate account from link clicked after Validate.component process */
@@ -95,7 +97,7 @@ const updateEmail = async (ticket, new_email) => {
                             'Content-Type': 'application/json' },
                     body: { newEmail: new_email } } )
         return response.json()
-    } catch(error) { return JSON.stringify({error: error}) }
+    } catch(error) { return JSON.stringify({error}) }
 }
 
 /* POST request to rich new password from link clicked after SetupPassword.component process */
@@ -108,7 +110,7 @@ const updatePassword = async (id, ticket, password) => {
             body: JSON.stringify({password: cypher(password)})
         } )
         return response.json()
-    } catch (error) { return JSON.stringify({error: error}) }
+    } catch (error) { return JSON.stringify({error}) }
 }
 
 export { create, list, read, update, remove, 

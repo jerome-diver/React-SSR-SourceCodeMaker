@@ -1,5 +1,11 @@
 {
   "authenticate": {
+    "failed": {
+      "update": {
+        "title": "Il n'est pas permis à cet utillisateur de modifier ce compte",
+        "message": "L'utilisateur n'est ni le propriétaire du compte, ni un Administrateur du site."
+      }
+    },
     "id": {
       "missing": "Il manque un email ou un username pour pouvoir s'iddentifier"
     },
@@ -59,6 +65,10 @@
         }
       },
       "update": {
+        "role": {
+          "name": "Mise à jour du droit interdit",
+          "message": "Vous n'êtes pas administrateur et de fait inabilité pour modifier le droit de ce compte."
+        },
         "failed": "La mise à jour a échoué"
       }
     },
@@ -86,5 +96,10 @@
     "status": "La validation du compte est $t(error:validation.{{validated}})",
     "success": "un succès",
     "failed": "un échec"
+  },
+  "jwt": {
+    "sign": {
+      "failed": "Ne parvient pas à signer le jeton"
+    }
   }
 }

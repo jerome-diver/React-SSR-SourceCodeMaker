@@ -1,6 +1,5 @@
 import express from 'express'
 import morganBody from 'morgan-body'
-const bodyParser = require('body-parser')
 import fs from 'fs'
 const path = require('path')
 const mailer = require('express-mailer')
@@ -63,16 +62,16 @@ i18n
     app.use(express.static('build/public'))          // read dir as public
   //  app.use('./images', express.static('../images'))
     // define route to use and action to respond from own defined requests
-    app.use('/api/language', [bodyParser.json(), setLanguage])
+    app.use('/api/language', [setLanguage])
     app.use('/api/home', homeRouter)
-    app.use('/api/auth', [bodyParser.json(), authRouter])
-    app.use('/api/users', [bodyParser.json(), usersRouter])
-    app.use('/api/roles', [bodyParser.json(), rolesRouter])
+    app.use('/api/auth', [authRouter])
+    app.use('/api/users', [usersRouter])
+    app.use('/api/roles', [rolesRouter])
     app.use('/template/contact', contactsRouter)
-    app.use('/api/containers', [bodyParser.json(), containerRouter])
-    app.use('/api/types', [bodyParser.json(), typeRouter])
-    app.use('/api/admin', [bodyParser.json(), adminRouter])
-    app.use('/api/mailer', [bodyParser.json(), sendMailRouter])
+    app.use('/api/containers', [containerRouter])
+    app.use('/api/types', [typeRouter])
+    app.use('/api/admin', [adminRouter])
+    app.use('/api/mailer', [sendMailRouter])
     app.use('/', layoutRouter)
 
     const port = normalizePort(process.env.SERVER_PORT || '3000')

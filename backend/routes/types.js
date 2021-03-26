@@ -25,18 +25,18 @@ router.post('/', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
 } )
 
 /* GET types list */
-router.get('/', (req, res) => {
+router.get('/', [hasAuthorization], (req, res) => {
   Type.find({}).exec()
     .then(types => { return res.status(200).json(types.map((type) => {return type.toJSON()})) })
     .catch(error => { return res.status(401).json({ error }) })
 })
 
 /* GET a type from his id */
-router.get('/', (req, res) => {
-  const id = req.body.id
+router.get('/:id', (req, res) => {
+  const id = req.params.id
   Type.findOne({ _id: id }).exec()
     .then(type => { return res.status(200).json({content: type.toJSON()}) })
-    .catch(error => { return res.sttus(401).json({ error }) })
+    .catch(error => { return res.status(401).json({ error }) })
 } )
 
 /* PUT to update an existing type from his id */

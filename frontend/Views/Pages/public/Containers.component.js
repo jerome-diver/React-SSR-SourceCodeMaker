@@ -4,55 +4,28 @@
 */
 
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { string, bool, object, func, exact, shape, arrayOf } from 'prop-types'
 import { Loading, Error } from './Printers.component'
-import { useAuthenticate } from '../../../Controllers/context/authenticate'
+import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
-import { TAG, HOST, SERVER_PORT, colorType, trContainer } from '../../helpers/config'
-import { getContainer, getContainersOfType, getChildrenContainersOf,
-         createContainer, updateContainer, deleteContainer } from '../../../Controllers/container/action-CRUD'
+import { colorType, trContainer } from '../../helpers/config'
+import { crud_caller, crud_list } from '../../../Controllers/container/action-CRUD'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup } from 'react-bootstrap'
 import loadable from '@loadable/component'
 const Editor = loadable(() => import('for-editor'))
 
 
-const host = TAG + HOST + ":" + SERVER_PORT
-
 /* fetching data to get database collection entries back */
-const useFetch = (crud_call, data, trigger) => {
+const useFetch = (crud_name, data, trigger) => {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, content: ""})
     const [ containers, setContainers ] = useState({})
     useEffect(() => {
-        // should call the string crud_call as a function:
-        /*
-        if (crud_call in ['getContainer', 'getChildrenContainersOf', 'getContainersOfType', 
-                          'updateContainer', 'createContainer', 'deleteContainer']) {
-          console.log("FETCHING NOW with %s for language %s", crud_call, trigger)
-          global[crud_call](data, setContainers, setError, setLoading) 
-        }
-        */
-        switch(crud_call) {
-          case 'getContainer':
-            getContainer(data, setContainers, setError, setLoading)
-            break
-          case 'getChildrenContainersOf':
-            getChildrenContainersOf(data, setContainers, setError, setLoading)
-            break
-          case 'getContainersOfType':
-            getContainersOfType(data, setContainers, setError, setLoading)
-            break
-          case 'createContainer':
-            createContainer(data, setContainers, setError, setLoading)
-            break
-          case 'updateContainer':
-            updateContainer(data, setContainers, setError, setLoading)
-            break
-          case 'deleteContainer':
-            deleteContainer(data, setContainers, setError, setLoading)
-            break
+        console.log("==> useFetch for CRUD's container function name:", crud_name)
+        if (crud_list.includes(crud_name)) {
+          crud_caller['$' + crud_name](data, setContainers, setError, setLoading) 
         }
     }, [trigger] )
     return { loading, error, containers }
@@ -67,8 +40,7 @@ const ActionLinks = ( { data, type, callback } ) => {
   const role = getRole()
   const editContent = () => { callback('edit') }
   const cancel = () => { callback('normal') }
-  if (role != undefined && ((role.name == 'Admin') || (role.name == 'Writer')) || 
-      user != undefined && user.id == data.author_id) {
+  if (canModify(role, type) || itsMine(user, data)) {
     return (
       <>
         <Button onClick={editContent} variant="warning">
@@ -109,8 +81,8 @@ const HeadContent = ( { container, type } ) => {
     }
     setValidated(true)
   }
-  useEffect(() => {
-  }, [])
+/*   useEffect(() => {
+  }, []) */
   switch (mode) {
     case 'normal':
       return ( <>
@@ -222,8 +194,8 @@ const CardList = ( { containers, type, children } ) => {
     <>
       <CardGroup>
         { containers.map( (container, index) => {
-          console.log("GET TYPE NAME: ", container.type_name)
-          const type_name = (children != undefined) ? container.type_name : type
+          const type_name = (children) ? container.type_name : type
+          console.log("GET TYPE NAME: ", type_name)
           if (container.enable) return ( 
             <CardSimple data={container}
               type={type_name}
@@ -246,10 +218,9 @@ const CardTree = ({ data, link, text }) => (
    children is an Object with two keys: {other, same} with boolean values
    to show children for same and other types.
    head is a boolean value for show params :id container content on head first. */
-const Containers = (props) => {
-  const { type, children } = props
+const Containers = ({ type, children }) => {
   const { id } = useParams()
-  console.log("Inside Containers component for ", type)
+  console.log("==> Containers component for ", type)
   const { i18n, t } = useTranslation()
   const language = i18n.language
   const crud_mode = (children == undefined) ? 'getContainersOfType' : 'getChildrenContainersOf'
@@ -260,10 +231,7 @@ const Containers = (props) => {
   else if(error.state) return <><Error title={t('error:home.title')} 
                                        name={error.content.name}
                                        message={error.content.message}/></>
-  else {
-   // let top_head
-   // if (head) { top_head = {<HeadContent />}}
-    if (children == undefined) { // print categories list only (cards)
+  else if (children == undefined) { // print categories list only (cards)
       return (
         <>
           <h1>{t('containers.list', {type})}</h1>
@@ -271,46 +239,59 @@ const Containers = (props) => {
           <CardList containers={containers} type={type} />
         </>
       )
-    } else if (!children.same && children.other) {
+  } else if (!children.same && children.other) {
       return (
         <>
           <HeadContent container={containers.head.container} type={containers.head.type} />
           <CardList containers={containers.containers} type={type} children={true} />
         </>
       )
-    } else if (children.same && !children.other) { 
-    } else if (!children.same && !children.other) { }
-  }
+  } else if (children.same && !children.other) { 
+  } else if (!children.same && !children.other) { }
 }
 
 /* Props Types checking part... */
 
 Containers.propTypes = {
-  type: PropTypes.string,
-  children: PropTypes.exact({
-              same: PropTypes.bool,
-              other: PropTypes.bool }),
-  head: PropTypes.bool
+  type: string.isRequired,
+  children: exact({
+              same:  bool.isRequired,
+              other: bool.isRequired }),
 }
 
 CardSimple.propTypes = {
-  data: PropTypes.shape({
-              title: PropTypes.string,
-              content: PropTypes.string,
-              title_en: PropTypes.string,
-              content_en: PropTypes.string,
-              image_link: PropTypes.string
+  data: shape({
+      title:      string.isRequired,
+      content:    string.isRequired,
+      title_en:   string.isRequired,
+      content_en: string.isRequired,
+      image_link: string.isRequired
   }),
-  type: PropTypes.string,
-  lng: PropTypes.string,
-  link: PropTypes.string,
-  text: PropTypes.string
+  type: string.isRequired,
+  link: string.isRequired,
+  text: string.isRequired
+}
+
+CardList.propTypes = {
+  containers: arrayOf(object).isRequired,
+  type:       string.isRequired,
+  children:   bool
+}
+
+CardList.defaultProps = {
+  children: false
+}
+
+ActionLinks.propTypes = {
+  data:     object.isRequired,
+  type:     string.isRequired,
+  callback: func.isRequired
 }
 
 HeadContent.propTypes = {
-  data: PropTypes.object,
-  type: PropTypes.object,
-  lng: PropTypes.string
+  data: object.isRequired,
+  type: object.isRequired,
+  lng:  string.isRequired
 }
 
 export default Containers

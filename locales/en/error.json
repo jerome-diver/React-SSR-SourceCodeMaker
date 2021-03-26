@@ -1,5 +1,11 @@
 {
   "authenticate": {
+    "failed": {
+      "update": {
+        "title": "This user has no ability to update this account",
+        "message": "User is not owner of this account, and he is not a web site Admin."
+      }
+    },
     "id": {
       "missing": "Missing email or username to authenticate"
    },
@@ -59,6 +65,10 @@
         }
       },
       "update": {
+        "role": {
+          "name": "Role update forbiden",
+          "message": "Your are not Admin, you have no authority to update this accounr"
+        },
         "failed": "Update failed"
       }
     },
@@ -87,5 +97,10 @@
     "status": "Validation account has $t(error:validation.{{validated}})",
     "success": "been successfuly passed",
     "failed": "been failed"
+  },
+  "jwt": {
+    "sign": {
+      "failed": "Can not sign token"
+    }
   }
 }

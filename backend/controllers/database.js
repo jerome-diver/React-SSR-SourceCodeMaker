@@ -5,6 +5,7 @@ const url_db = `mongodb://${process.env.HOST}/${process.env.DB_NAME}`
 
 mongoose.connect(url_db, { useNewUrlParser: true,
                            useUnifiedTopology: true,
+                           useFindAndModify: false,
                            useCreateIndex: true })
 const db = mongoose.connection
 // Connect to MongoDB SourceCodeMaker database

@@ -30,6 +30,7 @@
       "description": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte."
     },
     "email": {
+      "label": "courriel",
       "button": {
         "edit": "email",
         "tooltip": {
@@ -189,13 +190,15 @@
     "home": "Acceuil",
     "contents": "Catégories",
     "contacts": "Contacts",
-    "user_main": "Utilisateur",
-    "users_list": "Utilisateurs",
-    "profile": "Profile",
-    "signout": "Déconnexion",
-    "signin": "Connexion",
-    "signup": "S'enregistrer",
-    "admin": "Administration"
+    "user": {
+      "main": "Utilisateur",
+      "signout": "Déconnexion",
+      "signin": "Connexion",
+      "signup": "S'enregistrer",
+      "profile": "Profile",
+      "list": "Utilisateurs",
+      "admin": "Administration"
+    }
   },
   "popup": {
     "signup": {

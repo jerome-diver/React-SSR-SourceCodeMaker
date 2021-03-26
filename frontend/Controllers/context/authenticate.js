@@ -15,7 +15,7 @@ export const isAuthenticated = async () => {
       credentials: 'include',
     })
     return await response.json()
-  } catch (err) { return { error: err } }
+  } catch (error) { return JSON.stringify({error}) }
 }
 
 export const hasRole = async (role) => {
@@ -27,5 +27,17 @@ export const hasRole = async (role) => {
       credentials: 'include',
     })
     return await response.json()
-  } catch (err) { return { error: err } }
+  } catch (error) { return JSON.stringify({error}) }
+}
+
+export const canModify = (role, type_name) => {
+  return (role != undefined && 
+          ((role.name == 'Admin') || (role.name == 'Writer')))
+          /* but should better find Type.id from type_name, 
+             then check Rule for this document and this Role.id
+             to accept or reject modification ability */
+}
+
+export const itsMine = (user, data) => {
+  return (user != undefined && user.id == data.author_id)
 }

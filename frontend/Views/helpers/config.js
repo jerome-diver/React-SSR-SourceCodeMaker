@@ -8,21 +8,19 @@ const HOST = 'localhost'
 const SERVER_PORT = 3000
 
 const colorType = (name) => {
-  let color
   switch (name) {
     case "category":
-      color = 'rgb(155, 56, 90)'
+      return 'rgb(155, 56, 90)'
       break
     case "subject":
-      color = 'rgb(150, 100, 50)'
+      return 'rgb(150, 100, 50)'
       break
     case "article":
-      color = 'rgb(25, 56, 190)'
+      return 'rgb(25, 56, 190)'
       break
     default:
-      color = 'rgb(80, 80, 80)'
+      return 'rgb(80, 80, 80)'
   }
-  return color
 }
 
 /* Translate container title and content by choosing its entry */

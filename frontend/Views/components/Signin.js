@@ -201,9 +201,8 @@ const FormIdEntrySelector = (props) => {
     </>)
 }
 
-const FixProblem = (props) => {
+const FixProblem = ({ username, email, password }) => {
     const { t } = useTranslation()
-    const { username, email, password } = props
     const [ redirect, setRedirect ] = useState('')
     const [ collapse, setCollapse ] = useState(false)
 

@@ -19,11 +19,11 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
         console.log("--- PrivateRoute component useEffect entry point, user is", user)
         if (!user) setError('Undefined user, you need to be logged in.')
         else if (!loaded) {
-            if(user) isAuthenticated()
-                    .then(response => {
-                        setAccess(response.authenticated)
-                        setLoaded(true) } )
-                    .catch(error => setError(error) ) }
+            isAuthenticated()
+                .then(response => setAccess(response.authenticated) )
+                .catch(error => setError(error) )
+                .finally(() => setLoaded(true))
+        }
     }, [])
 
     const closeModal = () => { setError('') }
@@ -36,8 +36,8 @@ const  PrivateRoute = ({component: Component, ...rest}) => {
                 (props) => (access) ? 
                         ( <Component {...props} /> ) :
                         ( <Redirect to={{ pathname: '/signin', 
-                                        state: { from: props.location, 
-                                                 error: 'Failed to authenticate Token'} }} /> )
+                                          state: { from: props.location, 
+                                                   error: 'Failed to authenticate Token'} }} /> )
             } /> )
     } else {
         if (redirect !== '') { return ( <Redirect to={redirect} /> )}

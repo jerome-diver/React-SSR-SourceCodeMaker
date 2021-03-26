@@ -6,7 +6,7 @@ import Contact from '../Pages/public/Contact.component'
 import Containers from '../Pages/public/Containers.component'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 //import Subject from './public/Subject.component'
-import Users from '../Pages/public/Users.component'
+import Accounts from '../Pages/public/Accounts.component'
 import Sign from "../Pages/public/Sign.component"
 import Admin from '../Pages/private/Admin.component'
 import Profile from '../Pages/private/Profile.component'
@@ -32,7 +32,7 @@ const PageSwitcher = (props) => {
             <Route path="/subject/:id"
                    component={ (props) => <Containers {...props} type="subject"
                                                                  children={{same: false, other: true}}/> } />
-            <PrivateRoute path="/users" component={Users}/>
+            <PrivateRoute path="/users" component={Accounts}/>
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
             <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 
                                                                                     userRole={getRole()} />}/>

@@ -3,8 +3,8 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { NavLink, Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faUserPlus, faUserCircle, faUserTie, 
-        faUserEdit, faAddressCard, faFolder, faHome, 
-        faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+         faUserEdit, faAddressCard, faFolder, faHome, 
+         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
 import FlagFR from '../../img/flag-fr.svg'
@@ -16,10 +16,13 @@ const getFlagFromLng = (lng) => {
     switch(lng) {
         case 'fr':
             return FlagFR
+            break
         case 'en':
             return FlagUK
+            break
         case 'us': 
             return FlagUS
+            break
         default:
             return FlagUK
     }
@@ -72,53 +75,48 @@ const I18nSelector = (props) => {
     </>
 }
 
-const UserRoleEntries = (props) => {
-
-    const { role } = props
+const UserRoleEntries = ({ role }) => {
     const { t } = useTranslation()
-
     console.log("--- UserRoleEntries navigation sub-menu role, role is:", role)
     
     switch (role) {
       case 'Admin':
         return <>
               <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
-                <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.admin')}</NavLink>
+                <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.admin')}</NavLink>
               <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
-                <FontAwesomeIcon icon={faUsers}/> Users list</NavLink>
+                <FontAwesomeIcon icon={faUsers}/>{t('nav_bar.user.list')}</NavLink>
           </>
       default:
         return <></>
     }
 }
 
-const UserEntries = (props) => {
-
-    const { username, email, role } = props
+const UserEntries = ({ username, email, role }) => {
     const { t } = useTranslation()
-  
     console.log("--- UserLogEntries navigation sub-menu users, username is:", username)
+
     if (username) {
       return (
         <>
           <NavDropdown title={<span><Gravatar email={email} size={18} /> {username}</span>}
                        id="basic-nav-dropdown">
             <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.profile')}</NavLink>
+              <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>
             <UserRoleEntries role={role} />
             <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.signout')}</NavLink>
+              <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.signout')}</NavLink>
           </NavDropdown>
         </>
       ) 
     } else {
       return (
         <>
-          <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user_main')}</span>}>
+          <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user.main')}</span>}>
             <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.signin')}</NavLink>
+              <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.user.signin')}</NavLink>
             <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.signup')}</NavLink>
+              <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.user.signup')}</NavLink>
           </NavDropdown>
         </>
       )

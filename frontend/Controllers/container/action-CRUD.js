@@ -2,6 +2,7 @@
    at /api/containers address */
 
 import { TAG, HOST, SERVER_PORT } from '../../Views/helpers/config'
+
 const host = TAG + HOST + ":" + SERVER_PORT
 
 const giveMe = (url, successCBK, failedCBK, finalCBK) => {
@@ -68,5 +69,16 @@ const deleteContainer = (id, successCBK, failedCBK, finalCBK) => {
         .finally( () => finalCBK(false) )
 }
 
-export { getContainer, getContainersOfType, getChildrenContainersOf,
+const crud_caller = {
+    $getContainer: getContainer,
+    $getContainersOfType: getContainersOfType,
+    $getChildrenContainersOf: getChildrenContainersOf,
+    $createContainer: createContainer,
+    $updateContainer: updateContainer,
+    $deleteContainer: deleteContainer 
+}
+const crud_list = ['getContainer', 'getChildrenContainersOf', 'getContainersOfType', 
+                   'updateContainer', 'createContainer', 'deleteContainer']
+
+export { crud_caller, crud_list, getContainer, getContainersOfType, getChildrenContainersOf,
          createContainer, updateContainer, deleteContainer }
