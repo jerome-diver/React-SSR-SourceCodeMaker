@@ -49,7 +49,7 @@ const update = async (user_form) => {
     } catch(error) { return JSON.stringify({error}) }
 }
 
-const remove = async (params, credentials) => {
+const remove = async (params) => {
     try {
         let response = await fetch('/api/users/' + params.id, {
             method: 'DELETE',

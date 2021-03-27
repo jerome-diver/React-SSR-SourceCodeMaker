@@ -22,7 +22,14 @@
     "title1": "Data",
     "title2": "Metadata",
     "created": "Created the {{date}}",
-    "status": "Status"
+    "status": "Status",
+    "user": {
+      "switch": "$t(account.user.{{action}})",
+      "delete": "Destroy",
+      "true": "Activate",
+      "false": "Unactivate"
+    }
+
   },
   "profile": {
     "origin": {
