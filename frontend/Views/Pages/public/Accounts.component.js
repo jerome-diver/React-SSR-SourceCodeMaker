@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
 import { getRoles } from '../../../Controllers/roles/action-CRUD'
-import { Jumbotron, Modal, Badge, Card, DropdownButton, ButtonGroup, Button, Dropdown } from 'react-bootstrap'
+import { Jumbotron, Modal, Badge, Card, Button, Row, Col, Form, FormCheck } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from './Printers.component'
@@ -105,14 +105,22 @@ const Account = ({ account, setAccount, setEditRole }) => {
 
 const Accounts = () => {
     const { t } = useTranslation()
-    const [ accounts, setAccounts ]           = useState([])    // list data from mongodb accounts server collection
-    const [ selectedAccount, setAccount ]     = useState({})    // Account selected to edit
-    const [ loading, setLoading ]             = useState(true)  // false: not loading, true: loading
-    const [ error, setError ]                 = useState('')    // error loading accounts report text
-    const [ editRole, setEditRole ]           = useState(false) // open Modal to edit Role with account
-    const [ existingRoles, setExistingRoles ] = useState([])    // Existing roles list
+    const [ accounts, setAccounts ]             = useState([])    // list data from mongodb accounts server collection
+    const [ selectedAccount, setAccount ]       = useState({})    // Account selected to edit
+    const [ loading, setLoading ]               = useState(true)  // false: not loading, true: loading
+    const [ error, setError ]                   = useState('')    // error loading accounts report text
+    const [ editRole, setEditRole ]             = useState(false) // open Modal to edit Role with account
+    const [ existingRoles, setExistingRoles ]   = useState([])    // Existing roles list
+    const [ selectedRoleID, setSelectedRoleID ] = useState('')    // Role_id selected
   
     const handleClose = () => { setEditRole(false) }
+    const updateRole = (e) => {
+        e.preventDefault()
+        console.log("Update this account user: %s, with role_id: %s", 
+                    selectedAccount.user.username, selectedRoleID)
+    }
+    const onRoleChange = (e) => { setSelectedRoleID(e.target.value) }
+
     useEffect( () => {
         const abort = new AbortController()     // stop to fetch a request if we cancel this page
         const myUsers = list(abort.signal)
@@ -145,6 +153,7 @@ const Accounts = () => {
                    onHide={handleClose}
                    backdrop="static"
                    centered >
+                <Form>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         {t('account.role.edit.title')} {(selectedAccount.user) ? selectedAccount.user.username 
@@ -152,18 +161,28 @@ const Accounts = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <DropdownButton as={ButtonGroup} title={t('account.role.title')} id="bg-vertical-dropdown-1">
+                    <Form.Group as={Col}>
                         {existingRoles.map((role, index) => {
-                            return ( <Dropdown.Item key={index}>{role.name}</Dropdown.Item>)
+                          return (
+                            <FormCheck key={index} id={'selectedRole' + index}>
+                                <FormCheck.Input isValid={(selectedAccount.role) ? (selectedAccount.role.id == role.id) 
+                                                                                 : false}
+                                                 type='radio'
+                                                 name='roleSelected'
+                                                 value={role.name}
+                                                 onChange={onRoleChange} />
+                                <FormCheck.Label>{role.name}</FormCheck.Label>
+                                <Form.Text className='text-muted'>{role.description}</Form.Text>
+                            </FormCheck>
+                          )
                         })}
-                    </DropdownButton>
-                    <p>Should you get button dropdown with roles name list ?</p>
-                    <p>Have: {(existingRoles) ? existingRoles.length : '0'}</p>
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
-                    <Button variant="primary">{t('account.role.save')}</Button>
+                    <Button variant="primary" onClick={updateRole}>{t('account.role.save')}</Button>
                 </Modal.Footer>
+                </Form>
             </Modal>
         </>)
     }
