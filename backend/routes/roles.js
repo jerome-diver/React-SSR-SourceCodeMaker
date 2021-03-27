@@ -1,7 +1,9 @@
 import express from 'express'
 const router = express.Router()
 import { db } from '../controllers/database'
+import { hasAuthorization } from './middlewares/authentication'
 import Role from '../models/role.model'
+import { hasAuthorization } from './middlewares/authentication'
 require('dotenv').config('../../')
 
 
@@ -23,9 +25,9 @@ router.get('/:name', (req, res) => {
 } )
 
 /* GET roles listing. */
-router.get('/', (req, res) => {
+router.get('/', [hasAuthorization], (req, res) => {
     Role.find({}).exec()
-        .then(roles => { return res.status(200).json(role.map((r) => {role.toObject()})) })
+        .then(roles => { return res.status(200).json(roles.map((role) => {return role.toJSON()})) })
         .catch(error => { return res.status(401).json({error})})
 })
 

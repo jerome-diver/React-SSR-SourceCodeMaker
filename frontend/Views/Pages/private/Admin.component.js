@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { Button, Spinner, ListGroup } from 'react-bootstrap'
 import { useAuth } from '../../../Controllers/context/authenticate'
-import { getRoles, updateRole, deleteRole, createRole } from '../../../Controllers/role'
+import { getRoles, updateRole, deleteRole, createRole } from '../../../Controllers/roles/action-CRUD'
 
 const Role = (props) => {
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
-import { Jumbotron, Modal, Badge, Card, Button } from 'react-bootstrap'
+import { getRoles } from '../../../Controllers/roles/action-CRUD'
+import { Jumbotron, Modal, Badge, Card, DropdownButton, ButtonGroup, Button, Dropdown } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from './Printers.component'
@@ -89,7 +90,7 @@ const Account = ({ account, setAccount, setEditRole }) => {
                 </Card.Text>
                 <Card.Title className='my-2'>{t('account.title2')}</Card.Title>
                 <Card.Text as='div'>
-                    <p style={{ color: 'red'}}><Calendar2Date className='mr-2' color='red'/>
+                    <p style={{ color: 'orange'}}><Calendar2Date className='mr-2' color='orange'/>
                         {t('account.created', {date: date_formed(new Date(account.user.created))})}</p>
                     <p>{t('account.status')} : <Badge variant={accountStatus.color}>{accountStatus.status}</Badge></p>
                 </Card.Text>
@@ -104,19 +105,22 @@ const Account = ({ account, setAccount, setEditRole }) => {
 
 const Accounts = () => {
     const { t } = useTranslation()
-    const [ accounts, setAccounts ]         = useState([])    // list data from mongodb accounts server collection
-    const [ selectedAccount, setAccount ]   = useState({})    // Account selected to edit
-    const [ loading, setLoading ]           = useState(true)  // false: not loading, true: loading
-    const [ error, setError ]               = useState('')    // error loading accounts report text
-    const [ editRole, setEditRole ]         = useState(false) // open Modal to edit Role with account
+    const [ accounts, setAccounts ]           = useState([])    // list data from mongodb accounts server collection
+    const [ selectedAccount, setAccount ]     = useState({})    // Account selected to edit
+    const [ loading, setLoading ]             = useState(true)  // false: not loading, true: loading
+    const [ error, setError ]                 = useState('')    // error loading accounts report text
+    const [ editRole, setEditRole ]           = useState(false) // open Modal to edit Role with account
+    const [ existingRoles, setExistingRoles ] = useState([])    // Existing roles list
   
     const handleClose = () => { setEditRole(false) }
     useEffect( () => {
         const abort = new AbortController()     // stop to fetch a request if we cancel this page
-        list(abort.signal)
-            .then(data =>   { setAccounts(data) })
-            .catch(error => { setError(error) })
-            .finally(() =>  { setLoading(false) })
+        const myUsers = list(abort.signal)
+        const myRoles = getRoles(abort.signal)
+        Promise.all([myUsers, myRoles])
+            .then(results => { setAccounts(results[0]); setExistingRoles(results[1]); })
+            .catch(error => setError(error))
+            .finally(() =>  setLoading(false))
         return function cleanup() { abort.abort() }
     }, [] )
   
@@ -129,13 +133,13 @@ const Accounts = () => {
         return (<>
             <Jumbotron fluid id="accounts">
                 <h1>{t('nav_bar.user.list')}</h1>    
-                <div id='accounts'>
+                <article id='accounts'>
                     {accounts.map( (account, index) => { 
                         return ( <Account account={account}
                                           setAccount={setAccount}
                                           key={index} 
                                           setEditRole={setEditRole}/> ) } ) }
-                </div>
+                </article>
             </Jumbotron>
             <Modal show={editRole}
                    onHide={handleClose}
@@ -143,15 +147,22 @@ const Accounts = () => {
                    centered >
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Edit Role of {(selectedAccount.user) ? selectedAccount.user.username : 'unknown'}
+                        {t('account.role.edit.title')} {(selectedAccount.user) ? selectedAccount.user.username 
+                                                                               : 'unknown'}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Modal body text goes here.</p>
+                    <DropdownButton as={ButtonGroup} title={t('account.role.title')} id="bg-vertical-dropdown-1">
+                        {existingRoles.map((role, index) => {
+                            return ( <Dropdown.Item key={index}>{role.name}</Dropdown.Item>)
+                        })}
+                    </DropdownButton>
+                    <p>Should you get button dropdown with roles name list ?</p>
+                    <p>Have: {(existingRoles) ? existingRoles.length : '0'}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary">Save changes</Button>
+                    <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
+                    <Button variant="primary">{t('account.role.save')}</Button>
                 </Modal.Footer>
             </Modal>
         </>)

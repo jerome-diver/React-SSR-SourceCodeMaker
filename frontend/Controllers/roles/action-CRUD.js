@@ -6,17 +6,18 @@ const createRole = async (role) => {
             body: role
         })
         return response.json()
-    } catch(error) { return JSON.stringify({error: error})}
+    } catch(error) { return JSON.stringify({error})}
 }
 
-const getRoles = async () => {
+const getRoles = async (signal) => {
     try {
         let response = await fetch('/api/roles', {
             method: 'GET',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            signal: signal
         } )
         return response.json()
-} catch(error) { return JSON.stringify({error: error}) }
+} catch(error) { return JSON.stringify({error}) }
 }
 
 const updateRole = async (id, updatedRole) => {
@@ -28,7 +29,7 @@ const updateRole = async (id, updatedRole) => {
             body: updatedRole
         })
         return response.json()
-    } catch(error) { return JSON.stringify({error: error})}
+    } catch(error) { return JSON.stringify({error})}
 }
 
 const deleteRole = async (id, admin) => {
@@ -40,7 +41,7 @@ const deleteRole = async (id, admin) => {
             body: admin
         })
         return response.json()
-    } catch(error) { return JSON.stringify({error: error})}
+    } catch(error) { return JSON.stringify({error})}
 }
 
 export { getRoles, createRole, updateRole, deleteRole }

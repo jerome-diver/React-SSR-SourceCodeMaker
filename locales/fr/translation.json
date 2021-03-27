@@ -28,6 +28,14 @@
       "delete": "Détruire",
       "true": "Activer",
       "false": "Désactiver"
+    },
+    "role": {
+      "title": "Droits",
+      "save": "Sauvegarder",
+      "close": "Annuler",
+      "edit": {
+        "title": "Édition du role de"
+      }
     }
   },
   "profile": {

@@ -28,8 +28,15 @@
       "delete": "Destruct",
       "true": "Activate",
       "false": "Unactivate"
+    },
+    "role": {
+      "title": "Roles",
+      "save": "Save",
+      "close": "Cancel",
+      "edit": {
+        "title": "Edit role of"
+      }
     }
-
   },
   "profile": {
     "origin": {
