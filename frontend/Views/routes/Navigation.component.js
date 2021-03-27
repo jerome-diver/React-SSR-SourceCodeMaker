@@ -94,12 +94,17 @@ const UserRoleEntries = ({ role }) => {
 
 const UserEntries = ({ username, email, role }) => {
     const { t } = useTranslation()
+    const [ title, setTitle ] = useState(<span>{username}</span>)
     console.log("--- UserLogEntries navigation sub-menu users, username is:", username)
+
+    useEffect(() => {
+      setTitle(<span><Gravatar email={email} size={18} default='mp'/> {username}</span>)
+    }, [username])
 
     if (username) {
       return (
         <>
-          <NavDropdown title={<span><Gravatar email={email} size={18} default='mp'/> {username}</span>}
+          <NavDropdown title={title}
                        id="basic-nav-dropdown">
             <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
               <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>
