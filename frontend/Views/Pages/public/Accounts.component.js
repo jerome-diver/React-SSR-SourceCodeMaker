@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { list } from '../../../Controllers/user/action-CRUD'
-import { Jumbotron, Badge, Card, Button } from 'react-bootstrap'
+import { Jumbotron, Modal, Badge, Card, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from './Printers.component'
@@ -10,8 +10,10 @@ import { date_formed, accountEnabled } from '../../helpers/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Gravatar from 'react-gravatar'
 
-const editAccountRole = (account) => {
+const editAccountRole = (account, setAccount, setEditRole) => {
     console.log("Role is:", account.role.name)
+    setAccount(account)
+    setEditRole(true)
 }
 
 const switchValidity = (account, validity, setValidity) => { 
@@ -44,7 +46,7 @@ const ActionLinks = ({ account }) => {
     } else return null
 }
 
-const Account = ({ account }) => {
+const Account = ({ account, setAccount, setEditRole }) => {
     const { t } = useTranslation()
     const accountStatus = accountEnabled(account.user.validated)
     const { getUser } = useAuthenticate()
@@ -60,7 +62,7 @@ const Account = ({ account }) => {
                         <h4 className='ml-2'>{account.user.username}</h4>
                     </div>
                     <Button variant={`outline-${account.role.color}`}
-                            onClick={() => editAccountRole(account)}
+                            onClick={() => editAccountRole(account, setAccount, setEditRole)}
                             size='sm'>
                         {account.role.name}
                     </Button>
@@ -102,10 +104,13 @@ const Account = ({ account }) => {
 
 const Accounts = () => {
     const { t } = useTranslation()
-    const [accounts, setAccounts] = useState([])       // list data from mongodb accounts server collection
-    const [loading, setLoading] = useState(true) // false: not loading (finished or not started), true: loading
-    const [error, setError] = useState('')       // error loading accounts report text
+    const [ accounts, setAccounts ]         = useState([])    // list data from mongodb accounts server collection
+    const [ selectedAccount, setAccount ]   = useState({})    // Account selected to edit
+    const [ loading, setLoading ]           = useState(true)  // false: not loading, true: loading
+    const [ error, setError ]               = useState('')    // error loading accounts report text
+    const [ editRole, setEditRole ]         = useState(false) // open Modal to edit Role with account
   
+    const handleClose = () => { setEditRole(false) }
     useEffect( () => {
         const abort = new AbortController()     // stop to fetch a request if we cancel this page
         list(abort.signal)
@@ -121,14 +126,35 @@ const Accounts = () => {
                         name={error.name} 
                         message={error.message} /> )
     } else {
-        return (
+        return (<>
             <Jumbotron fluid id="accounts">
                 <h1>{t('nav_bar.user.list')}</h1>    
                 <div id='accounts'>
-                    {accounts.map( (account, index) => { return ( <Account account={account} key={index}/> ) } ) }
+                    {accounts.map( (account, index) => { 
+                        return ( <Account account={account}
+                                          setAccount={setAccount}
+                                          key={index} 
+                                          setEditRole={setEditRole}/> ) } ) }
                 </div>
             </Jumbotron>
-        )
+            <Modal show={editRole}
+                   onHide={handleClose}
+                   backdrop="static"
+                   centered >
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        Edit Role of {(selectedAccount.user) ? selectedAccount.user.username : 'unknown'}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Modal body text goes here.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                    <Button variant="primary">Save changes</Button>
+                </Modal.Footer>
+            </Modal>
+        </>)
     }
 }
 
