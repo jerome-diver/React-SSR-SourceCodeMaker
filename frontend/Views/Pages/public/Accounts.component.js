@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next'
 import { Loading, Error } from './Printers.component'
 import '../../../stylesheet/users.sass'
 import { Calendar2Date } from 'react-bootstrap-icons'
-import { date_formed } from '../../helpers/config'
+import { date_formed, accountEnabled } from '../../helpers/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Gravatar from 'react-gravatar'
 
 const Account = ({ account }) => {
     const { t } = useTranslation()
+    const accountStatus = accountEnabled(account.user.validated)
   //  const promote = user.role.color
     return (
         <Card id={account.user.id} className='mt-2'>
@@ -49,6 +50,7 @@ const Account = ({ account }) => {
             <Card.Text as='div'>
                 <p style={{ color: 'red'}}><Calendar2Date className='mr-2' color='red'/>
                     {t('account.created', {date: date_formed(new Date(account.user.created))})}</p>
+                <p>{t('account.status')} : <Badge variant={accountStatus.color}>{accountStatus.status}</Badge></p>
             </Card.Text>
           </Card.Body>
         </Card>

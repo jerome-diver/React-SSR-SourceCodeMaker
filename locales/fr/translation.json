@@ -21,7 +21,8 @@
   "account": {
     "title1": "Données",
     "title2": "Méta-données",
-    "created": "Créé le {{date}}"
+    "created": "Créé le {{date}}",
+    "status": "Status"
   },
   "profile": {
     "origin": {
