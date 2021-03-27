@@ -18,6 +18,11 @@
     "title": "Description",
     "content": "<p>Bienvenue sur mon site web.</p><p>Mon nom est Jérôme Lanteri, je suis un informaticien français en status d'auto-entrepreneur (micro-entreprise).</p><p>Mon site est construit avec du code Javascript et avec un serveur Express et un code côté client avec React.</p><p>Je peux aussi construire un site avec du code Python (Django ou Flask) ou du code Ruby (RubyOnRails).i</p><p>Les bases de données peuvent être MySQL ou Postgresql ou MongoDB. Je peux aussi installer le code du site sur un serveur distant (que je peux commander et installer pour vous, mais aussi maintenir) avec un serveur HTTP Nginx.</p><p>Et bien d'autres choses, il suffit de demander.</p>"
   },
+  "account": {
+    "title1": "Données",
+    "title2": "Méta-données",
+    "created": "Créé le {{date}}"
+  },
   "profile": {
     "origin": {
       "title": "Vôtre outil d'accès d'origine",

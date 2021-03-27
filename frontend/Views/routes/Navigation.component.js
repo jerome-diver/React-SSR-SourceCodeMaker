@@ -99,7 +99,7 @@ const UserEntries = ({ username, email, role }) => {
     if (username) {
       return (
         <>
-          <NavDropdown title={<span><Gravatar email={email} size={18} /> {username}</span>}
+          <NavDropdown title={<span><Gravatar email={email} size={18} default='mp'/> {username}</span>}
                        id="basic-nav-dropdown">
             <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
               <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>

@@ -5,19 +5,29 @@ import { colorType } from '../../helpers/config'
 import { useTranslation } from 'react-i18next'
 import { Loading, Error } from './Printers.component'
 import '../../../stylesheet/users.sass'
-import { ChevronDoubleRight } from 'react-bootstrap-icons'
+import { Calendar2Date } from 'react-bootstrap-icons'
+import { date_formed } from '../../helpers/config'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Gravatar from 'react-gravatar'
 
 const Account = ({ account }) => {
     const { t } = useTranslation()
   //  const promote = user.role.color
     return (
         <Card id={account.user.id} className='mt-2'>
-            <Card.Header style={{ backgroundColor: 'rgb(25,25,25,0.75)' }}>
-                <h4>{account.user.username} <Badge pill variant={account.role.color}>{account.role.name}</Badge></h4>
+            <Card.Header className='d-flex align-items-center justify-content-between' 
+                         style={{ backgroundColor: 'rgb(25,25,25,0.75)' }}>
+                <div className='d-flex'>
+                    <Gravatar email={account.user.email} size={24} default='mp'/>
+                    <h4 className='ml-2'>{account.user.username}</h4>
+                </div>
+                <Badge pill variant={account.role.color}>
+                    {account.role.name}
+                </Badge>
             </Card.Header>
             <Card.Body>
-            <Card.Title>Content</Card.Title>
-            <Card.Text>
+            <Card.Title>{t('account.title1')}</Card.Title>
+            <Card.Text as='div'>
                 <table>
                     <tbody> 
                         <tr>
@@ -34,6 +44,11 @@ const Account = ({ account }) => {
                         </tr>
                     </tbody>
                 </table>
+            </Card.Text>
+            <Card.Title className='my-2'>{t('account.title2')}</Card.Title>
+            <Card.Text as='div'>
+                <p style={{ color: 'red'}}><Calendar2Date className='mr-2' color='red'/>
+                    {t('account.created', {date: date_formed(new Date(account.user.created))})}</p>
             </Card.Text>
           </Card.Body>
         </Card>

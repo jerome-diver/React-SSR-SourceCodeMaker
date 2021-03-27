@@ -1,4 +1,6 @@
 import { i18n } from '../../../backend/i18n'
+import { format } from 'date-fns'
+import { fr as localeFR, en as localeEN } from 'date-fns/locale'
 
 const accountEnabled = (valid) => (valid) 
                                 ? {color: 'success', status: i18n.t('profile.account_enable')}
@@ -6,6 +8,22 @@ const accountEnabled = (valid) => (valid)
 const TAG = 'http://'
 const HOST = 'localhost'
 const SERVER_PORT = 3000
+
+const date_formed = (created) => {
+    const format_date = `iiii, dd MMMM yyyy ${i18n.t('mailer:date.at')} HH:mm`
+    let localization
+    switch(i18n.language) {
+        case 'fr':
+            localization = localeFR
+            break
+        case 'en':
+            localization = localeEN
+            break
+        default:
+            localization = localeEN
+    }
+    return format(created, format_date, {locale: localization})
+}
 
 const colorType = (name) => {
   switch (name) {
@@ -35,4 +53,4 @@ const trContainer = (lng, container) => {
   }
 }
 
-export { TAG, HOST, SERVER_PORT, accountEnabled, colorType, trContainer }
+export { TAG, HOST, SERVER_PORT, date_formed, accountEnabled, colorType, trContainer }

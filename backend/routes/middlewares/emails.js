@@ -15,7 +15,7 @@ require('dotenv').config('../../')
 const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
 
 
-const dates = (created, locale, tr) => {
+const dates = (created, locale) => {
     const format_date = `iiii, dd MMMM yyyy ${i18n.t('mailer:date.at')} HH:mm`
     let localization
     switch(locale) {
