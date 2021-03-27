@@ -10,16 +10,20 @@ import { date_formed, accountEnabled } from '../../helpers/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Gravatar from 'react-gravatar'
 
+const editAccountRole = (account) => {
+    console.log("Role is:", account.role.name)
+}
+
 const switchValidity = (account, validity, setValidity) => { 
     console.log("Edit")
     setValidity(!validity)
 }
 
-const deleteAccount = (content) => { console.log("DELETE") }
+const deleteAccount = (account) => { console.log("DELETE account:", account.user.username) }
 
 const ActionLinks = ({ account }) => {
     const { t } = useTranslation()
-    const [ validity, setValidity ] = useState(account.user.validated)
+    const [ validity, setValidity ] = useState(!account.user.validated)
     const { getUser, getRole } = useAuthenticate()
     const user = getUser()
     const role = getRole()
@@ -27,10 +31,13 @@ const ActionLinks = ({ account }) => {
         return (<>
             <Button onClick={() => switchValidity(account, validity, setValidity)} 
                     variant="warning"
-                    className='mr-2'>
+                    className='mr-2'
+                    size='sm'>
                 { t('account.user.switch', {action: validity}) }
             </Button>
-            <Button onClick={() => deleteAccount(account)} variant="danger">
+            <Button onClick={() => deleteAccount(account)} 
+                    variant="danger"
+                    size='sm'>
                 { t('account.user.delete') }
             </Button>
         </> )
@@ -52,9 +59,11 @@ const Account = ({ account }) => {
                         <Gravatar email={account.user.email} size={24} default='mp'/>
                         <h4 className='ml-2'>{account.user.username}</h4>
                     </div>
-                    <Badge pill variant={account.role.color}>
+                    <Button variant={`outline-${account.role.color}`}
+                            onClick={() => editAccountRole(account)}
+                            size='sm'>
                         {account.role.name}
-                    </Badge>
+                    </Button>
                 </Card.Header>
                 <Card.Body>
                 <Card.Title>{t('account.title1')}</Card.Title>

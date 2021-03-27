@@ -25,7 +25,7 @@
     "status": "Status",
     "user": {
       "switch": "$t(account.user.{{action}})",
-      "delete": "Destroy",
+      "delete": "Destruct",
       "true": "Activate",
       "false": "Unactivate"
     }
