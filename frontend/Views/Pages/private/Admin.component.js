@@ -28,34 +28,32 @@ const Admin = (props) => {
                              color="blue"
                              className='mr-2'/>{t('admin.main.title')}</h1>
         <hr />
-        <article id="Admin_system">
-          <Jumbotron fluid id="accounts">
-            <h2>System</h2>
-            <hr/>
-            <Accordion>
-              <Card>
-                <Card.Header>
-                  <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                    {t('nav_bar.user.list')}
-                  </Accordion.Toggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="0">
-                  <Card.Body><Accounts/></Card.Body>
-                </Accordion.Collapse>
-              </Card>
-              <Card>
-                <Card.Header>
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Role maybe ?
-                  </Accordion.Toggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="1">
-                  <Card.Body>Hello! I'm another body</Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            </Accordion>
-          </Jumbotron>
-        </article>
+        <Jumbotron fluid id="accounts" fluid>
+          <h2>{t('admin.system.title')}</h2>
+          <hr/>
+          <Accordion>
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                  {t('nav_bar.user.list')}
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body><Accounts/></Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                  Role maybe ?
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>Hello! I'm another body</Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </Jumbotron>
     </>)
 }
 

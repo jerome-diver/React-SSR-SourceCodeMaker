@@ -3,6 +3,9 @@
     "failed": "No access possible to this private page"
   },
   "admin": {
+    "system": {
+      "title": "System administartion"
+    },
     "main": {
       "title": "Administration page"
     }

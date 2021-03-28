@@ -3,6 +3,9 @@
     "failed": "Impossible d'accéder à cette page privée"
   },
   "admin": {
+    "system": {
+      "title": "Administartion système"
+    },
     "main": {
       "title": "Page d'administration"
     }

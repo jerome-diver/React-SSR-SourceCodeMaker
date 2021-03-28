@@ -19,25 +19,18 @@ const editAccountRole = (account, setAccount, setEditRole) => {
 
 const switchValidity = (account, validity, setValidity) => { 
     console.log("Edit")
-    setValidity(!validity)
+    setValidity(accountEnabled(!validity.enabled))
 }
 
 const deleteAccount = (account) => { console.log("DELETE account:", account.user.username) }
 
 const ActionLinks = ({ account }) => {
     const { t } = useTranslation()
-    const [ validity, setValidity ] = useState(!account.user.validated)
     const { getUser, getRole } = useAuthenticate()
     const user = getUser()
     const role = getRole()
     if (role && ((role.name == "Admin") || (user.id == account.user.id))) {
         return (<>
-            <Button onClick={() => switchValidity(account, validity, setValidity)} 
-                    variant="warning"
-                    className='mr-2'
-                    size='sm'>
-                { t('account.user.switch', {action: validity}) }
-            </Button>
             <Button onClick={() => deleteAccount(account)} 
                     variant="danger"
                     size='sm'>
@@ -50,7 +43,7 @@ const ActionLinks = ({ account }) => {
 const Account = ({ account, setAccount, setEditRole }) => {
     const { t } = useTranslation()
     const [ avatarUrl, setAvatarUrl ] = useState('')
-    const accountStatus = accountEnabled(account.user.validated)
+    const [ validity, setValidity ] = useState(accountEnabled(account.user.validated))
     const { getUser } = useAuthenticate()
     const user = getUser()
 
@@ -100,7 +93,11 @@ const Account = ({ account, setAccount, setEditRole }) => {
                 <Card.Text as='div'>
                     <p style={{ color: 'orange'}}><Calendar2Date className='mr-2' color='orange'/>
                         {t('account.created', {date: date_formed(new Date(account.user.created))})}</p>
-                    <p>{t('account.status')} : <Badge variant={accountStatus.color}>{accountStatus.status}</Badge></p>
+                    <Button variant={`outline-${validity.color}`}
+                            size='sm'
+                            onClick={() => switchValidity(account, validity, setValidity)}>
+                        {validity.status}
+                    </Button>
                 </Card.Text>
                 <Card.Link className='d-flex justify-content-end'>
                     <ActionLinks account={account}/>
