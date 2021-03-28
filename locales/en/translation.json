@@ -35,10 +35,15 @@
     "created": "Created the {{date}}",
     "status": "Status",
     "user": {
+      "status":{
+        "popover": {
+          "title": "Switch status"
+        }
+      },
       "switch": "$t(account.user.{{action}})",
       "delete": "Destruct",
-      "true": "Activate",
-      "false": "Unactivate"
+      "true": "Activated account",
+      "false": "Unactivated account"
     },
     "role": {
       "title": "Roles",

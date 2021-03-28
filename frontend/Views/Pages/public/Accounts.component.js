@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { list, update } from '../../../Controllers/user/action-CRUD'
 import { getRoles } from '../../../Controllers/roles/action-CRUD'
-import { Jumbotron, Modal, Badge, Card, Button, Row, Col, Form, FormCheck } from 'react-bootstrap'
+import { Modal, Badge, Card, Button, Col, Form, FormCheck, OverlayTrigger, Popover } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from './Printers.component'
@@ -93,11 +93,22 @@ const Account = ({ account, setAccount, setEditRole }) => {
                 <Card.Text as='div'>
                     <p style={{ color: 'orange'}}><Calendar2Date className='mr-2' color='orange'/>
                         {t('account.created', {date: date_formed(new Date(account.user.created))})}</p>
-                    <Button variant={`outline-${validity.color}`}
-                            size='sm'
-                            onClick={() => switchValidity(account, validity, setValidity)}>
-                        {validity.status}
-                    </Button>
+                    <OverlayTrigger placement='right'
+                                    overlay={
+                                        <Popover id='popover-positioned-right'>
+                                            <Popover.Title as="h3">
+                                                {t('account.user.status.popover.title')}
+                                            </Popover.Title>
+                                            <Popover.Content>
+                                                {t('account.user.switch', {action: validity.enabled})}
+                                            </Popover.Content>
+                                        </Popover> }>
+                        <Button variant={`outline-${validity.color}`}
+                                size='sm'
+                                onClick={() => switchValidity(account, validity, setValidity)}>
+                            {validity.status}
+                        </Button>
+                    </OverlayTrigger>
                 </Card.Text>
                 <Card.Link className='d-flex justify-content-end'>
                     <ActionLinks account={account}/>

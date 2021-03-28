@@ -35,10 +35,17 @@
     "created": "Créé le {{date}}",
     "status": "Status",
     "user": {
+      "status":{
+        "popover": {
+          "title": "Change le status"
+        }
+      },
       "switch": "$t(account.user.{{action}})",
       "delete": "Détruire",
-      "true": "Activer",
-      "false": "Désactiver"
+      "true": "Désactive le compte",
+      "false": "Active le compte",
+      "activated": "Compte actif",
+      "disabled": "Compte Inactif"
     },
     "role": {
       "title": "Droits",

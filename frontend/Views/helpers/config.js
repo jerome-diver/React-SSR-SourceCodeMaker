@@ -3,8 +3,8 @@ import { format } from 'date-fns'
 import { fr as localeFR, en as localeEN } from 'date-fns/locale'
 
 const accountEnabled = (valid) => (valid) 
-                                ? {color: 'success', status: i18n.t('profile.account_enable'), enabled: true}
-                                : {color: 'danger', status: i18n.t('profile.account_disable'), enabled: false}
+                                ? {color: 'success', status: i18n.t('account.user.activated'), enabled: true}
+                                : {color: 'danger', status: i18n.t('account.user.disabled'), enabled: false}
 const TAG = 'http://'
 const HOST = 'localhost'
 const SERVER_PORT = 3000
