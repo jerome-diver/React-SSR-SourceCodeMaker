@@ -137,7 +137,7 @@ const Accounts = () => {
             .catch(error => setError(error))
             .finally(() =>  setLoading(false))
         return function cleanup() { abort.abort() }
-    }, [] )
+    }, [selectedAccount] )
   
     if (loading) { return <><Loading /></> }
     if (error.message) return (
