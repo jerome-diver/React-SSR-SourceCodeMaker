@@ -1,4 +1,9 @@
 {
+  "admin": {
+    "main": {
+      "failed": "Failed to show Administration page"
+    }
+  },
   "authenticate": {
     "failed": {
       "update": {

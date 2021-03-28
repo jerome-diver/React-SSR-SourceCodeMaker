@@ -4,7 +4,7 @@ import { NavLink, Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faUserPlus, faUserCircle, faUserTie, 
          faUserEdit, faAddressCard, faFolder, faHome, 
-         faSignInAlt} from '@fortawesome/free-solid-svg-icons'
+         faSignInAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 import { useAuthenticate, isAuthorized } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
 import FlagFR from '../../img/flag-fr.svg'
@@ -78,12 +78,15 @@ const UserRoleEntries = ({ role }) => {
     
     switch (role) {
       case 'Admin':
-        return <>
-              <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
+        return (
+            <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
                 <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.admin')}</NavLink>
-              <NavLink as={NavLink} to='/users' activeClassName='menuselected'>
-                <FontAwesomeIcon icon={faUsers}/>{t('nav_bar.user.list')}</NavLink>
-          </>
+          )
+      case 'Writer':
+         return (
+             <NavLink as={NavLink} to='/my_contents' activeClassName='menuselected'>
+                 <FontAwesomeIcon icon={faUsers}/>{t('nav_bar.user.list')}</NavLink>
+         )
       default:
         return <></>
     }
@@ -107,7 +110,7 @@ const UserEntries = ({ username, email, role }) => {
               <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>
             <UserRoleEntries role={role} />
             <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.signout')}</NavLink>
+              <FontAwesomeIcon icon={faSignOutAlt}/> {t('nav_bar.user.signout')}</NavLink>
           </NavDropdown>
       </>)
     }

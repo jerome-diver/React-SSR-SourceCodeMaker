@@ -1,72 +1,62 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { Button, Spinner, ListGroup } from 'react-bootstrap'
-import { useAuth } from '../../../Controllers/context/authenticate'
-import { getRoles, updateRole, deleteRole, createRole } from '../../../Controllers/roles/action-CRUD'
-
-const Role = (props) => {
-
-    const { role } = props
-
-    const removeRole = () => {
-      //
-    }
-
-    return (
-      <>
-        <ListGroup.Item id={role._id.toString()}>
-          <h4><Badge pill variant={role.color}>{role.name}</Badge></h4>
-          <hr/>
-          <h5>Description</h5> 
-          <p>{role.description}</p>
-          <Button onClick={removeRole}>Remove</Button>
-        </ListGroup.Item>
-      </>
-    )
-}
+import { faCogs } from '@fortawesome/free-solid-svg-icons'
+import { Button, Jumbotron, Accordion, Card, OverlayTrigger, Popover } from 'react-bootstrap'
+import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
+import { Loading, Error } from '../public/Printers.component'
+import { useTranslation } from 'react-i18next'
+import Accounts from '../public/Accounts.component'
 
 const Admin = (props) => {
-  const { setAuthTokens } = useAuth()
-  const [users, setUsers] = useState([])
-  const [load, setLoad] = useState(false)
-    const [roles, setRoles] = useState([])
+    const { t } = useTranslation()
+    const [ loading, setLoading ] = useState(true)
+    const [ error, setError ] = useState({})
 
-  useEffect( () => {
-      console.log("UseEffect of AdminPage component call")
-        getRoles().then(response => {
-          if (response.error) { setError(response.error); setLoad(true); }
-          else { setRoles(response.roles) }
-        })
-  }, [] )
+    useEffect( () => {
+        console.log("--- Admin component useEffect entry point")
+        setLoading(false)
+    }, [] )
 
-  const logOut = () => { setAuthTokens() }
-  const addRole = () => {
-    //
-  }
-
-  if (load) {
-    return (
-      <>
-        <h1><FontAwesomeIcon icon={faCoffee} size="xs" color="blue"/> Admin page</h1>
+    if (loading) { return <Loading /> }
+    if (error.name) return (
+         <Error title={t('error:admin.main.failed')} 
+                name={error.name} 
+                message={error.message} /> )
+    return (<>
+        <h1><FontAwesomeIcon icon={faCogs}
+                             size="xs"
+                             color="blue"
+                             className='mr-2'/>{t('admin.main.title')}</h1>
         <hr />
-        <div id="Admin_manage_roles_board">
-          <ListGroup>
-            {roles.map( (role, index) => { return ( <Role key={index} role={role}/> ) } ) }
-          </ListGroup>
-          <Button onClick={addRole}>Add new role</Button>
-        </div>
-        <Button onClick={logOut}>Log out</Button>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <Spinner animation='border' role='status'/>
-        <p>Loading...</p>
-      </>
-    )
-  }
+        <article id="Admin_system">
+          <Jumbotron fluid id="accounts">
+            <h2>System</h2>
+            <hr/>
+            <Accordion>
+              <Card>
+                <Card.Header>
+                  <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                    {t('nav_bar.user.list')}
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body><Accounts/></Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Card.Header>
+                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                    Role maybe ?
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>Hello! I'm another body</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </Jumbotron>
+        </article>
+    </>)
 }
 
 export default Admin

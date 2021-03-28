@@ -147,26 +147,24 @@ const Accounts = () => {
         return function cleanup() { abort.abort() }
     }, [selectedAccount] )
   
-    if (loading) { return <><Loading /></> }
+    if (loading) { return <Loading /> }
     if (error.message) return (
          <Error title={t('error:accounts.list.failed')} 
                 name={error.name} 
                 message={error.message} /> )
     return (<>
-        <Jumbotron fluid id="accounts">
-            <h1>{t('nav_bar.user.list')}</h1>    
-            <article id='accounts'>
-                {accounts.map( (account, index) => { 
-                    return ( <Account account={account}
-                                        setAccount={setAccount}
-                                        key={index} 
-                                        setEditRole={setEditRole}/> ) } ) }
-            </article>
-        </Jumbotron>
+        <article id='accounts'>
+            {accounts.map( (account, index) => { 
+                return ( <Account account={account}
+                                    setAccount={setAccount}
+                                    key={index} 
+                                    setEditRole={setEditRole}/> ) } ) }
+        </article>
         <Modal show={editRole}
-                onHide={handleClose}
-                backdrop="static"
-                centered >
+               size='lg'
+               onHide={handleClose}
+               backdrop="static"
+               centered >
             <Form onSubmit={submitRole}>
             <Modal.Header closeButton>
                 <Modal.Title>

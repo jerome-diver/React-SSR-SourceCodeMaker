@@ -1,4 +1,12 @@
 {
+  "private_route": {
+    "failed": "Impossible d'accéder à cette page privée"
+  },
+  "admin": {
+    "main": {
+      "title": "Page d'administration"
+    }
+  },
   "head": {
     "title": "SourceCode Maker (infos)",
     "meta": {

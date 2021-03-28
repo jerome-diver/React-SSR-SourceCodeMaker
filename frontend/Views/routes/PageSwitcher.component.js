@@ -32,7 +32,6 @@ const PageSwitcher = (props) => {
             <Route path="/subject/:id"
                    component={ (props) => <Containers {...props} type="subject"
                                                                  children={{same: false, other: true}}/> } />
-            <PrivateRoute path="/users" component={Accounts}/>
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
             <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 
                                                                                     userRole={getRole()} />}/>
@@ -46,4 +45,5 @@ const PageSwitcher = (props) => {
   )
 }
 
+    //<PrivateRoute path="/my_contents" component={MyContents}/>
 export default PageSwitcher
