@@ -26,7 +26,7 @@ router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
           { error: {
               title: req.i18n.t('error:database.containers.create.failed.validation'), 
               message } }) })
-      return res.status(200).json( { accepted: true } )
+      return res.status(201).json( { accepted: true } )
   }
 } )
 
@@ -82,7 +82,7 @@ router.put('/:id', [hasAuthorization, checkContainer, sanitizer], (req, res) => 
           { title, content, title_en, content_en, enable, author_id, parent_id, type_id } , 
           { new: true }).exec()
         .then(container => {
-            return res.status(200).json({ accepted: true, container: container.toJSON() }) })
+            return res.status(201).json({ accepted: true, container: container.toJSON() }) })
         .catch(error => { return res.status(400).json( 
               { error: 
                 { title: req.i18n.t('error:database.containers.update.failed'), 

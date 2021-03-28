@@ -7,7 +7,7 @@ router.post('/:lng', (req, res)=> {
     if (lng) req.i18n.changeLanguage(lng)
     console.log("=== /api/language, POST request, language selected is %s, but session language is %s", 
                 req.language, cookie_lng)
-    return res.status(200)
+    return res.status(202)
 })
 
 router.get('/', (req, res)=> {

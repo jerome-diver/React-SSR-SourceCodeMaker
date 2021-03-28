@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { list } from '../../../Controllers/user/action-CRUD'
+import { list, update } from '../../../Controllers/user/action-CRUD'
 import { getRoles } from '../../../Controllers/roles/action-CRUD'
 import { Jumbotron, Modal, Badge, Card, Button, Row, Col, Form, FormCheck } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -114,10 +114,17 @@ const Accounts = () => {
     const [ selectedRoleID, setSelectedRoleID ] = useState('')    // Role_id selected
   
     const handleClose = () => { setEditRole(false) }
-    const updateRole = (e) => {
+    const submitRole = (e) => {
         e.preventDefault()
         console.log("Update this account user: %s, with role_id: %s", 
                     selectedAccount.user.username, selectedRoleID)
+        const to_update_user = {...selectedAccount.user, role_id: selectedRoleID}
+        update(to_update_user)
+            .then(account => {
+                if (account.error) throw (account.error)
+                setAccount(account)})
+            .catch(error =>  {console.log("HERE IS THE ERROR!"); setError(error);} )
+            .finally(() =>   setEditRole(false))
     }
     const onRoleChange = (e) => { setSelectedRoleID(e.target.value) }
 
@@ -133,59 +140,57 @@ const Accounts = () => {
     }, [] )
   
     if (loading) { return <><Loading /></> }
-    else if (error != '') {
-        return ( <Error title={t('error:accounts.list.failed')} 
-                        name={error.name} 
-                        message={error.message} /> )
-    } else {
-        return (<>
-            <Jumbotron fluid id="accounts">
-                <h1>{t('nav_bar.user.list')}</h1>    
-                <article id='accounts'>
-                    {accounts.map( (account, index) => { 
-                        return ( <Account account={account}
-                                          setAccount={setAccount}
-                                          key={index} 
-                                          setEditRole={setEditRole}/> ) } ) }
-                </article>
-            </Jumbotron>
-            <Modal show={editRole}
-                   onHide={handleClose}
-                   backdrop="static"
-                   centered >
-                <Form>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {t('account.role.edit.title')} {(selectedAccount.user) ? selectedAccount.user.username 
-                                                                               : 'unknown'}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group as={Col}>
-                        {existingRoles.map((role, index) => {
-                          return (
-                            <FormCheck key={index} id={'selectedRole' + index}>
-                                <FormCheck.Input isValid={(selectedAccount.role) ? (selectedAccount.role.id == role.id) 
-                                                                                 : false}
-                                                 type='radio'
-                                                 name='roleSelected'
-                                                 value={role.name}
-                                                 onChange={onRoleChange} />
-                                <FormCheck.Label>{role.name}</FormCheck.Label>
-                                <Form.Text className='text-muted'>{role.description}</Form.Text>
-                            </FormCheck>
-                          )
-                        })}
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
-                    <Button variant="primary" onClick={updateRole}>{t('account.role.save')}</Button>
-                </Modal.Footer>
-                </Form>
-            </Modal>
-        </>)
-    }
+    if (error.message) return (
+         <Error title={t('error:accounts.list.failed')} 
+                name={error.name} 
+                message={error.message} /> )
+    return (<>
+        <Jumbotron fluid id="accounts">
+            <h1>{t('nav_bar.user.list')}</h1>    
+            <article id='accounts'>
+                {accounts.map( (account, index) => { 
+                    return ( <Account account={account}
+                                        setAccount={setAccount}
+                                        key={index} 
+                                        setEditRole={setEditRole}/> ) } ) }
+            </article>
+        </Jumbotron>
+        <Modal show={editRole}
+                onHide={handleClose}
+                backdrop="static"
+                centered >
+            <Form onSubmit={submitRole}>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    {t('account.role.edit.title')} {(selectedAccount.user) ? selectedAccount.user.username 
+                                                                            : 'unknown'}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form.Group as={Col}>
+                    {existingRoles.map((role, index) => {
+                        return (
+                        <FormCheck key={index} id={'selectedRole' + index}>
+                            <FormCheck.Input isValid={(selectedAccount.role) ? (selectedAccount.role.id == role.id) 
+                                                                                : false}
+                                                type='radio'
+                                                name='roleSelected'
+                                                value={role.id}
+                                                onChange={onRoleChange} />
+                            <FormCheck.Label>{role.name}</FormCheck.Label>
+                            <Form.Text className='text-muted'>{role.description}</Form.Text>
+                        </FormCheck>
+                        )
+                    })}
+                </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
+                <Button variant="primary" type='submit'>{t('account.role.save')}</Button>
+            </Modal.Footer>
+            </Form>
+        </Modal>
+    </>)
 }
 
 export default Accounts

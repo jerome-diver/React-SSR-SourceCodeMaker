@@ -86,7 +86,7 @@ const SignIn = (props) => {
             const id = (selectIdentifier == 'Email') ? form.email : form.username
             signin(id, selectIdentifier, form.password)
                 .then(data => {
-                    if (data.error) throw new Error(data.error)
+                    if (data.error) throw (data.error)
                     getLoggedUser(data) })
                 .catch(error => getError(error) )
         }

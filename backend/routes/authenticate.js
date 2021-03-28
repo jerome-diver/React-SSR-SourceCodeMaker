@@ -15,7 +15,7 @@ router.post('/signin', [canConnect, findRole], (req, res) => {
             message: er.message })
         res.cookie('token', token, { httpOnly: true })
         delete req.user.role_id
-        return res.status(200).json({
+        return res.status(201).json({
             user: req.user, 
             role: req.role.toJSON()}) 
     })
@@ -24,7 +24,7 @@ router.post('/signin', [canConnect, findRole], (req, res) => {
 /* POST to sign out user with token to ask */
 router.post('/signout', [hasAuthorization], (req, res) => {
     res.clearCookie('token')
-    return res.status('200').json(true)
+    return res.status(201).json(true)
 } )
 
 router.post('/authenticated', [hasAuthorization], (req, res) => {

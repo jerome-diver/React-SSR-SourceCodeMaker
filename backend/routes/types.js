@@ -9,7 +9,7 @@ router.post('/', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
   const {user_id, name, description, rules, enable} = req.body
   const type = new Type( { name, description, rules, enable } )
   type.save().exec()
-    .then(type => { return res.status(200).json({accepted: true}) })
+    .then(type => { return res.status(201).json({accepted: true}) })
     .catch(error => {
       let message = ''
       let name = ''
@@ -52,7 +52,7 @@ router.put('/:id', [hasAuthorization, checkType, sanitizer], (req, res) => {
             if (error) return res.status(400).json( { error: 
                     { name: req.i18n.t('error:database.types.update.failed'), 
                       message: error } } )
-            return res.status(200).json({ accepted: true, type: type.toJSON() })
+            return res.status(201).json({ accepted: true, type: type.toJSON() })
   } ) }
 } )
 
@@ -60,7 +60,7 @@ router.put('/:id', [hasAuthorization, checkType, sanitizer], (req, res) => {
 router.delete('/:id', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
     Type.deleteOne( { _id: req.params.id }).exec()
       .then(response => {
-        if (response.acknowledged == false) throw new Error(req.i18n.t('error:type.unknown'))
+        if (response.acknowledged == false) throw req.i18n.t('error:type.unknown')
         return res.status(200).json({accepted: true}) })
       .catch(error => { return res.status(401).json({
         error: {

@@ -1,9 +1,8 @@
 import express from 'express'
 const router = express.Router()
 import { db } from '../controllers/database'
-import { hasAuthorization } from './middlewares/authentication'
+import { hasAuthorization, isOwnerOrAdmin } from './middlewares/authentication'
 import Role from '../models/role.model'
-import { hasAuthorization } from './middlewares/authentication'
 require('dotenv').config('../../')
 
 
@@ -27,7 +26,7 @@ router.get('/:name', (req, res) => {
 /* GET roles listing. */
 router.get('/', [hasAuthorization], (req, res) => {
     Role.find({}).exec()
-        .then(roles => { return res.status(200).json(roles.map((role) => {return role.toJSON()})) })
+        .then(roles => { return res.status(200).json(roles.map(role => {return role.toJSON()})) })
         .catch(error => { return res.status(401).json({error})})
 })
 
@@ -36,8 +35,17 @@ router.post('/', (req, res) => { // Record to MongoDB
     Role.create( { name: req.body.name,
                    color: req.body.color,
                    description: req.body.description }).exec()
-        .then(role => { return res.json({error: '', accepted: true}) })
-        .catch(error => { return res.json({accepted: false, error: error.message}) })
+        .then(role => { return res.status(201).json({error: '', accepted: true}) })
+        .catch(error => { return res.status(400).json({accepted: false, error: error.message}) })
 } )
+
+router.put('/', [hasAuthorization, isOwnerOrAdmin], (req, res) => {
+    const { role_form } = req.body
+    Role.findOneAndUpdate({_id: role_form.id}, 
+                          {$set: role_form}, 
+                          {new: true}).exec()
+        .then(role => { return res.status(201).json(role.toJSON()) })
+        .catch(error => { return res.status(401).json({error})})
+})
 
 module.exports = router

@@ -20,13 +20,13 @@ const getRoles = async (signal) => {
 } catch(error) { return JSON.stringify({error}) }
 }
 
-const updateRole = async (id, updatedRole) => {
+const updateRole = async (form_role) => {
     try {
         const url = `api/roles/update/${id}`
         let response = await fetch(url, {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: updatedRole
+            body: JSON.stringify({form_role})
         })
         return response.json()
     } catch(error) { return JSON.stringify({error})}

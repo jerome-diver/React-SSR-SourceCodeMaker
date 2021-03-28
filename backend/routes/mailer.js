@@ -27,7 +27,7 @@ router.post('/account/validate', [emailValidation], (req, res) => {
             link_validate: req.email.validation_link,
             submit_text: req.email.submit_text
         }, (error) => { failedToSentEmail(error, res, req.i18n) })
-    return res.status(200).json( { error: undefined, 
+    return res.status(202).json( { error: undefined, 
                                    sent: true,
                                    start: req.date.start, 
                                    end:   req.date.end })
@@ -45,7 +45,7 @@ router.post('/account/reset_password', [emailResetPassword], (req, res) => {
         link_validate: req.email.validation_link,
         submit_text: req.email.submit_text
     }, (error) => { failedToSentEmail(error, res, req.i18n) })
-    return res.status(200).json({ error: undefined, 
+    return res.status(202).json({ error: undefined, 
                                   sent:  true, 
                                   start: req.date.start, 
                                   end:   req.date.end })
@@ -75,7 +75,7 @@ router.post('/account/modify_email', [isValid, checkEmail, sanitizer, emailModif
             (error) => { emailSent[key] = {...value, error, sent: false } })
         if (emailSent[key] == undefined) emailSent[key] = {...value, sent: true }
     } 
-    const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 200 : 401
+    const status = (emailSent.oldEmail.sent && emailSent.newEmail.sent) ? 202 : 401
     return res.status(status).json(emailSent) 
 } )
 
@@ -90,7 +90,7 @@ const verifyEmailExist = async (email) => {
 router.post('/email/check', isValid, (req, res) => {
     const { email } = req.body
     verifyEmailExist(email)
-        .then(status => { return res.status(200).json({status}) })
+        .then(status => { return res.status(202).json({status}) })
         .catch(error => { return res.status(400).json({error}) })
 })
 

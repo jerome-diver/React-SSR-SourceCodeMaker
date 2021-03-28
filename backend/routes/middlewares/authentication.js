@@ -39,12 +39,12 @@ const canConnect  = (req, res, next) => {
     if (id === {}) { return res.status(400).json({error: req.i18n.t('error:authenticate.id.missing') }) }
     User.findOne(id).exec()
         .then(user => {
-            if(!user.authenticate(req.body.password)) throw {
+            if(!user.authenticate(req.body.password)) throw ({ error: {
                 name: req.i18n.t('error:authenticate.user.password.title'), 
-                message: req.i18n.t('error:authenticate.user.password.message') }
-            if (!user.validated) throw { 
+                message: req.i18n.t('error:authenticate.user.password.message')} })
+            if (!user.validated) throw ({ error: {
                 name: req.i18n.t('error:authenticate.user.disabled.title'),
-                message:  req.i18n.t('error:authenticate.user.disabled.message')}
+                message:  req.i18n.t('error:authenticate.user.disabled.message')} })
             req.user = user.toJSON()
             next() })
         .catch(error => {return res.status(401).json({error})})
