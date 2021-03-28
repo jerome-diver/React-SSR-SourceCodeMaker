@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import FlagFR from '../../img/flag-fr.svg'
 import FlagUS from '../../img/flag-us.svg'
 import FlagUK from '../../img/flag-uk.svg'
-import Gravatar from 'react-gravatar'
+import { getGravatarUrl } from 'react-awesome-gravatar';
 
 const getFlagFromLng = (lng) => {
     switch(lng) {
@@ -52,15 +52,12 @@ const I18nSelector = (props) => {
     console.log("--- I18nSelector (Navigation sub-component) flagLng props is", i18n.language)
 
     useEffect(() => {
-        console.log("--- I18nSelector [useEffect] (Navigation sub-menu) language is", i18n.language)
         setFlagSelected(imgFlag(i18n.language, 20))
     },[i18n.language])
 
     const changeLanguage = lng => () => {
-        console.log("CHANGING language to", lng)
         i18n.changeLanguage(lng)
         if (getUser()) {
-            console.log("We got a user session existing...")
             setLanguage(lng)
         }
         setFlagSelected(imgFlag(lng, 20))
@@ -94,17 +91,17 @@ const UserRoleEntries = ({ role }) => {
 
 const UserEntries = ({ username, email, role }) => {
     const { t } = useTranslation()
-    const [ title, setTitle ] = useState(<span>{username}</span>)
-    console.log("--- UserLogEntries navigation sub-menu users, username is:", username)
+    const [ avatar, setAvatar ] = useState(<FontAwesomeIcon icon={faUserCircle} style={{margin: '4px'}}/>)
 
     useEffect(() => {
-      setTitle(<span><Gravatar email={email} size={18} default='mp'/> {username}</span>)
+      const options = {size: 18, default: 'mp'}
+      const gravatar = getGravatarUrl(email, options)
+      setAvatar(<img src={gravatar} className='mr-2'/>)
     }, [username])
 
     if (username) {
-      return (
-        <>
-          <NavDropdown title={title}
+      return (<>
+          <NavDropdown title={<span>{avatar}{username}</span>}
                        id="basic-nav-dropdown">
             <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
               <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>
@@ -112,20 +109,16 @@ const UserEntries = ({ username, email, role }) => {
             <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
               <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.signout')}</NavLink>
           </NavDropdown>
-        </>
-      ) 
-    } else {
-      return (
-        <>
-          <NavDropdown title={<span><FontAwesomeIcon icon={faUserCircle}/> {t('nav_bar.user.main')}</span>}>
-            <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.user.signin')}</NavLink>
-            <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.user.signup')}</NavLink>
-          </NavDropdown>
-        </>
-      )
-  }
+      </>)
+    }
+    return (<>
+        <NavDropdown title={<span>{avatar}{t('nav_bar.user.main')}</span>}>
+          <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.user.signin')}</NavLink>
+          <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
+            <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.user.signup')}</NavLink>
+        </NavDropdown>
+    </>)
 }
 
 const Navigation = (props) => {

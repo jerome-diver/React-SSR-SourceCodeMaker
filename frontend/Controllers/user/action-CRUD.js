@@ -46,7 +46,7 @@ const update = async (user_form) => {
             credentials: 'include',
             body: JSON.stringify({user_form}) } )
         return response.json()
-    } catch(error) { console.log("ERROR !!!!!!"); return error }
+    } catch(error) { return error }
 }
 
 const remove = async (params) => {

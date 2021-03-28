@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react'
 import { Jumbotron, Card, Form, Badge, Tooltip,Modal,
          Button, Alert, OverlayTrigger } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserEdit, faUserCheck } from '@fortawesome/free-solid-svg-icons'
+import { faUserEdit, faUserCheck, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import '../../../stylesheet/users.sass'
@@ -11,6 +11,7 @@ import { update, updatePassword } from '../../../Controllers/user/action-CRUD'
 import { checkEmail } from '../../../Controllers/user/authenticate-api'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
+import { getGravatarUrl } from 'react-awesome-gravatar';
 const navigatorInfo = require('navigator-info')
 const _ = require('lodash')
 import { Loading } from '../public/Printers.component'
@@ -70,10 +71,14 @@ const Profile = (props) => {
     const [ showPasswordModal, setShowPasswordModal ] = useState(false)
     const [ toggleEmail, setToggleEmail ] = useState('outline-light')
     const [ togglePwd, setTogglePwd ] = useState('outline-light')
+    const [ avatar, setAvatar ] = useState(<FontAwesomeIcon icon={faUserCircle} style={{margin: '4px'}}/>)
 
     useEffect( () => {
         if (!userSession) setUserSession(washUser(getUser()))
         setAccountState(accountEnabled(userForm.validated)) 
+        const options = {size: 18, default: 'mp'}
+        const gravatar = getGravatarUrl(userSession.email, options)
+        setAvatar(<img src={gravatar} className='mr-2'/>)
         setLoaded(true)
     }, [userSession, message] )
   
@@ -210,7 +215,8 @@ const Profile = (props) => {
                     <Card.Body>
                         <Form onSubmit={clickSubmit} noValidate validated={validated}>
                             <Card.Title>
-                                {t('profile.header.title', { username: userForm.username })} <Badge variant={accountState.color}>{accountState.status}</Badge>
+                                {avatar}{t('profile.header.title', { username: userForm.username })}
+                                <Badge variant={accountState.color} className='ml-2'>{accountState.status}</Badge>
                                 </Card.Title>
                             <Card.Subtitle className='mb-2 text-muted' />
                             <Card.Text>{t('profile.header.description')}</Card.Text>

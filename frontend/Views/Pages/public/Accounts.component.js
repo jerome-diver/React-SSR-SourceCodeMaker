@@ -9,7 +9,7 @@ import '../../../stylesheet/users.sass'
 import { Calendar2Date } from 'react-bootstrap-icons'
 import { date_formed, accountEnabled } from '../../helpers/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Gravatar from 'react-gravatar'
+import { getGravatarUrl } from 'react-awesome-gravatar';
 
 const editAccountRole = (account, setAccount, setEditRole) => {
     console.log("Role is:", account.role.name)
@@ -49,9 +49,17 @@ const ActionLinks = ({ account }) => {
 
 const Account = ({ account, setAccount, setEditRole }) => {
     const { t } = useTranslation()
+    const [ avatarUrl, setAvatarUrl ] = useState('')
     const accountStatus = accountEnabled(account.user.validated)
     const { getUser } = useAuthenticate()
     const user = getUser()
+
+    useEffect(() => {
+      const options = {size: 18, default: 'mp'}
+      const gravatar = getGravatarUrl(account.user.email, options)
+      setAvatarUrl(gravatar)
+    }, [account.user])
+
     if (user.id == account.user.id) return null
     else {
         return (
@@ -59,7 +67,7 @@ const Account = ({ account, setAccount, setEditRole }) => {
                 <Card.Header className='d-flex align-items-center justify-content-between' 
                             style={{ backgroundColor: 'rgb(25,25,25,0.75)' }}>
                     <div className='d-flex'>
-                        <Gravatar email={account.user.email} size={24} default='mp'/>
+                        <img src={avatarUrl} className='mr-2'/>
                         <h4 className='ml-2'>{account.user.username}</h4>
                     </div>
                     <Button variant={`outline-${account.role.color}`}
@@ -122,8 +130,8 @@ const Accounts = () => {
         update(to_update_user)
             .then(account => {
                 if (account.error) throw (account.error)
-                setAccount(account)})
-            .catch(error =>  {console.log("HERE IS THE ERROR!"); setError(error);} )
+                setAccount(account) })
+            .catch(error =>  setError(error) )
             .finally(() =>   setEditRole(false))
     }
     const onRoleChange = (e) => { setSelectedRoleID(e.target.value) }

@@ -80,8 +80,8 @@ router.put('/',
             Role.findOne({_id: user.role_id}).exec()
                 .then(role => { 
                     return res.status(201).json({ user: user.toJSON(), 
-                                                    role: role.toJSON() }) }) })
-        .catch(error => { return res.status(400).json({
+                                                  role: role.toJSON() }) }) })
+        .catch(error => { res.status(400).json({
                           error: { name: req.i18n.t('error:database.users.update.failed'), 
                                    message: error.message} }) })
 })
