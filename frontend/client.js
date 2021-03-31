@@ -8,6 +8,12 @@ import './stylesheet/app.sass'
 import App from './App'
 import { Loading } from './Views/Pages/public/Printers.component'
 import { CookiesProvider } from 'react-cookie'
+import { Provider } from 'react-redux'
+import store from './Redux/store'
+
+const unSubscribe = store.subscribe(() => {
+  console.log("*** store state is: %s ***", store.getState())
+})
 
 
 const BaseAppI18n = () => {
@@ -16,7 +22,9 @@ const BaseAppI18n = () => {
     <Suspense fallback={<Loading/>}>
       <CookiesProvider>
           <BrowserRouter>
-            <App />
+            <Provider store={store}>
+              <App />
+            </Provider>
           </BrowserRouter>
       </CookiesProvider>
     </Suspense>

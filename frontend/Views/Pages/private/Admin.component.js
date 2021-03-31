@@ -5,7 +5,7 @@ import { Button, Jumbotron, Accordion, Card, OverlayTrigger, Popover } from 'rea
 import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from '../public/Printers.component'
 import { useTranslation } from 'react-i18next'
-import Accounts from '../public/Accounts.component'
+import AccountsManager from '../public/Accounts.component'
 
 const Admin = (props) => {
     const { t } = useTranslation()
@@ -39,7 +39,7 @@ const Admin = (props) => {
                 </Accordion.Toggle>
               </Card.Header>
               <Accordion.Collapse eventKey="0">
-                <Card.Body><Accounts/></Card.Body>
+                <Card.Body><AccountsManager/></Card.Body>
               </Accordion.Collapse>
             </Card>
             <Card>

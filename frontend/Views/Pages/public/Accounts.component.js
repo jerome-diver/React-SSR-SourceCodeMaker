@@ -8,27 +8,99 @@ import { Loading, Error } from './Printers.component'
 import '../../../stylesheet/users.sass'
 import { Calendar2Date } from 'react-bootstrap-icons'
 import { date_formed, accountEnabled } from '../../helpers/config'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getGravatarUrl } from 'react-awesome-gravatar';
+import { useSelector, useDispatch } from 'react-redux'
+import { setSelectedAccount, setEmailToSendContent,
+         setExistingRoles, setApplyUpdateValidity,
+         setRoleIdToUpdate, setSelectedAccountValidity, 
+         setModal, setModalOpen,
+         setError, setLoading } from '../../../Redux/Slices/accounts'
+import store from '../../../Redux/store'
 
-const editAccountRole = (account, setAccount, setEditRole) => {
-    console.log("Role is:", account.role.name)
-    setAccount(account)
-    setEditRole(true)
+const AccountsManager = () => {
+    const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const { open, submit, title, body } = useSelector(state => state.accounts.modal)
+    const { loading, error } = useSelector(state => state.accounts.componentStatus)
+
+    const handleClose = () => { 
+        dispatch(setModalOpen(false))
+        dispatch(setApplyUpdateValidity(false))
+    }
+
+    const submitFN = {
+        submitRole: (e) => {
+            e.preventDefault()
+            const selectedAccount = store.getState().accounts.selectedAccount
+            console.log("Update this account user: %s, with role_id: %s", 
+                        selectedAccount.content.user.username, selectedAccount.toUpdate.RoleId)
+            const to_update_user = {...selectedAccount.content.user, 
+                                    role_id: selectedAccount.toUpdate.roleId}
+            update(to_update_user)
+                .then(account => {
+                    if (account.error) throw (account.error)
+                    dispatch(setSelectedAccount(account))
+                    })
+                .catch(error =>  dispatch(setError(error)) )
+                .finally(() =>   dispatch(setModalOpen(false)))
+        },
+        submitSwitch: (e) => {
+
+        }
+    }
+
+    if (error.message) return (
+         <Error title={t('error:accounts.list.failed')} 
+                name={error.name} 
+                message={error.message} /> )
+    return (<>
+        <Accounts />
+        <Modal show={open}
+               size='lg'
+               onHide={handleClose}
+               backdrop="static"
+               centered >
+            <Form onSubmit={ submitFN[submit] }>
+            <Modal.Header closeButton>
+                <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form.Group as={Col}>
+                    {(body == 'body_roles') ? (<ModalBodyRole />) : (<ModalBodySwitch />) }
+                </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
+                <Button variant="primary" type='submit'>{t('account.role.save')}</Button>
+            </Modal.Footer>
+            </Form>
+        </Modal>
+    </>)
 }
-
-const switchValidity = (account, validity, setValidity) => { 
-    console.log("Edit")
-    setValidity(accountEnabled(!validity.enabled))
-}
-
-const deleteAccount = (account) => { console.log("DELETE account:", account.user.username) }
 
 const ActionLinks = ({ account }) => {
     const { t } = useTranslation()
     const { getUser, getRole } = useAuthenticate()
     const user = getUser()
     const role = getRole()
+
+    const deleteAccount = (account) => { 
+        console.log("DELETE account:", account.user.username)
+        /* Should:
+            1/ open model form to add description reason text */
+
+        /*  3/ remove user account concerned */
+
+    }
+
+    const sendEmailToUser = (account, content) => {
+        /* Should:
+            1/ open model form to add warn description */
+
+        /*  2/ send email to user.email to warn him */
+
+    }
+
     if (role && ((role.name == "Admin") || (user.id == account.user.id))) {
         return (<>
             <Button onClick={() => deleteAccount(account)} 
@@ -40,12 +112,82 @@ const ActionLinks = ({ account }) => {
     } else return null
 }
 
-const Account = ({ account, setAccount, setEditRole }) => {
+const ModalBodyRole = () => {
+    const dispatch = useDispatch()
+    const roles = store.getState().accounts.existingRoles
+    const account = store.getState().accounts.selectedAccount.content
+
+    const onRoleChange = (e) => { 
+        const role_id = e.target.value
+        dispatch(setRoleIdToUpdate(role_id))
+    }
+
+    return ( <>
+        { roles.map(role => { 
+            return (
+                <FormCheck key={role.id} id={'selectedRole' + role.id}>
+                    <FormCheck.Input isValid={(account.role) ? (account.role.id == role.id) 
+                                                            : false}
+                                    type='radio'
+                                    name='roleSelected'
+                                    value={role.id}
+                                    onChange={onRoleChange} />
+                    <FormCheck.Label>{role.name}</FormCheck.Label>
+                    <Form.Text className='text-muted'>{role.description}</Form.Text>
+                </FormCheck>
+            )
+        })}
+    </>)
+}
+
+const ModalBodySwitch = () => {
+    const { t } = useTranslation()
+    const dispatch = useDispatch()
+
+    const onEmailContent = (e) => { 
+        const content = e.target.value
+        dispatch(setEmailToSendContent(content))
+    }
+
+    return (<>
+        <Form.Label>{t('account.switch_validity.label')}</Form.Label>
+        <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
+    </>)
+}
+
+const Account = ({ account }) => {
     const { t } = useTranslation()
     const [ avatarUrl, setAvatarUrl ] = useState('')
-    const [ validity, setValidity ] = useState(accountEnabled(account.user.validated))
     const { getUser } = useAuthenticate()
     const user = getUser()
+    const dispatch = useDispatch()
+
+    const switchValidity = (account) => { 
+        dispatch(setSelectedAccount(account))
+        /* should:
+            1/ open modal form description reason text */
+        const selectedAccount = store.getState().accounts.selectedAccount.content
+        const username = (selectedAccount.user) ? selectedAccount.user.username : 'unknown'
+        const title = t('account.switch_validity.title') + ' ' +  username
+        const body = 'body_switch'
+        const modal = { open: true, submit: 'submitSwitch', title, body }
+        dispatch(setModal(modal)) // dispatch triggers.accounts.modal
+        /*  2/ switch user account validity (!user.validated) */
+        const valid = store.getState().accounts.selectedAccount.validity.enabled
+        const field_status = accountEnabled(!valid)
+        dispatch(setSelectedAccountValidity(field_status))
+    }
+
+    const editAccountRole = (account) => {
+        console.log("Role is:", account.role.name)
+        /* Define modal contents an open (for submit function, title and body content) */
+        const username = (account.user) ? account.user.username : 'unknown'
+        const title = t('account.role.edit.title') + ' ' + username
+        const body = 'body_roles'
+        const modal = { open: true, submit: 'submitRole', title, body }
+        dispatch(setSelectedAccount(account))
+        dispatch(setModal(modal)) // dispatch triggers.accounts.modal
+    }
 
     useEffect(() => {
       const options = {size: 18, default: 'mp'}
@@ -55,6 +197,7 @@ const Account = ({ account, setAccount, setEditRole }) => {
 
     if (user.id == account.user.id) return null
     else {
+        const selected = accountEnabled(account.enabled)
         return (
             <Card id={account.user.id} className='mt-2'>
                 <Card.Header className='d-flex align-items-center justify-content-between' 
@@ -64,8 +207,8 @@ const Account = ({ account, setAccount, setEditRole }) => {
                         <h4 className='ml-2'>{account.user.username}</h4>
                     </div>
                     <Button variant={`outline-${account.role.color}`}
-                            onClick={() => editAccountRole(account, setAccount, setEditRole)}
-                            size='sm'>
+                            size='sm'
+                            onClick={() => editAccountRole(account)} >
                         {account.role.name}
                     </Button>
                 </Card.Header>
@@ -100,13 +243,14 @@ const Account = ({ account, setAccount, setEditRole }) => {
                                                 {t('account.user.status.popover.title')}
                                             </Popover.Title>
                                             <Popover.Content>
-                                                {t('account.user.switch', {action: validity.enabled})}
+                                                {t('account.user.switch',
+                                                  {action: selected.enabled})}
                                             </Popover.Content>
                                         </Popover> }>
-                        <Button variant={`outline-${validity.color}`}
+                        <Button variant={`outline-${selected.color}`}
                                 size='sm'
-                                onClick={() => switchValidity(account, validity, setValidity)}>
-                            {validity.status}
+                                onClick={() => switchValidity(account)}>
+                            {selected.status}
                         </Button>
                     </OverlayTrigger>
                 </Card.Text>
@@ -121,90 +265,33 @@ const Account = ({ account, setAccount, setEditRole }) => {
 
 const Accounts = () => {
     const { t } = useTranslation()
-    const [ accounts, setAccounts ]             = useState([])    // list data from mongodb accounts server collection
-    const [ selectedAccount, setAccount ]       = useState({})    // Account selected to edit
-    const [ loading, setLoading ]               = useState(true)  // false: not loading, true: loading
-    const [ error, setError ]                   = useState('')    // error loading accounts report text
-    const [ editRole, setEditRole ]             = useState(false) // open Modal to edit Role with account
-    const [ existingRoles, setExistingRoles ]   = useState([])    // Existing roles list
-    const [ selectedRoleID, setSelectedRoleID ] = useState('')    // Role_id selected
+    const [ accounts, setAccounts ]               = useState([])    // list data from mongodb accounts server collection
+    const selectedAccount = useSelector(state => state.accounts.selectedAccount.content)
+    const { loading } = useSelector(state => state.accounts.componentStatus)
+    const dispatch = useDispatch()
   
-    const handleClose = () => { setEditRole(false) }
-    const submitRole = (e) => {
-        e.preventDefault()
-        console.log("Update this account user: %s, with role_id: %s", 
-                    selectedAccount.user.username, selectedRoleID)
-        const to_update_user = {...selectedAccount.user, role_id: selectedRoleID}
-        update(to_update_user)
-            .then(account => {
-                if (account.error) throw (account.error)
-                setAccount(account) })
-            .catch(error =>  setError(error) )
-            .finally(() =>   setEditRole(false))
-    }
-    const onRoleChange = (e) => { setSelectedRoleID(e.target.value) }
-
     useEffect( () => {
         const abort = new AbortController()     // stop to fetch a request if we cancel this page
         const myUsers = list(abort.signal)
         const myRoles = getRoles(abort.signal)
         Promise.all([myUsers, myRoles])
-            .then(results => { setAccounts(results[0]); setExistingRoles(results[1]); })
-            .catch(error => setError(error))
-            .finally(() =>  setLoading(false))
+            .then(results => {
+                setAccounts(results[0])
+                dispatch(setExistingRoles(results[1])) })
+            .catch(error => dispatch(setError(error)))
+            .finally(() =>  {
+                const isLoading = false
+                dispatch(setLoading(isLoading)) })
         return function cleanup() { abort.abort() }
     }, [selectedAccount] )
   
-    if (loading) { return <Loading /> }
-    if (error.message) return (
-         <Error title={t('error:accounts.list.failed')} 
-                name={error.name} 
-                message={error.message} /> )
-    return (<>
+    if (loading) return (<Loading />)
+    return (
         <article id='accounts'>
-            {accounts.map( (account, index) => { 
-                return ( <Account account={account}
-                                    setAccount={setAccount}
-                                    key={index} 
-                                    setEditRole={setEditRole}/> ) } ) }
+            {accounts.map( account => { 
+                return ( <Account key={account.user.id} account={account}/> ) } ) }
         </article>
-        <Modal show={editRole}
-               size='lg'
-               onHide={handleClose}
-               backdrop="static"
-               centered >
-            <Form onSubmit={submitRole}>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    {t('account.role.edit.title')} {(selectedAccount.user) ? selectedAccount.user.username 
-                                                                            : 'unknown'}
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form.Group as={Col}>
-                    {existingRoles.map((role, index) => {
-                        return (
-                        <FormCheck key={index} id={'selectedRole' + index}>
-                            <FormCheck.Input isValid={(selectedAccount.role) ? (selectedAccount.role.id == role.id) 
-                                                                                : false}
-                                                type='radio'
-                                                name='roleSelected'
-                                                value={role.id}
-                                                onChange={onRoleChange} />
-                            <FormCheck.Label>{role.name}</FormCheck.Label>
-                            <Form.Text className='text-muted'>{role.description}</Form.Text>
-                        </FormCheck>
-                        )
-                    })}
-                </Form.Group>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
-                <Button variant="primary" type='submit'>{t('account.role.save')}</Button>
-            </Modal.Footer>
-            </Form>
-        </Modal>
-    </>)
+    )
 }
 
-export default Accounts
+export default AccountsManager

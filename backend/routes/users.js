@@ -35,15 +35,6 @@ router.get('/user',
         .catch(error => { return res.status(401).json({error}) })
 })
 
-/* POST to create new user */
-const formatMongooseError = (error) => {
-    if(error.errors) {
-        for (const [k, v] of Object.entries(error.errors)) {
-            if (k == 'role') return {name: error.errors.role._message, 
-                                     message: error.errors.role.errors.description.message } } }
-    return error
-}
-
 router.post('/',
             [checkNewUser, sanitizer],
             (req, res) => {

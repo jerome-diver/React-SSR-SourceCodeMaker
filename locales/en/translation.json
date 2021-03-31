@@ -34,6 +34,16 @@
     "title2": "Metadata",
     "created": "Created the {{date}}",
     "status": "Status",
+    "switch_validity": {
+      "label": "Email content",
+      "title": "Informed email after to modify account"
+    },
+    "change_motivation": {
+      "warn": "Warning",
+      "suspended": "Suspended for {{delay}}",
+      "banned": "Banned !",
+      "asked": "On your own"
+    },
     "user": {
       "status":{
         "popover": {
@@ -42,8 +52,8 @@
       },
       "switch": "$t(account.user.{{action}})",
       "delete": "Destruct",
-      "true": "Activated account",
-      "false": "Unactivated account"
+      "true": "Activate account",
+      "false": "Unactivate account"
     },
     "role": {
       "title": "Roles",

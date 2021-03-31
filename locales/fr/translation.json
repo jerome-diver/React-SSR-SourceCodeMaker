@@ -34,6 +34,16 @@
     "title2": "Méta-données",
     "created": "Créé le {{date}}",
     "status": "Status",
+    "switch_validity": {
+      "label": "Contenu de l'email",
+      "title": "Email de signalement de changement de validité du compte"
+    },
+    "change_motivation": {
+      "warn": "Avertissement",
+      "suspended": "Suspension pour {{delay}}",
+      "banned": "Banni !",
+      "asked": "A vôtre demande"
+    },
     "user": {
       "status":{
         "popover": {
@@ -42,8 +52,8 @@
       },
       "switch": "$t(account.user.{{action}})",
       "delete": "Détruire",
-      "true": "Désactive le compte",
-      "false": "Active le compte",
+      "true": "Désactiver le compte",
+      "false": "Activer le compte",
       "activated": "Compte actif",
       "disabled": "Compte Inactif"
     },
