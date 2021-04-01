@@ -35,6 +35,7 @@
     "created": "Créé le {{date}}",
     "status": "Status",
     "switch_validity": {
+      "reason": "Choisissez la raison",
       "label": "Contenu de l'email",
       "title": "Email de signalement de changement de validité du compte"
     },

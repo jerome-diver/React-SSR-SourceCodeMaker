@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { list, update } from '../../../Controllers/user/action-CRUD'
 import { getRoles } from '../../../Controllers/roles/action-CRUD'
-import { Modal, Badge, Card, Button, Col, Form, FormCheck, OverlayTrigger, Popover } from 'react-bootstrap'
+import { Modal, Badge, Card, Button, Col, Row, Form, FormCheck, OverlayTrigger, Popover } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from './Printers.component'
@@ -55,9 +55,7 @@ const AccountsManager = () => {
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form.Group as={Col}>
-                    {(body == 'body_roles') ? (<ModalBodyRole />) : (<ModalBodySwitch />) }
-                </Form.Group>
+                {(body == 'body_roles') ? (<ModalBodyRole />) : (<ModalBodySwitch />) }
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
@@ -78,17 +76,19 @@ const ModalBodyRole = () => {
         dispatch(setRoleIdToUpdate(role_id))
     }
 
-    if (account.role) return ( <>
-        { roles.map(role => { if (account.role.id != role.id) return (
-                <FormCheck key={role.id} id={'selectedRole' + role.id} Hide>
-                    <FormCheck.Input type='radio'        onChange={onRoleChange}
-                                     name='roleSelected' value={role.id} />
-                    <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
-                    <Form.Text className='text-muted'>{role.description}</Form.Text>
-                </FormCheck>
-            )
-        })}
-    </>)
+    if (account.role) return ( 
+        <Form.Group as={Col}>
+            { roles.map(role => { if (account.role.id != role.id) return (
+                    <FormCheck key={role.id} id={'selectedRole' + role.id}>
+                        <FormCheck.Input type='radio'        onChange={onRoleChange}
+                                        name='roleSelected' value={role.id} />
+                        <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
+                        <Form.Text className='text-muted'>{role.description}</Form.Text>
+                    </FormCheck>
+                )
+            })}
+        </Form.Group>
+    )
 }
 
 const ModalBodySwitch = () => {
@@ -99,11 +99,29 @@ const ModalBodySwitch = () => {
         const content = e.target.value
         dispatch(setEmailToSendContent(content))
     }
-
-    return (<>
-        <Form.Label>{t('account.switch_validity.label')}</Form.Label>
-        <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
-    </>)
+    const onModeChange = (e) => {
+        const mode = e.target.value
+        console.log("Your choic: ", mode)
+    }
+    const modes = [ {name: 'Warning',    color:'info'},
+                    {name: 'Suspended',  color:'warning'},
+                    {name: 'Banned',     color:'danger'},
+                    {name: 'Own choice', color:'primary'},]
+    return (
+        <Form.Group as={Row}>
+            <Form.Label>{t('account.switch_validity.label')}</Form.Label>
+            <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
+            <div className='mr-4'>{t('account.switch_validity.reason')}</div>
+            { modes.map((mode, index) => { return (
+                    <FormCheck key={index} className='mr-4'>
+                        <FormCheck.Input type='radio'        onChange={onModeChange}
+                                        name='modeSelected' value={mode.name} />
+                        <FormCheck.Label><Badge variant={mode.color}>{mode.name}</Badge></FormCheck.Label>
+                    </FormCheck>
+                )
+            })}
+        </Form.Group>
+    )
 }
 
 const ActionLinks = ({ account }) => {

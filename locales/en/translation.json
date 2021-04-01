@@ -35,6 +35,7 @@
     "created": "Created the {{date}}",
     "status": "Status",
     "switch_validity": {
+      "reason": "Choose a reason",
       "label": "Email content",
       "title": "Informed email after to modify account"
     },
