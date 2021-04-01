@@ -29,7 +29,8 @@ export  const accountsSlice = createSlice({
             open: false,
             submit: {},
             title: '',
-            body: ''
+            body: '',
+            canSubmit: false,
         },
         email: {
             mode: 'contact', // any in ['contact', 'warning', 'banned', 'suspended']
@@ -48,20 +49,23 @@ export  const accountsSlice = createSlice({
         setExistingRoles: (state, action) => { state.existingRoles = action.payload },
         setModal: (state, action) => { state.modal = action.payload },
         setModalOpen: (state, action) => { state.modal.open = action.payload },
-        setEmailToSend: (state, action) => { state.email = action.payload },
+        setModalCanSubmit: (state, action) => { state.modal.canSubmit = action.payload },
         setEmailToSendContent: (state, action) => { state.email.content = action.payload },
+        setEmailToSendSubject: (state, action) => { state.email.subject = action.payload },
+        setEmailToSendTo: (state, action) => { state.email.to = action.payload },
+        setEmailToSendMode: (state, action) => { state.email.mode = action.payload },
     }
 })
 
 const { actions, reducer } = accountsSlice
 
-export const { setLoading, setError,
-    setEmailToSend, setExistingRoles, setModalOpen, getSelectedAccountContent,
-    getModalBody, getModalTitle, getModalSubmit, getModalOpen,
-    setRoleIdToUpdate, setSelectedAccount, setValidityToUpdate,
-    setModal, setSelectedAccountValidity, setEmailToSendContent,
-    getModal, getEmail, getExistingRoles, getSelectedAccount,
-    setApplyUpdateRoleId, setApplyUpdateValidity } = actions
+export const { 
+    setLoading, setError, setExistingRoles,
+    setModal, setModalCanSubmit, setModalOpen, 
+    setSelectedAccount, setSelectedAccountValidity, 
+    setRoleIdToUpdate, setValidityToUpdate,
+    setEmailToSendContent, setEmailToSendSubject, 
+    setEmailToSendTo, setEmailToSendMode } = actions
 
 
 export default reducer
