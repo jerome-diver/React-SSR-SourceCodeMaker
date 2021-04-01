@@ -15,45 +15,12 @@ import { setSelectedAccount, setSelectedAccountValidity, setValidityToUpdate,
          setEmailToSendSubject, setEmailToSendTo, setEmailToSendMode,
          setModal, setModalOpen, setModalCanSubmit,
          setError, setLoading } from '../../../Redux/Slices/accounts'
+import { actionsAccountsManager } from './compositions/accounts.actions'
+import { statesAccountsManager } from './compositions/accounts.states'
 import store from '../../../Redux/store'
 
-const AccountsManager = () => {
-    const { t } = useTranslation()
-    const dispatch = useDispatch()
-    const { open, submit, title, body } = useSelector(state => state.accounts.modal)
-    const { error } = useSelector(state => state.accounts.componentStatus)
-    const { canSubmit } = useSelector(state => state.accounts.modal)
-
-    const handleClose = () => { dispatch(setModalOpen(false)) }
-
-    const update_account = (to_update) =>{
-            update(to_update)
-                .then(account => {
-                    if (account.error) throw (account.error)
-                    dispatch(setSelectedAccount(account))
-                    })
-                .catch(error =>  dispatch(setError(error)) )
-                .finally(() =>   dispatch(setModalOpen(false)))
-    }
-
-    const submitFN = {
-        submitRole: (e) => {
-            e.preventDefault()
-            const selectedAccount = store.getState().accounts.selectedAccount
-            const to_update_user  = {...selectedAccount.content.user, 
-                                     role_id: selectedAccount.toUpdate.roleId}
-            update_account(to_update_user)
-        },
-        submitSwitch: (e) => {
-            e.preventDefault()
-            const selectedAccount = store.getState().accounts.selectedAccount
-            const email_content   = store.getState().accounts.email
-            const to_update_user  = {...selectedAccount.content.user,
-                                     validated: !selectedAccount.content.user.validated}
-            update_account(to_update_user)
-        }
-    }
-
+const AccountsManagerUI = ({handleClose, submitFN, error, t, 
+                            open, submit, title, body, canSubmit}) => {
     if (error.message) return (
          <Error title={t('error:accounts.list.failed')} 
                 name={error.name} 
@@ -77,6 +44,8 @@ const AccountsManager = () => {
         </Modal>
     </>)
 }
+
+const AccountsManager = actionsAccountsManager(statesAccountsManager(AccountsManagerUI))
 
 const ModalBodyRole = () => {
     const dispatch = useDispatch()
