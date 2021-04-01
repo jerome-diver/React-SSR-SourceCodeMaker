@@ -78,7 +78,7 @@
       "description": "Vous pouvez éditer vôtre profile ici, mais vous devrez indiquer vôtre mot de passe, puis le confirmer pour que cela soit pris en compte."
     },
     "email": {
-      "label": "courriel",
+      "label": "Courriel",
       "button": {
         "edit": "email",
         "tooltip": {

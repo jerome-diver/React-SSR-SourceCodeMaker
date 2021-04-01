@@ -23,10 +23,6 @@ export  const accountsSlice = createSlice({
                 roleId: '',
                 enabled: undefined
             },
-            applyUpdate: {
-                roleId: false,
-                enabled: false
-            }
         },
         existingRoles: [],
         modal: {
@@ -54,17 +50,6 @@ export  const accountsSlice = createSlice({
         setModalOpen: (state, action) => { state.modal.open = action.payload },
         setEmailToSend: (state, action) => { state.email = action.payload },
         setEmailToSendContent: (state, action) => { state.email.content = action.payload },
-        setApplyUpdateRoleId: (state, action) => { state.selectedAccount.applyUpdate.roleId = action.payload },
-        setApplyUpdateValidity: (state, action) => { state.selectedAccount.applyUpdate.enabled = action.payload },
-        getModalOpen: (state) => { state.modal.open },
-        getModalBody: (state) => { state.modal.body },
-        getModalSubmit: (state) => { state.modal.submit },
-        getModalTitle: (state) => { state.modal.title },
-        getModal: (state) => { state.modal },
-        getEmail: (state) => { state.email },
-        getExistingRoles: (state) => { state.existingRoles },
-        getSelectedAccount: (state) => { state.selectedAccount },
-        getSelectedAccountContent: (state) => { state.selectedAccount.content },
     }
 })
 

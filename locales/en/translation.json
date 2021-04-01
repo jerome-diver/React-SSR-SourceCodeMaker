@@ -78,7 +78,7 @@
     "email": {
       "label": "email",
       "button": {
-        "edit": "eMail",
+        "edit": "Email",
         "tooltip": {
           "on": "Click to be able to modify email address, and read instructions to apply update process.",
           "off": "Cancel email modification"
