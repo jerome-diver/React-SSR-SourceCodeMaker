@@ -46,4 +46,76 @@ const actionsAccountsManager = UI => {
     return actions
 }
 
-export { actionsAccountsManager }
+const actionsModalBodyRole = UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        const onRoleChange = (e) => {
+            const role_id = e.target.value
+            dispatch(setRoleIdToUpdate(role_id))
+            dispatch(setModalCanSubmit(true))
+        }
+        props = {...props, onRoleChange}
+        return <UI {...props} />
+    }
+    return actions
+}
+
+const actionsModalBodySwitch = UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        const onEmailContent = (e) => { 
+            const content = e.target.value
+            dispatch(setEmailToSendContent(content))
+        }
+        const onModeChange = (e) => {
+            const mode = e.target.value
+            dispatch(setEmailToSendMode(mode))
+            dispatch(setModalCanSubmit(true))
+        }
+        const modes = [ {name: 'Warning',    color:'info'},
+                        {name: 'Suspended',  color:'warning'},
+                        {name: 'Banned',     color:'danger'},
+                        {name: 'Own choice', color:'primary'},]
+        props = {...props, onModeChange, onEmailContent, modes}
+        return <UI {...props} />
+    }
+    return actions
+}
+
+const actionsAccount =  UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        const switchValidity = (account) => { 
+            dispatch(setSelectedAccount(account))
+            /*  1/ open modal form description reason text */
+            const selectedAccount = store.getState().accounts.selectedAccount
+            const username = (selectedAccount.content.user) ? selectedAccount.content.user.username : 'unknown'
+            const modal = { 
+                open:   true, 
+                submit: 'submitSwitch', 
+                title:  t('account.switch_validity.title') + ' ' +  username, 
+                body:   'body_switch' }
+            dispatch(setModal(modal))
+            /*  2/ switch user account validity (!user.validated) */
+            const valid = selectedAccount.validity.enabled
+            const field_status = accountEnabled(!valid)
+            dispatch(setSelectedAccountValidity(field_status))
+        }
+        const editAccountRole = (account) => {
+            /* Define modal contents an open (for submit function, title and body content) */
+            const username = (account.user) ? account.user.username : 'unknown'
+            const title = t('account.role.edit.title') + ' ' + username
+            const body = 'body_roles'
+            const modal = { open: true, submit: 'submitRole', title, body }
+            dispatch(setSelectedAccount(account))
+            dispatch(setModal(modal)) // dispatch triggers.accounts.modal
+        }
+        props = {...props, switchValidity, editAccountRole}
+        return <UI {...props} />
+    }
+    return actions
+}
+
+
+export { actionsAccountsManager, actionsModalBodyRole, 
+         actionsModalBodySwitch, actionsAccount }
