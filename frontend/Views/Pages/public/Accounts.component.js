@@ -10,6 +10,15 @@ import { statesAccountsManager, statesModalBodyRole,
          statesModalBodySwitch, statesActionLinks,
          statesAccount, statesAccounts } from './compositions/accounts.states'
 
+/* Pure UI components with HOC to compose with states and actions components.
+   -> AccountsManager is the Main composed component
+   -> Accounts show a Modal and the list of
+   -> Account,  who show
+   -> ActionLinks in his Card.Footer 
+   On click event, Modal Content (Body, Title, submit method) are updated with on of:
+   -> ModalBodyRole or
+   -> ModalBodySwitch */ 
+
 const AccountsManagerUI = ({handleClose, submitFN, t, 
                             open, submit, title, body, canSubmit}) => (
      <>
