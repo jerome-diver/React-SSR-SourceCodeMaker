@@ -33,7 +33,11 @@ export  const accountsSlice = createSlice({
             canSubmit: false,
         },
         email: {
-            mode: 'contact', // any in ['contact', 'warning', 'banned', 'suspended']
+            modes: [ {name: 'Warning',    color:'info'},
+                     {name: 'Suspended',  color:'warning'},
+                     {name: 'Banned',     color:'danger'},
+                     {name: 'Own choice', color:'primary'} ],
+            mode: 'contact', // any in modes
             subject: '',
             content: '',
             to: ''

@@ -1,4 +1,4 @@
-/* HOC for enhence states (hooks) to accounts.components Components */
+/* HOC to Compose with Accounts.components STATES */
 
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -42,7 +42,8 @@ const statesModalBodyRole = UI => {
 const statesModalBodySwitch  = UI => {
     const states = (props) => {
         const { t }    = useTranslation()
-        props = {...props, t}
+        const { modes } = useSelector(state => state.accounts.email)
+        props = {...props, t, modes}
         return <UI {...props} />
     }
     return states

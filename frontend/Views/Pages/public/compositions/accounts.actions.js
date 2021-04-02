@@ -1,4 +1,4 @@
-/* Compose with Accounts.component for ACTIONS */
+/* HOC to Compose with Accounts.component for ACTIONS */
 
 import React from 'react'
 import { list, update } from '../../../../Controllers/user/action-CRUD'
@@ -74,11 +74,7 @@ const actionsModalBodySwitch = UI => {
             dispatch(setEmailToSendMode(mode))
             dispatch(setModalCanSubmit(true))
         }
-        const modes = [ {name: 'Warning',    color:'info'},
-                        {name: 'Suspended',  color:'warning'},
-                        {name: 'Banned',     color:'danger'},
-                        {name: 'Own choice', color:'primary'},]
-        props = {...props, onModeChange, onEmailContent, modes}
+        props = {...props, onModeChange, onEmailContent}
         return <UI {...props} />
     }
     return actions
@@ -151,7 +147,6 @@ const actionsAccounts = UI => {
     }
     return actions
 }
-
 
 export { actionsAccountsManager, actionsModalBodyRole, 
          actionsModalBodySwitch, actionsActionLinks,
