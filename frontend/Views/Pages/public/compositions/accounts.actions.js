@@ -2,7 +2,9 @@
 
 import React from 'react'
 import { list, update } from '../../../../Controllers/user/action-CRUD'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { accountEnabled } from '../../../helpers/config'
 import store from '../../../../Redux/store'
 import { setSelectedAccount, setSelectedAccountValidity, setValidityToUpdate,
          setExistingRoles, setRoleIdToUpdate,setEmailToSendContent,
@@ -82,9 +84,34 @@ const actionsModalBodySwitch = UI => {
     return actions
 }
 
+const actionsActionLinks = UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        const deleteAccount = (account) => {
+            console.log("DELETE account:", account.user.username)
+            /* Should:
+                1/ open model form to add description reason text */
+
+            /*  3/ remove user account concerned */
+
+        }
+        const sendEmailToUser = (account, content) => {
+            /* Should:
+                1/ open model form to add warn description */
+
+            /*  2/ send email to user.email to warn him */
+
+        }
+        props = {...props, deleteAccount, sendEmailToUser}
+        return <UI {...props} />
+    }
+    return actions
+}
+
 const actionsAccount =  UI => {
     const actions = (props) => {
         const dispatch = useDispatch()
+        const { t }    = useTranslation()
         const switchValidity = (account) => { 
             dispatch(setSelectedAccount(account))
             /*  1/ open modal form description reason text */
@@ -116,6 +143,16 @@ const actionsAccount =  UI => {
     return actions
 }
 
+const actionsAccounts = UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        props = {...props, }
+        return <UI {...props} />
+    }
+    return actions
+}
+
 
 export { actionsAccountsManager, actionsModalBodyRole, 
-         actionsModalBodySwitch, actionsAccount }
+         actionsModalBodySwitch, actionsActionLinks,
+         actionsAccount, actionsAccounts }

@@ -1,36 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { list, update } from '../../../Controllers/user/action-CRUD'
-import { getRoles } from '../../../Controllers/roles/action-CRUD'
+import React from 'react'
 import { Modal, Badge, Card, Button, Col, Row, Form, FormCheck, OverlayTrigger, Popover } from 'react-bootstrap'
-import { useTranslation } from 'react-i18next'
-import { useAuthenticate } from '../../../Controllers/context/authenticate'
-import { Loading, Error } from './Printers.component'
 import '../../../stylesheet/users.sass'
 import { Calendar2Date } from 'react-bootstrap-icons'
-import { date_formed, accountEnabled } from '../../helpers/config'
-import { getGravatarUrl } from 'react-awesome-gravatar';
-import { useSelector, useDispatch } from 'react-redux'
-import { setSelectedAccount, setSelectedAccountValidity, setValidityToUpdate,
-         setExistingRoles, setRoleIdToUpdate,setEmailToSendContent,
-         setEmailToSendSubject, setEmailToSendTo, setEmailToSendMode,
-         setModal, setModalOpen, setModalCanSubmit,
-         setError, setLoading } from '../../../Redux/Slices/accounts'
+import { date_formed } from '../../helpers/config'
 import { actionsAccountsManager, actionsModalBodyRole,
-         actionsModalBodySwitch, actionsAccount } from './compositions/accounts.actions'
+         actionsModalBodySwitch, actionsActionLinks,
+         actionsAccount, actionsAccounts } from './compositions/accounts.actions'
 import { statesAccountsManager, statesModalBodyRole,
-         statesModalBodySwitch, actionsAccount } from './compositions/accounts.states'
-import store from '../../../Redux/store'
+         statesModalBodySwitch, statesActionLinks,
+         statesAccount, statesAccounts } from './compositions/accounts.states'
 
-const AccountsManagerUI = ({handleClose, submitFN, error, t, 
-                            open, submit, title, body, canSubmit}) => {
-    if (error.message) return (
-         <Error title={t('error:accounts.list.failed')} 
-                name={error.name} 
-                message={error.message} /> )
-    return (<>
+const AccountsManagerUI = ({handleClose, submitFN, t, 
+                            open, submit, title, body, canSubmit}) => (
+     <>
         <Accounts />
         <Modal show={open}        size='lg'    onHide={handleClose} 
-               backdrop="static"  centered >
+                backdrop="static"  centered >
             <Form onSubmit={ submitFN[submit] }>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
@@ -44,28 +29,22 @@ const AccountsManagerUI = ({handleClose, submitFN, error, t,
             </Modal.Footer>
             </Form>
         </Modal>
-    </>)
-}
+    </>
+)
 
-const AccountsManager = actionsAccountsManager(statesAccountsManager(AccountsManagerUI))
-
-const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => {
-    if (content.role) return ( 
-        <Form.Group as={Col}>
-            { existingRoles.map(role => { if (content.role.id != role.id) return (
-                    <FormCheck key={role.id} id={'selectedRole' + role.id}>
-                        <FormCheck.Input type='radio'        onChange={onRoleChange}
-                                         name='roleSelected' value={role.id} />
-                        <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
-                        <Form.Text className='text-muted'>{role.description}</Form.Text>
-                    </FormCheck>
-                )
-            })}
-        </Form.Group>
-    )
-}
-
-const ModalBodyRole = actionsModalBodyRole(statesModalBodyRole(ModalBodyRoleUI))
+const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
+    <Form.Group as={Col}>
+        { existingRoles.map(role => { if (content.role.id != role.id) return (
+                <FormCheck key={role.id} id={'selectedRole' + role.id}>
+                    <FormCheck.Input type='radio'        onChange={onRoleChange}
+                                        name='roleSelected' value={role.id} />
+                    <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
+                    <Form.Text className='text-muted'>{role.description}</Form.Text>
+                </FormCheck>
+            )
+        })}
+    </Form.Group>
+)
 
 const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
     <Form.Group as={Row}>
@@ -83,40 +62,12 @@ const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
     </Form.Group>
 )
 
-const ModalBodySwitch = actionsModalBodySwitch(statesModalBodySwitch(ModalBodySwitchUI))
-
-const ActionLinks = ({ account }) => {
-    const { t }                = useTranslation()
-    const { getUser, getRole } = useAuthenticate()
-    const user = getUser()
-    const role = getRole()
-
-    const deleteAccount = (account) => { 
-        console.log("DELETE account:", account.user.username)
-        /* Should:
-            1/ open model form to add description reason text */
-
-        /*  3/ remove user account concerned */
-
-    }
-
-    const sendEmailToUser = (account, content) => {
-        /* Should:
-            1/ open model form to add warn description */
-
-        /*  2/ send email to user.email to warn him */
-
-    }
-
-    if (role && ((role.name == "Admin") || (user.id == account.user.id))) {
-        return (<>
-            <Button onClick={() => deleteAccount(account)} 
-                    variant="danger"   size='sm'>
-                { t('account.user.delete') }
-            </Button>
-        </> )
-    } else return null
-}
+const ActionLinksUI = ({ account, t, deleteAccount, sendEmailToUser }) => (
+    <Button onClick={() => deleteAccount(account)} 
+            variant="danger"   size='sm'>
+        { t('account.user.delete') }
+    </Button>
+)
 
 const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchValidity }) => (
     <Card id={account.user.id} className='mt-2'>
@@ -196,40 +147,20 @@ const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchVal
     </Card>
 )
 
-const Account = actionsAccount(statesAccount(AccountUI))
+const AccountsUI = ({accounts, user}) => (
+    <article id='accounts'>
+        {accounts.map( account => { if (user.id == account.user.id) {
+            return ( <Account key={account.user.id} account={account}/> ) } } ) }
+    </article>
+)
 
-const Accounts = () => {
-    const { t }                     = useTranslation()
-    const [ accounts, setAccounts ] = useState([])    // list data from mongodb accounts server collection
-    const selectedAccount           = useSelector(state => state.accounts.selectedAccount.content)
-    const { loading }               = useSelector(state => state.accounts.componentStatus)
-    const { getUser }               = useAuthenticate()
-    const user = getUser()
-    const dispatch                  = useDispatch()
-  
-    useEffect( () => {
-        const abort = new AbortController()     // stop to fetch a request if we cancel this page
-        const myUsers = list(abort.signal)
-        const myRoles = getRoles(abort.signal)
-        Promise.all([myUsers, myRoles])
-            .then(results => {
-                setAccounts(results[0])
-                dispatch(setExistingRoles(results[1])) })
-            .catch(error => dispatch(setError(error)))
-            .finally(() =>  {
-                const isLoading = false
-                dispatch(setLoading(isLoading)) })
-        return function cleanup() { abort.abort() }
-    }, [selectedAccount] )
-  
-    if (loading) return (<Loading />)
-    return (
-        <article id='accounts'>
-            {accounts.map( account => { if (user.id == account.user.id) {
-                return ( <Account key={account.user.id} 
-                                  account={account}/> ) } } ) }
-        </article>
-    )
-}
+/* Compose UI with actions and states to provide each Component */
+
+const AccountsManager = actionsAccountsManager(statesAccountsManager(AccountsManagerUI))
+const ModalBodyRole = actionsModalBodyRole(statesModalBodyRole(ModalBodyRoleUI))
+const ModalBodySwitch = actionsModalBodySwitch(statesModalBodySwitch(ModalBodySwitchUI))
+const ActionLinks = actionsActionLinks(statesActionLinks(ActionLinksUI))
+const Account = actionsAccount(statesAccount(AccountUI))
+const Accounts = actionsAccounts(statesAccounts(AccountsUI))
 
 export default AccountsManager
