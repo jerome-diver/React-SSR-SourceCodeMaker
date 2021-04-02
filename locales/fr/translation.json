@@ -46,6 +46,7 @@
       "asked": "A vôtre demande"
     },
     "user": {
+      "contact": "Contacter",
       "status":{
         "popover": {
           "title": "Change le status"

@@ -11,9 +11,9 @@ import { fr as localeFR, en as localeEN } from 'date-fns/locale'
 import User from '../../models/user.model'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
+const emailValidator = require('email-deep-validator')
 
 const host = process.env.TAG + process.env.HOST + ":" + process.env.SERVER_PORT
-
 
 const dates = (created) => {
     const format_date = `iiii, dd MMMM yyyy ${i18n.t('mailer:date.at')} HH:mm`
@@ -30,6 +30,17 @@ const dates = (created) => {
     }
     return { start: format(created, format_date, {locale: localization}),
              end:   format(addDays(created, 2),format_date, {locale: localization}) }
+}
+
+/* Check email address is existing and valid */
+const verifyEmailExist = async (email) => {
+    try {
+        const checkEmail = new emailValidator()
+        const { wellFormed,
+                validDomain,
+                validMailbox } = await checkEmail.verify(email)
+        return (wellFormed && validDomain && validMailbox)
+    } catch(error) {return JSON.stringify({error})}
 }
 
 /* Find user created and build req.email content 
@@ -104,6 +115,7 @@ const emailModifyEmail = (req, res, next) => {
             const action_link = `${url}/${user.id}/${user.ticket}/${newEmail}`
             req.process = date
             req.email = {
+                to              : `${newEmail} ${oldEmail}`,
                 subject         : i18n.t('mailer:account.email.subject'),
                 title           : i18n.t('mailer:account.email.title'),
                 content_title   : i18n.t('mailer:account.email.content.title'),
@@ -118,4 +130,39 @@ const emailModifyEmail = (req, res, next) => {
             next() })
         .catch(err => {return res.status(401).json({error: err, sent: false})})
 }
-export { emailValidation, emailResetPassword, emailModifyEmail }
+
+const emailContactUser = (req, res, next) => {
+    const { username, content, subject } = req.body
+
+}
+
+const emailAlertUser = (req, res, next) => {
+    const { username, mode, subject, content } = req.body
+
+}
+
+const sendEmail = (req, res, next) => {
+    res.app.mailer.send('send_email_to_user', {
+        to: req.email.to,
+        subject: req.email.subject,
+        title: req.email.title,
+        content_title: req.email.content_title,
+        introduction: req.email.introduction,
+        text: req.email.text,
+        link_validate: req.email.validation_link,
+        submit_text: req.email.submit_text
+    }, (error) => { 
+        if (error) return res.status(401).json( 
+                { error: { 
+                    name: req.i18n.t('mailer:failed.title'), 
+                    message: error
+                }, 
+                sent: false
+                })
+        next()
+    })
+}
+
+export { emailValidation, emailResetPassword, emailModifyEmail, 
+         emailContactUser, emailAlertUser,
+         sendEmail, verifyEmailExist }

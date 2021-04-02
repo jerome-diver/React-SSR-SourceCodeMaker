@@ -11,19 +11,23 @@ import { setSelectedAccount, setSelectedAccountValidity, setValidityToUpdate,
          setEmailToSendSubject, setEmailToSendTo, setEmailToSendMode,
          setModal, setModalOpen, setModalCanSubmit,
          setError, setLoading } from '../../../../Redux/Slices/accounts'
+import { sendEmailLink } from '../../../../Controllers/user/user-form-helper'
 
 const actionsAccountsManager = UI => {
     const actions = (props) => {
         const dispatch = useDispatch()
         const handleClose = () => { dispatch(setModalOpen(false)) }
         const update_account = (to_update) =>{
-                update(to_update)
-                    .then(account => {
-                        if (account.error) throw (account.error)
-                        dispatch(setSelectedAccount(account))
-                        })
-                    .catch(error =>  dispatch(setError(error)) )
-                    .finally(() =>   dispatch(setModalOpen(false)))
+            update(to_update)
+                .then(account => {
+                    if (account.error) throw (account.error)
+                    dispatch(setSelectedAccount(account))
+                    })
+                .catch(error =>  dispatch(setError(error)) )
+                .finally(() =>   dispatch(setModalOpen(false)))
+        }
+        const send_email = (email, user, mode) => {
+
         }
         const submitFN = {
             submitRole: (e) => {
@@ -36,10 +40,15 @@ const actionsAccountsManager = UI => {
             submitSwitch: (e) => {
                 e.preventDefault()
                 const selectedAccount = store.getState().accounts.selectedAccount
-                const email_content   = store.getState().accounts.email
+                const email           = store.getState().accounts.email
                 const to_update_user  = {...selectedAccount.content.user,
                                         validated: !selectedAccount.content.user.validated}
                 update_account(to_update_user)
+            },
+            submitContact: (e) => {
+                const selectedAccount = store.getState().accounts.selectedAccount
+                const email           = store.getState().accounts.email
+                send_email(email, selectedAccount.user)
             }
         }
         props = { ...props, handleClose, submitFN }
@@ -57,6 +66,25 @@ const actionsModalBodyRole = UI => {
             dispatch(setModalCanSubmit(true))
         }
         props = {...props, onRoleChange}
+        return <UI {...props} />
+    }
+    return actions
+}
+
+const actionsModalBodyEmailContent = UI => {
+    const actions = (props) => {
+        const dispatch = useDispatch()
+        const onEmailContent = (e) => {
+            const content = e.target.value
+            dispatch(setEmailToSendContent(content))
+            dispatch(setModalCanSubmit(true))
+        }
+        const onEmailSubject = (e) => {
+            const subject = e.target.value
+            dispatch(setEmailToSendSubject(subject))
+            dispatch(setModalCanSubmit(true))
+        }
+        props = {...props, onEmailContent, onEmailSubject}
         return <UI {...props} />
     }
     return actions
@@ -94,9 +122,12 @@ const actionsActionLinks = UI => {
         const sendEmailToUser = (account, content) => {
             /* Should:
                 1/ open model form to add warn description */
-
-            /*  2/ send email to user.email to warn him */
-
+            const username = (account.user) ? account.user.username : 'unknown'
+            const title = t('account.user.contact.title', {user: username})
+            const body = 'body_contact'
+            const modal = { open: true, submit: 'submitContact', title, body }
+            dispatch(setSelectedAccount(account))
+            dispatch(setModal(modal)) // dispatch triggers.accounts.modal
         }
         props = {...props, deleteAccount, sendEmailToUser}
         return <UI {...props} />
@@ -150,4 +181,5 @@ const actionsAccounts = UI => {
 
 export { actionsAccountsManager, actionsModalBodyRole, 
          actionsModalBodySwitch, actionsActionLinks,
+         actionsModalBodyEmailContent,
          actionsAccount, actionsAccounts }

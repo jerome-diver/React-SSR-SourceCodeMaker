@@ -46,6 +46,7 @@
       "asked": "On your own"
     },
     "user": {
+      "contact": "Contact",
       "status":{
         "popover": {
           "title": "Switch status"

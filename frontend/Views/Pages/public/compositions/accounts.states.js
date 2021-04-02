@@ -39,6 +39,15 @@ const statesModalBodyRole = UI => {
     return states
 }
 
+const statesModalBodyEmailContact  = UI => {
+    const states = (props) => {
+        const { t }    = useTranslation()
+        props = {...props, t}
+        return <UI {...props} />
+    }
+    return states
+}
+
 const statesModalBodySwitch  = UI => {
     const states = (props) => {
         const { t }    = useTranslation()
@@ -117,4 +126,5 @@ const statesAccounts  = UI => {
 
 export { statesAccountsManager, statesModalBodyRole, 
          statesModalBodySwitch, statesActionLinks,
+         statesModalBodyEmailContact,
          statesAccount, statesAccounts }

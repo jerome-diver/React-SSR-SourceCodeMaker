@@ -9967,11 +9967,6 @@
   "resolved" "https://registry.npmjs.org/is-resolvable/-/is-resolvable-1.1.0.tgz"
   "version" "1.1.0"
 
-"is-retina@^1.0.3":
-  "integrity" "sha1-10AbKGvqKuN/Ykd1iN5QTQuGR+M="
-  "resolved" "https://registry.npmjs.org/is-retina/-/is-retina-1.0.3.tgz"
-  "version" "1.0.3"
-
 "is-root@2.1.0":
   "integrity" "sha512-AGOriNp96vNBd3HtU+RzFEc75FfR5ymiYv8E553I71SCeXBiMsVDUtdio1OEFvrPyLIQ9tVR5RxXIFe5PUFjMg=="
   "resolved" "https://registry.npmjs.org/is-root/-/is-root-2.1.0.tgz"
@@ -11782,7 +11777,7 @@
     "inherits" "^2.0.1"
     "safe-buffer" "^5.1.2"
 
-"md5@^2.1.0", "md5@^2.2.1":
+"md5@^2.2.1":
   "integrity" "sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g=="
   "resolved" "https://registry.npmjs.org/md5/-/md5-2.3.0.tgz"
   "version" "2.3.0"
@@ -15667,15 +15662,6 @@
   "integrity" "sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew=="
   "resolved" "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.9.tgz"
   "version" "6.0.9"
-
-"react-gravatar@^2.6.3":
-  "integrity" "sha1-VAfrash+gw4qNN63YNKkxATrHaw="
-  "resolved" "https://registry.npmjs.org/react-gravatar/-/react-gravatar-2.6.3.tgz"
-  "version" "2.6.3"
-  dependencies:
-    "is-retina" "^1.0.3"
-    "md5" "^2.1.0"
-    "query-string" "^4.2.2"
 
 "react-hot-loader@^4.13.0":
   "integrity" "sha512-JrLlvUPqh6wIkrK2hZDfOyq/Uh/WeVEr8nc7hkn2/3Ul0sx1Kr5y4kOGNacNRoj7RhwLNcQ3Udf1KJXrqc0ZtA=="

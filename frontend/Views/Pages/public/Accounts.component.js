@@ -5,9 +5,11 @@ import { Calendar2Date } from 'react-bootstrap-icons'
 import { date_formed } from '../../helpers/config'
 import { actionsAccountsManager, actionsModalBodyRole,
          actionsModalBodySwitch, actionsActionLinks,
+         actionsModalBodyEmailContent,
          actionsAccount, actionsAccounts } from './compositions/accounts.actions'
 import { statesAccountsManager, statesModalBodyRole,
          statesModalBodySwitch, statesActionLinks,
+         statesModalBodyEmailContact,
          statesAccount, statesAccounts } from './compositions/accounts.states'
 
 /* Pure UI components with HOC to compose with states and actions components.
@@ -17,9 +19,21 @@ import { statesAccountsManager, statesModalBodyRole,
    -> ActionLinks in his Card.Footer 
    On click event, Modal Content (Body, Title, submit method) are updated with on of:
    -> ModalBodyRole or
+   -> ModalBodyEmailContact
    -> ModalBodySwitch */ 
 
-const AccountsManagerUI = ({handleClose, submitFN, t, 
+const renderSwitch = (param) => {
+    switch (param) {
+        case 'body_roles': 
+            return (<ModalBodyRole />)
+        case 'body_switch':
+            return (<ModalBodySwitch />)
+        case 'body_contact':
+            return (<ModalBodyEmailContact />)
+    }
+}
+
+const AccountsManagerUI = ({handleClose, submitFN, t,
                             open, submit, title, body, canSubmit}) => (
      <>
         <Accounts />
@@ -29,9 +43,7 @@ const AccountsManagerUI = ({handleClose, submitFN, t,
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {(body == 'body_roles') ? (<ModalBodyRole />) : (<ModalBodySwitch />) }
-            </Modal.Body>
+            <Modal.Body>{ renderSwitch(body) }</Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>{t('account.role.close')}</Button>
                 <Button variant="primary" type='submit' disabled={!canSubmit}>{t('account.role.save')}</Button>
@@ -55,6 +67,15 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
     </Form.Group>
 )
 
+const ModalBodyEmailContactUI = ({t, onEmailContent, onEmailSubject}) => (
+    <Form.Group as={Col}>
+        <Form.Label>{t('account.user.contact.label.subject')}</Form.Label>
+        <Form.Control as="textarea" rows={5} onChange={onEmailSubject} />
+        <Form.Label>{t('account.user.contact.label.content')}</Form.Label>
+        <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
+    </Form.Group>
+)
+
 const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
     <Form.Group as={Row}>
         <Form.Label>{t('account.switch_validity.label')}</Form.Label>
@@ -72,10 +93,14 @@ const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
 )
 
 const ActionLinksUI = ({ account, t, deleteAccount, sendEmailToUser }) => (
-    <Button onClick={() => deleteAccount(account)} 
-            variant="danger"   size='sm'>
-        { t('account.user.delete') }
-    </Button>
+    <>
+        <Button onClick={() => sendEmailToUser(account)} variant='info' size='sm' className='mr-2'>
+            {t('account.user.contact')}
+        </Button>
+        <Button onClick={() => deleteAccount(account)} variant="danger" size='sm'>
+            {t('account.user.delete')}
+        </Button>
+    </>
 )
 
 const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchValidity }) => (
@@ -167,6 +192,7 @@ const AccountsUI = ({accounts, user}) => (
 
 const AccountsManager = actionsAccountsManager(statesAccountsManager(AccountsManagerUI))
 const ModalBodyRole = actionsModalBodyRole(statesModalBodyRole(ModalBodyRoleUI))
+const ModalBodyEmailContact = actionsModalBodyEmailContent(statesModalBodyEmailContact(ModalBodyEmailContactUI))
 const ModalBodySwitch = actionsModalBodySwitch(statesModalBodySwitch(ModalBodySwitchUI))
 const ActionLinks = actionsActionLinks(statesActionLinks(ActionLinksUI))
 const Account = actionsAccount(statesAccount(AccountUI))

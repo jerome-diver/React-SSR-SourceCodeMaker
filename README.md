@@ -29,11 +29,12 @@ This will also be a contact point to my freelance activity contact web site.
 
 * [React.js](https://reactjs.org/) frontend framework
 * [react-cookie](https://www.npmjs.com/package/react-cookie) to use cookie client side with React.js
-* Redux with [react-redux](https://github.com/reduxjs/react-redux)
+* Redux with [react-redux](https://github.com/reduxjs/react-redux) and toolkit to manage states components of React.js
 * Bootstrap-4 UI stylesheet framework with [react-bootstrap](https://react-bootstrap.github.io/)
 * Fontawesome fonts and icons with [@fontawesome/react-fontawesome](https://github.com/FortAwesome/react-fontawesome)
 * [SweetAlert2](https://sweetalert2.github.io/) nice dialog modal customized
 * [React-i18next](https://react.i18next.com/) to get internationalization from translated entries
+* [react-awesome-gravatar](https://github.com/ignaciojcano/react-awesome-gravatar) to show Gravatar of users
 
 ## DevOps part
 
