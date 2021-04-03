@@ -39,14 +39,14 @@ router.post('/account/modify_email',
 
 /* POST for Admin to contact user with a link to answer eventually */ 
 router.post('/account/contact',
-             [isValid, isAdmin, emailContactUser] , (req, res) => {
-
+             [isValid, isAdmin, emailContactUser, sendEmail] , (req, res) => {
+    return res.status(202).json({ sent:  true })
 })
 
 /* POST for Admin to alert user about something */ 
 router.post('/account/alert',
-             [isValid, isAdmin, emailAlertUser] , (req, res) => {
-
+             [isValid, isAdmin, emailAlertUser, sendEmail] , (req, res) => {
+    return res.status(202).json({ sent:  true })
 })
 
 router.post('/email/check', isValid, (req, res) => {

@@ -47,6 +47,10 @@
     },
     "user": {
       "contact": "Contacter",
+      "contact_label": {
+        "subject": "Sujet",
+        "content": "Contenu"
+      },
       "status":{
         "popover": {
           "title": "Change le status"

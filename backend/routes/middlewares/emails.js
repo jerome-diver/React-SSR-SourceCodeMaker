@@ -132,12 +132,21 @@ const emailModifyEmail = (req, res, next) => {
 }
 
 const emailContactUser = (req, res, next) => {
-    const { username, content, subject } = req.body
-
+    const { id, content, subject } = req.body
+    User.findOne({_id: id}).exec()
+        .then(user => {
+            req.email = {
+                to:             user.email,
+                subject:        subject,
+                title:          i18n.t('mailer:contact.email.title', {user: user.username}),
+                introduction:   i18n.t('mailer.contact.email.intro'),
+                text:           content }
+            next() })
+        .catch(err => {return res.status(401).json({error: err, sent: false})})
 }
 
 const emailAlertUser = (req, res, next) => {
-    const { username, mode, subject, content } = req.body
+    const { id, mode, subject, content } = req.body
 
 }
 

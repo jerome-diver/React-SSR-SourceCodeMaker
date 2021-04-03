@@ -183,7 +183,7 @@ const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchVal
 
 const AccountsUI = ({accounts, user}) => (
     <article id='accounts'>
-        {accounts.map( account => { if (user.id == account.user.id) {
+        {accounts.map( account => { if (user.id != account.user.id) {
             return ( <Account key={account.user.id} account={account}/> ) } } ) }
     </article>
 )

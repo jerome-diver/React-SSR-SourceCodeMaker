@@ -6,7 +6,6 @@ import Contact from '../Pages/public/Contact.component'
 import Containers from '../Pages/public/Containers.component'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 //import Subject from './public/Subject.component'
-import Accounts from '../Pages/public/Accounts.component'
 import Sign from "../Pages/public/Sign.component"
 import Admin from '../Pages/private/Admin.component'
 import Profile from '../Pages/private/Profile.component'

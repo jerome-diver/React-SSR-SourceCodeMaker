@@ -47,6 +47,10 @@
     },
     "user": {
       "contact": "Contact",
+      "contact_label": {
+        "subject": "Subject",
+        "content": "Content"
+      },
       "status":{
         "popover": {
           "title": "Switch status"

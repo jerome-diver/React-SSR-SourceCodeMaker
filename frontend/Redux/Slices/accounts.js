@@ -37,7 +37,7 @@ export  const accountsSlice = createSlice({
                      {name: 'Suspended',  color:'warning'},
                      {name: 'Banned',     color:'danger'},
                      {name: 'Own choice', color:'primary'} ],
-            mode: 'contact', // any in modes
+            mode: 'contact', // any in modes or 'contact'
             subject: '',
             content: '',
             to: ''

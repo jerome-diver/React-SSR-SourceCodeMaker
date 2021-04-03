@@ -1,6 +1,7 @@
 const CryptoJS = require('crypto-js')
 import Swal from 'sweetalert2'
 import { validateAccount, modifyEmail, resetPassword } from '../../Controllers/user/authenticate-api'
+import { emailContact, emailAlert } from './admin-send-email'
 import { i18n } from '../../../backend/i18n'
 
 const cypher = (password) => {
@@ -34,6 +35,12 @@ const sendEmailLink = (target, user_data, local) => {
     let failed = null
     let action = null
     switch (target) {
+        case 'contact':
+            action = emailContact
+            break
+        case 'alert':
+            action = emailAlert
+            break
         case 'validateAccount':
             action = validateAccount
             succeed = {

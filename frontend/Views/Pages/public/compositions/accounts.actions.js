@@ -16,6 +16,7 @@ import { sendEmailLink } from '../../../../Controllers/user/user-form-helper'
 const actionsAccountsManager = UI => {
     const actions = (props) => {
         const dispatch = useDispatch()
+        const { i18n } = useTranslation()
         const handleClose = () => { dispatch(setModalOpen(false)) }
         const update_account = (to_update) =>{
             update(to_update)
@@ -25,9 +26,6 @@ const actionsAccountsManager = UI => {
                     })
                 .catch(error =>  dispatch(setError(error)) )
                 .finally(() =>   dispatch(setModalOpen(false)))
-        }
-        const send_email = (email, user, mode) => {
-
         }
         const submitFN = {
             submitRole: (e) => {
@@ -48,7 +46,10 @@ const actionsAccountsManager = UI => {
             submitContact: (e) => {
                 const selectedAccount = store.getState().accounts.selectedAccount
                 const email           = store.getState().accounts.email
-                send_email(email, selectedAccount.user)
+                const data = { id: selectedAccount.user.id,
+                               content: email.content,
+                               subject: email.subject }
+                sendEmailLink('contact', data, i18n.language)
             }
         }
         props = { ...props, handleClose, submitFN }
