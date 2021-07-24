@@ -5,7 +5,7 @@ import { Calendar2Date } from 'react-bootstrap-icons'
 import { date_formed } from '../../helpers/config'
 import { actionsAccountsManager, actionsModalBodyRole,
          actionsModalBodySwitch, actionsActionLinks,
-         actionsModalBodyEmailContent,
+         actionsModalBodyEmailContact,
          actionsAccount, actionsAccounts } from './compositions/accounts.actions'
 import { statesAccountsManager, statesModalBodyRole,
          statesModalBodySwitch, statesActionLinks,
@@ -69,9 +69,9 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
 
 const ModalBodyEmailContactUI = ({t, onEmailContent, onEmailSubject}) => (
     <Form.Group as={Col}>
-        <Form.Label>{t('account.user.contact.label.subject')}</Form.Label>
+      <Form.Label>{t('mailer:account.user.contact.label.subject')}</Form.Label>
         <Form.Control as="textarea" rows={5} onChange={onEmailSubject} />
-        <Form.Label>{t('account.user.contact.label.content')}</Form.Label>
+        <Form.Label>{t('mailer:account.user.contact.label.content')}</Form.Label>
         <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
     </Form.Group>
 )
@@ -165,7 +165,7 @@ const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchVal
                                             {t('account.user.switch',
                                             {action: selected.enabled})}
                                         </Popover.Content>
-                                    </Popover> }>
+                                      </Popover> }>
                     <Button variant={`outline-${selected.color}`}
                             size='sm'
                             onClick={() => switchValidity(account)}>
@@ -192,7 +192,7 @@ const AccountsUI = ({accounts, user}) => (
 
 const AccountsManager = actionsAccountsManager(statesAccountsManager(AccountsManagerUI))
 const ModalBodyRole = actionsModalBodyRole(statesModalBodyRole(ModalBodyRoleUI))
-const ModalBodyEmailContact = actionsModalBodyEmailContent(statesModalBodyEmailContact(ModalBodyEmailContactUI))
+const ModalBodyEmailContact = actionsModalBodyEmailContact(statesModalBodyEmailContact(ModalBodyEmailContactUI))
 const ModalBodySwitch = actionsModalBodySwitch(statesModalBodySwitch(ModalBodySwitchUI))
 const ActionLinks = actionsActionLinks(statesActionLinks(ActionLinksUI))
 const Account = actionsAccount(statesAccount(AccountUI))

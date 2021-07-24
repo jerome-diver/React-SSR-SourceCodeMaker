@@ -44,7 +44,7 @@ const actionsAccountsManager = UI => {
                 update_account(to_update_user)
             },
             submitContact: (e) => {
-                const selectedAccount = store.getState().accounts.selectedAccount
+                const selectedAccount = store.getState().accounts.selectedAccount.content
                 const email           = store.getState().accounts.email
                 const data = { id: selectedAccount.user.id,
                                content: email.content,
@@ -72,7 +72,7 @@ const actionsModalBodyRole = UI => {
     return actions
 }
 
-const actionsModalBodyEmailContent = UI => {
+const actionsModalBodyEmailContact = UI => {
     const actions = (props) => {
         const dispatch = useDispatch()
         const onEmailContent = (e) => {
@@ -111,6 +111,7 @@ const actionsModalBodySwitch = UI => {
 
 const actionsActionLinks = UI => {
     const actions = (props) => {
+        const { t } = useTranslation()
         const dispatch = useDispatch()
         const deleteAccount = (account) => {
             console.log("DELETE account:", account.user.username)
@@ -124,7 +125,7 @@ const actionsActionLinks = UI => {
             /* Should:
                 1/ open model form to add warn description */
             const username = (account.user) ? account.user.username : 'unknown'
-            const title = t('account.user.contact.title', {user: username})
+            const title = t('mailer:account.user.contact.title', {username})
             const body = 'body_contact'
             const modal = { open: true, submit: 'submitContact', title, body }
             dispatch(setSelectedAccount(account))
@@ -182,5 +183,5 @@ const actionsAccounts = UI => {
 
 export { actionsAccountsManager, actionsModalBodyRole, 
          actionsModalBodySwitch, actionsActionLinks,
-         actionsModalBodyEmailContent,
+         actionsModalBodyEmailContact,
          actionsAccount, actionsAccounts }

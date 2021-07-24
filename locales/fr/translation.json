@@ -264,6 +264,38 @@
       "validate": "<div class='alert alert-info'><p>Un nouveau compte utilisateur vient d'être créé, vous devez le valider pour accepter la création.</p></div>"
     },
     "account": {
+      "contact": {
+        "succeed": {
+          "title": "Contact de l'utilisateur du compte accepté",
+          "content": "<div class='alert alert-info'><p>L'envoi du courriel s'est bien déroulé.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Contact de l'utilisateur échoué",
+          "content": "<div class='danger danger-info'><p>L'email de contact n'a pas pu être envoyé. Il y a eu un problème.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
+      "alert": {
+        "succeed": {
+          "title": "Envoi de l'alerte",
+          "content": "<div class='alert alert-info'><p>L'envoi de l'alerte n'a posé aucun problème.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Envoi de l'alerte",
+          "content": "<div class='danger danger-info'><p>L'envoi de l'alerte s'est mal passé, il y a eu un problème.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
       "new": {
         "succeed": {
           "title": "Procédé de validation de création de compte",

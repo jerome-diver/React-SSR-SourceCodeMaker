@@ -262,6 +262,38 @@
       }
     },
     "account": {
+      "contact": {
+        "succeed": {
+          "title": "Contact account user accepted",
+          "content": "<div class='alert alert-info'><p>Send email was done correctly.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Contact account user failed",
+          "content": "<div class='danger danger-info'><p>Email sent failed for any reason.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
+      "alert": {
+        "succeed": {
+          "title": "Alert message sent",
+          "content": "<div class='alert alert-info'><p>Alert message has been sent successfuly.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        },
+        "failed": {
+          "title": "Alert message sent failed",
+          "content": "<div class='danger danger-info'><p>Alert message has failed to be sent for any reason.</p></div>",
+          "link": {
+            "ok": "OK"
+          }
+        }
+      },
       "new": {
         "succeed": {
           "title": "New account validation process",

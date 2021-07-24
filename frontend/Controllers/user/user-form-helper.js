@@ -37,9 +37,33 @@ const sendEmailLink = (target, user_data, local) => {
     switch (target) {
         case 'contact':
             action = emailContact
+            succeed = {
+                title: i18n.t('popup.account.contact.succeed.title'),
+                content: i18n.t('popup.account.contact.succeed.content'),
+                link_ok: i18n.t('popup.account.contact.succeed.link.ok'),
+                icon: 'success'
+            }
+            failed = {
+                title: i18n.t('popup.account.contact.failed.title'),
+                content: i18n.t('popup.account.contact.failed.content'),
+                link_ok: i18n.t('popup.account.contact.failed.link.ok'),
+                icon: 'error'
+            }
             break
         case 'alert':
             action = emailAlert
+            succeed = {
+                title: i18n.t('popup.account.alert.succeed.title'),
+                content: i18n.t('popup.account.alert.succeed.content'),
+                link_ok: i18n.t('popup.account.alert.succeed.link.ok'),
+                icon: 'success'
+            }
+            failed = {
+                title: i18n.t('popup.account.alert.failed.title'),
+                content: i18n.t('popup.account.alert.failed.content'),
+                link_ok: i18n.t('popup.account.alert.failed.link.ok'),
+                icon: 'error'
+            }
             break
         case 'validateAccount':
             action = validateAccount

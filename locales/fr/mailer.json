@@ -4,6 +4,15 @@
     "title": "L'email n'a pas pu être envoyé"
   },
   "account": {
+    "user": {
+      "contact": {
+        "title": "Envoyez un email à {{username}}",
+        "label": {
+          "content": "Contenu du message",
+          "subject": "Quel est le sujet du contact ?"
+        }
+      }
+    },
     "validation": {
       "title": "Validation de compte sur SourceCodeMaker",
       "subject": "Confirmez vôtre email pour valider vôtre compte sur SourceCodeMaker",
