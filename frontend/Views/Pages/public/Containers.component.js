@@ -201,7 +201,8 @@ const CardList = ( { containers, type, children } ) => {
               type={type_name}
               key={index} 
               link={`/${type_name}/${container.id}`}
-              text={t('containers.link', { type_name, title: trContainer(i18n.language, container).title})} />
+              text={t('containers.link', 
+                    { type_name, title: trContainer(i18n.language, container).title})} />
           ) 
         } ) }
       </CardGroup>
@@ -230,7 +231,8 @@ const Containers = ({ type, children }) => {
   if (loading) return <><Loading /></>
   else if(error.state) return <><Error title={t('error:home.title')} 
                                        name={error.content.name}
-                                       message={error.content.message}/></>
+                                       message={error.content.message}
+                                       open = {true} /></>
   else if (children == undefined) { // print categories list only (cards)
       return (
         <>

@@ -16,9 +16,9 @@ const Loading = (props) => {
 }
 
 const Error = (props) => {
-    const { title, name, message } = props
+    const { title, name, message, open } = props
     const { t } = useTranslation()
-    const [ show, setShow ] = useState(true)
+    const [ show, setShow ] = useState(open)
 
     const handleClose = () => { setShow(false) }
 

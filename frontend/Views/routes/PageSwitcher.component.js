@@ -32,14 +32,18 @@ const PageSwitcher = (props) => {
                    component={ (props) => <Containers {...props} type="subject"
                                                                  children={{same: false, other: true}}/> } />
             <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
-            <PrivateRoute path="/profile" component={(props) => <Profile {...props} userProfile={getUser()} 
-                                                                                    userRole={getRole()} />}/>
+            <PrivateRoute path="/profile" 
+                          component={(props) => <Profile {...props} userProfile={getUser()} 
+                                                                    userRole={getRole()} />}/>
             <Route path="/signin" render={(props) => <Sign {...props} action="in" />} />
             <Route path="/signup" render={(props) => <Sign {...props} action="up" />}/>
-            <PrivateRoute path="/signout" component={(props) => <Sign {...props} action="out" />}/>
+            <PrivateRoute path="/signout" 
+                          component={(props) => <Sign {...props} action="out" />}/>
             <Route path="/validate/:username/:token/:ticket" component={Validate}/>
-            <PrivateRoute path="/setup_password/:id/:ticket" component={(props) => <SetupPassword {...props} /> }/>
-            <PrivateRoute path='/modify_email/:id/:ticket/:new_email' component={(props) => <ModifyEmail {...props} /> }/>
+            <PrivateRoute path="/setup_password/:id/:ticket" 
+                          component={(props) => <SetupPassword {...props} /> }/>
+            <PrivateRoute path='/modify_email/:id/:ticket/:new_email' 
+                          component={(props) => <ModifyEmail {...props} /> }/>
       </Switch>
   )
 }
