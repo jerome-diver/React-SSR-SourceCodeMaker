@@ -105,7 +105,7 @@ const HeadContent = ( { container, type } ) => {
           <div id="head-container-text">
             {parse(trContainer(i18n.language, container).content)}
           </div>
-          <ActionLinks data={container} type={type} callback={setMode}/>
+          <ActionLinks data={container} type={type.name} callback={setMode}/>
         </Jumbotron>
       </> )
       break
@@ -291,9 +291,9 @@ ActionLinks.propTypes = {
 }
 
 HeadContent.propTypes = {
-  data: object.isRequired,
+  container: object.isRequired,
   type: object.isRequired,
-  lng:  string.isRequired
+  //lng:  string.isRequired
 }
 
 export default Containers
