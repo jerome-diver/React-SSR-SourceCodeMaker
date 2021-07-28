@@ -7,6 +7,7 @@ const signin = async (identifier, type, password) => {
         const data = (type === 'Email') 
             ? {email: identifier, password: hpasswd} 
             : {username: identifier, password: hpasswd}
+            console.log("go to fetch data: ", data)
         let response = await fetch('/api/auth/signin/', {
             method: 'POST',
             credentials: 'include',

@@ -23,10 +23,12 @@ const useFetch = (crud_name, data, trigger) => {
     const [ error, setError ] = useState({state: false, content: ""})
     const [ containers, setContainers ] = useState({})
     useEffect(() => {
+        let isMounted = true
         console.log("==> useFetch for CRUD's container function name:", crud_name)
         if (crud_list.includes(crud_name)) {
-          crud_caller['$' + crud_name](data, setContainers, setError, setLoading) 
+            crud_caller['$' + crud_name](data, setContainers, setError, setLoading, isMounted) 
         }
+        return () => isMounted = false
     }, [trigger] )
     return { loading, error, containers }
 }
@@ -77,12 +79,10 @@ const HeadContent = ( { container, type } ) => {
     } else {
       console.log("UPDATE CONTAINER EVENT")
       const data = { id: container.id, body: {...container} }
-      const { loading, error } = useFetch('updateContainer', data, i18n.language)
+ //     const { loading, error } = useFetch('updateContainer', data, i18n.language)
     }
     setValidated(true)
   }
-/*   useEffect(() => {
-  }, []) */
   switch (mode) {
     case 'normal':
       return ( <>

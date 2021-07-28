@@ -24,9 +24,15 @@ const hasRules = (req, res, next) => {
 const findRole = (req, res, next) => {
     Role.findOne({_id: req.user.role_id}).exec()
         .then(role => { 
-            req.role = role
-            next() })
-        .catch(error => { return res.status(401).json({error}) })
+            if (role) {
+                req.role = role.toJSON()
+                next() } else return res.status(401).json({error: {name: "Database reference missing", 
+                                                                   message: "No role found" } })
+            } )
+        .catch(error => { 
+            console.log("find error:", error)
+            return res.status(401).json({name: "Database error", 
+                                        message: error }) })
 }
 
 /* Check that:
@@ -39,15 +45,20 @@ const canConnect  = (req, res, next) => {
     if (id === {}) { return res.status(400).json({error: req.i18n.t('error:authenticate.id.missing') }) }
     User.findOne(id).exec()
         .then(user => {
-            if(!user.authenticate(req.body.password)) throw ({ error: {
-                name: req.i18n.t('error:authenticate.user.password.title'), 
-                message: req.i18n.t('error:authenticate.user.password.message')} })
-            if (!user.validated) throw ({ error: {
-                name: req.i18n.t('error:authenticate.user.disabled.title'),
-                message:  req.i18n.t('error:authenticate.user.disabled.message')} })
-            req.user = user.toJSON()
-            next() })
-        .catch(error => {return res.status(401).json({error})})
+            if (user) {
+                if(!user.authenticate(req.body.password)) throw ({ error: {
+                    name: req.i18n.t('error:authenticate.user.password.title'), 
+                    message: req.i18n.t('error:authenticate.user.password.message')} })
+                if (!user.validated) throw ({ error: {
+                    name: req.i18n.t('error:authenticate.user.disabled.title'),
+                    message:  req.i18n.t('error:authenticate.user.disabled.message')} })
+                req.user = user.toJSON()
+                next() 
+            } else return res.status(401).json({error: {name: "Database reference missing", 
+                                                        message: "No user found" } })
+        })
+        .catch(error => {return res.status(401).json({name: "Database error", 
+                                                      message: error }) })
 }
 
 /* check authorized session httpOnly:

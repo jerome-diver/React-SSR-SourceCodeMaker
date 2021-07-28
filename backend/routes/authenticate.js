@@ -12,12 +12,12 @@ router.post('/signin', [canConnect, findRole], (req, res) => {
             (error, token) => {
         if (error) return res.status(401).json({
             name: req.i18n.t('error:jwt.sign.failed'),
-            message: er.message })
+            message: error.message })
         res.cookie('token', token, { httpOnly: true })
         delete req.user.role_id
         return res.status(201).json({
             user: req.user, 
-            role: req.role.toJSON()}) 
+            role: req.role}) 
     })
 })
 
