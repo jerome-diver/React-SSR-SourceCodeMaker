@@ -51,7 +51,11 @@ const SignUp = (props) => {
     }
 
     if (!loaded) return <><Loading /></>
-    return (
+    return <>
+        {/* <Error title='Sign up error'
+               name={sign.error.name}
+               message={sign.error.message}
+               open={sign.hasError} /> */}
         <Card id='sign'>
         {renderRedirect()}
             <Card.Header><h2><FontAwesomeIcon icon={faUserPlus} /> {t('signup.title')}</h2></Card.Header>
@@ -97,7 +101,7 @@ const SignUp = (props) => {
                 <Card.Link href='/signin'>{t('signup.link.have_account')}</Card.Link>
             </Card.Footer>
         </Card>
-    )
+    </>
 }
 
 export default SignUp

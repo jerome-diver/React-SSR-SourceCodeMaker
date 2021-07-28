@@ -3,7 +3,7 @@
    to adapt return back for each situation depending on route and options
 */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { string, bool, object, func, exact, shape, arrayOf } from 'prop-types'
 import { Loading, Error } from './Printers.component'
 import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
@@ -22,13 +22,14 @@ const useFetch = (crud_name, data, trigger) => {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, content: ""})
     const [ containers, setContainers ] = useState({})
+    const isMounted = useRef(null)
     useEffect(() => {
-        let isMounted = true
+        isMounted.current = true
         console.log("==> useFetch for CRUD's container function name:", crud_name)
         if (crud_list.includes(crud_name)) {
-            crud_caller['$' + crud_name](data, setContainers, setError, setLoading, isMounted) 
+            crud_caller['$' + crud_name](data, setContainers, setError, setLoading, isMounted.current) 
         }
-        return () => isMounted = false
+        return () => (isMounted.current = false)
     }, [trigger] )
     return { loading, error, containers }
 }
@@ -229,11 +230,11 @@ const Containers = ({ type, children }) => {
   const { loading, error, containers } = useFetch(crud_mode, data, language)
 
   if (loading) return <><Loading /></>
-  else if(error.state) return <><Error title={t('error:home.title')} 
+  if(error.state) return <><Error title={t('error:home.title')} 
                                        name={error.content.name}
                                        message={error.content.message}
                                        open = {true} /></>
-  else if (children == undefined) { // print categories list only (cards)
+  if (children == undefined) { // print categories list only (cards)
       return (
         <>
           <h1>{t('containers.list', {type})}</h1>
