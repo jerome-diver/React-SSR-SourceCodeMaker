@@ -297,7 +297,7 @@ const CardSimple = ( props ) => {
               font-family: 'Source Code Pro';}
           `}
         </style>
-        <CaV></CaV>rdSimpleNormal {...props} setMode={setMode} mode={mode} />
+        <CardSimpleNormal {...props} setMode={setMode} mode={mode} />
       </>
     case 'edit':
       return <>
