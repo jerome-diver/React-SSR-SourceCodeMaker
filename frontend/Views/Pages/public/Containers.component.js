@@ -12,7 +12,7 @@ import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { colorType, trContainer } from '../../helpers/config'
 import { crud_caller, crud_list } from '../../../Controllers/container/action-CRUD'
-import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup } from 'react-bootstrap'
+import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure } from 'react-bootstrap'
 import loadable from '@loadable/component'
 const Editor = loadable(() => import('for-editor'))
 
@@ -94,13 +94,17 @@ const HeadContentNormal = ({container, type, setMode, mode}) => {
         }       `}
     </style>
     <Jumbotron id='head-container'>
-      <div id='head-container-title'>
+      <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
         <Badge variant='info'>{t(type_to_translate)}</Badge>
-      </div>
-      <div id="head-container-text">
-        {parse(trContainer(i18n.language, container).content)}
-      </div>
+      </h1>
+      <Figure>
+        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} />
+        <Figure.Caption>
+          {parse(trContainer(i18n.language, container).content)}
+        </Figure.Caption>
+      </Figure>
+      <br/>
       <ActionLinks data={container} type={type.name} callback={setMode} mode={mode}/>
     </Jumbotron>
   </>
@@ -122,8 +126,8 @@ const HeadContentEdit = ({container, type, setMode, mode}) => {
     <style type='text/css'>
       {` #edit-container {
            background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
-           background-color: rgba(199,2,2,0.75)
-        }       `}
+           background-color: rgba(199,2,2,0.75) }
+      `}
     </style>
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: type.name})}</Badge>
@@ -167,7 +171,7 @@ const HeadContent = ( props ) => {
           {` #head-container-title h1 { display: inline-block; }
             #head-container-text { font-family: 'Santana'; }
             .badge { 
-              vertical-align: top; 
+              vertical-align: middle; 
               font-family: 'Source Code Pro'; }
           `}
         </style>
@@ -179,7 +183,7 @@ const HeadContent = ( props ) => {
           {` #edit-container-title h1 { display: inline-block; }
             #edit-container-text { font-family: 'Santana'; }
             .badge { 
-              vertical-align: top; 
+              vertical-align: middle; 
               font-family: 'Source Code Pro'; }
           `}
         </style>
@@ -303,6 +307,11 @@ const CardSimple = ( props ) => {
       return <>
         <style type="text/css">
           {`
+              #${props.type+'_'+props.index} {
+                margin: 5px;
+                min-width: 520px;
+                max-width: 600px;
+                border: 1px solid ${colorType(props.type)}; }
             .badge { 
               vertical-align: middle;  
               font-family: 'Source Code Pro';}
