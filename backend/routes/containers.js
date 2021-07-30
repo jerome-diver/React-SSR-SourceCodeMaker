@@ -75,6 +75,7 @@ router.get('/:id', (req, res) => {
 /* PUT to update an existing container from his id */
 router.put('/:id', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
   const {title, content, title_en, content_en, parent_id, author_id, type_id, enable} = req.body
+  console.log("UPDATE body:", req.body)
   if (((req.token.role_title == 'Writer') && (req.token.id == author_id)) || 
       (req.token.role_title == 'Admin')) {
     Container.findOneAndUpdate( 
