@@ -14,7 +14,7 @@ const giveMe = (url, successCBK, failedCBK, finalCBK, isMounted) => {
 }
 
 const getContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
-    const url = host + '/api/containers' + id
+    const url = host + '/api/containers/' + id
     giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
 }
 
@@ -23,7 +23,17 @@ const getChildrenContainersOf = (id, successCBK, failedCBK, finalCBK, isMounted)
     giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
 }
 
+const getChildrenIDof = (id, successCBK, failedCBK, finalCBK, isMounted) => {
+    const url = host + '/api/containers/children_ids_of/' + id
+    giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
+}
+
 const getContainersOfType = (type_name, successCBK, failedCBK, finalCBK, isMounted) => {
+    const url = host + '/api/containers/type/' + type_name
+    giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
+}
+
+const getContainersIDofType = (type_name, successCBK, failedCBK, finalCBK, isMounted) => {
     const url = host + '/api/containers/type/' + type_name
     giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
 }
@@ -72,13 +82,15 @@ const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
 const crud_caller = {
     $getContainer: getContainer,
     $getContainersOfType: getContainersOfType,
+    $getContainersIDofType: getContainersIDofType,
+    $getChildrenIDof: getChildrenIDof,
     $getChildrenContainersOf: getChildrenContainersOf,
     $createContainer: createContainer,
     $updateContainer: updateContainer,
     $deleteContainer: deleteContainer 
 }
-const crud_list = ['getContainer', 'getChildrenContainersOf', 'getContainersOfType', 
-                   'updateContainer', 'createContainer', 'deleteContainer']
+const crud_list = ['getContainer', 'getChildrenContainersOf', 'getContainersOfType','getContainersIDofType' ,
+                   'getChildrenIDof', 'updateContainer', 'createContainer', 'deleteContainer']
 
 export { crud_caller, crud_list, getContainer, getContainersOfType, getChildrenContainersOf,
          createContainer, updateContainer, deleteContainer }

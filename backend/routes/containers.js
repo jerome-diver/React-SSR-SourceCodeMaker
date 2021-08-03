@@ -40,6 +40,24 @@ router.get('/type/:type_name', (req, res) => {
     .catch(error => { return res.status(401).json({ error }) })
 } )
 
+/* GET containers child id list of container :id 
+  (can be any child: [subject, articles, comments, ...] 
+   or what ever type you created)
+   _should return something like:
+    {
+      [ id, ... ]
+    }
+*/
+router.get('/children_ids_of/:id', (req, res) => {
+  console.log("I searching for child IDs of container ID:", req.params.id)
+  Container.find({ parent_id: req.params.id }).exec()
+    .then(containers => {
+      console.log("I found any...")
+      return containers.map((container) => { return {id: container._id, enabled: container.enable } }) })
+    .then(data => { return res.status(200).json(data) })
+    .catch(error => { return res.status(401).json({ error }) })
+})
+
 /* GET containers child list for container :id 
   (can be any child: [subject, articles, comments, ...] 
    or what ever type you created)
@@ -68,7 +86,7 @@ router.get('/children_of/:id', (req, res) => {
 /* GET a container from his id */
 router.get('/:id', (req, res) => {
   Container.findOne({ _id: req.params.id }).exec()
-    .then(container => { return res.status(200).json( { content: container.toJSON()}) })
+    .then(container => { return res.status(200).json( container.toJSON() ) })
     .catch( error => { return res.status(401).json({ error }) })
 } )
 
