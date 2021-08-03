@@ -91,14 +91,15 @@ router.get('/:id', (req, res) => {
 } )
 
 /* PUT to update an existing container from his id */
-router.put('/:id', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
-  const {title, content, title_en, content_en, parent_id, author_id, type_id, enable} = req.body
+router.put('/:id/update', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
   console.log("UPDATE body:", req.body)
-  if (((req.token.role_title == 'Writer') && (req.token.id == author_id)) || 
-      (req.token.role_title == 'Admin')) {
+  const {title, content, title_en, content_en, parent_id, type_name, enable} = req.body
+  if (((req.token.role_name == 'Writer') && (req.token.id == author_id)) || 
+      (req.token.role_name == 'Admin')) {
+        console.log("UPDATE possible by this user")
     Container.findOneAndUpdate( 
           { _id: req.params.id }, 
-          { title, content, title_en, content_en, enable, author_id, parent_id, type_id } , 
+          { title, content, title_en, content_en, enable, parent_id, type_name } , 
           { new: true }).exec()
         .then(container => {
             return res.status(201).json({ accepted: true, container: container.toJSON() }) })

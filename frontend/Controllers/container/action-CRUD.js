@@ -39,7 +39,7 @@ const getContainersIDofType = (type_name, successCBK, failedCBK, finalCBK, isMou
 }
 
 const createContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
-    const url = host + 'api/containers/'
+    const url = host + '/api/containers/'
     fetch(url, {
             method: 'POST',
             credentials: 'include',
@@ -53,7 +53,8 @@ const createContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
 }
 
 const updateContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
-    const url = host + 'api/containers/' + data.id
+    const url = host + '/api/containers/' + data.id + '/update'
+    console.log("Go to update a container for url:", url)
     fetch(url, {
             method: 'PUT',
             credentials: 'include',
@@ -67,7 +68,7 @@ const updateContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
 }
 
 const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
-    const url = host + 'api/containers/' + id
+    const url = host + '/api/containers/' + id
     fetch(url, {
             method: 'DELETE',
             credentials: 'include',

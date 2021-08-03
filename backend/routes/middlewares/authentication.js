@@ -71,6 +71,7 @@ const hasAuthorization = (req, res, next) => {
     const authenticate = (user_session.id === decoded.id)
     if (!authenticate) return res.status(401).json({authenticated: false})
     if (decoded.error) return res.status(403).json({error: decoded.error})
+    console.log("DECODED:", decoded)
     req.token = decoded
     next()
 }

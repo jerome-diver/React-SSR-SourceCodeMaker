@@ -18,19 +18,19 @@ const Editor = loadable(() => import('for-editor'))
 
 
 /* fetching data to get database collection entries back */
-const useFetch = (crud_name, data, trigger) => {
+const useFetch = (crud_name, data, triggers) => {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, content: ""})
     const [ response, setResponse ] = useState({})
     const isMounted = useRef(null)
     useEffect(() => {
         isMounted.current = true
-        console.log("==> useFetch for CRUD's container function name:", crud_name)
+        console.log("==> useFetch for CRUD's container function name and content:", {crud_name, data})
         if (crud_list.includes(crud_name)) {
             crud_caller['$' + crud_name](data, setResponse, setError, setLoading, isMounted.current) 
         }
         return () => (isMounted.current = false)
-    }, [trigger] )
+    }, triggers )
     return { loading, error, response }
 }
 
@@ -97,27 +97,32 @@ const HeadContainerNormal = ({container, setMode, mode}) => {
   </>
 }
 
-const HeadContainerEdit = ({container, setMode, mode}) => {
+const HeadContainerEdit = ({container, setMode, mode, dispatch}) => {
   const { i18n, t } = useTranslation()
   const type_to_translate = "containers." + container.type_name
   const [ validated, setValidated ] = useState(false)
+  const [ data, setData ] = useState(container)
   const [ form, setForm ] = useState({ title:   { fr: container.title,   
                                                   en: container.title_en }, 
                                        content: { fr: container.content, 
                                                   en: container.content_en } })
-  const change = target => e => {
-    if (target == 'title') setForm({...form, title: { [i18n.language]: e.target.value} })
-    else setForm({...form, content: { [i18n.language]: e } })
+  const change = target => value => {
+    console.log("change e:", value)
+    if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
+    else setForm({...form, content: { [i18n.language]: value } })
+    setData({title: data.title, title_en: data.title_en, content: data.content, content_en: data.content_en, 
+             type_name: data.type_name, parent_id: data.parent_id, enable: data.enable, [target]: value})
+    console.log("DATA =>", data)
   }
-  const updateContainer = (container) => e => {
+  const update = (container) => e => {
+      console.log("UPDATE CONTAINER EVENT")
     const form_to_submit = e.currentTarget;
     if (form_to_submit.checkValidity() === false) {
         e.preventDefault();
         e.stopPropagation();
     } else {
-      console.log("UPDATE CONTAINER EVENT FOR", container)
-      const data = { id: container.id, body: {...container} }
-  //    const { loading, error } = useFetch('updateContainer', response, i18n.language)
+      console.log("UPDATE CONTAINER EVENT FOR", data)
+      dispatch({ type: 'update', reference: { id: container.id, body: data } })
     }
     setValidated(true)
   }
@@ -129,8 +134,8 @@ const HeadContainerEdit = ({container, setMode, mode}) => {
       `}
     </style>
     <Jumbotron id='edit-container'>
-      <Badge variant='warning'>{t('containers.edit', {type: type.name})}</Badge>
-      <Form onSubmit={updateContainer(container)} noValidate validated={validated}>
+      <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
+      <Form onSubmit={update(container)} noValidate validated={validated}>
         <Form.Group controlId="formBasicText">
             <Form.Label>Title</Form.Label>
             <InputGroup>
@@ -154,17 +159,30 @@ const HeadContainerEdit = ({container, setMode, mode}) => {
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
         </Form.Group>
-        <ActionLinks data={container} type={type.name} callback={setMode} mode={mode}/>
+        <ActionLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
       </Form>
     </Jumbotron>
   </>
 }
 
+const dataReducer = (state, action) => {
+    console.log("dispatch for", action)
+  switch (action.type) {
+    case 'update':
+      return { crud: 'updateContainer', data: action.reference }
+    case 'delete':
+      return { crud: 'deleteContainer', data: action.reference }
+    case 'get':
+      return { crud: 'getContainer', data: action.reference }
+  }
+}
+
 /* Print the content of a container on top */
 const HeadContainer = ( {id} ) => {
-  const [ mode, setMode ] = useState('normal')
   const { i18n, t } = useTranslation()
-  const { loading, error, response } = useFetch('getContainer', id, i18n.language)
+  const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: id})
+  const [ mode, setMode ] = useState('normal')
+  const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
 
   if (loading) return <><Loading /></>
   if(error.state) return <><Error title={t('error:home.title')} 
@@ -195,7 +213,7 @@ const HeadContainer = ( {id} ) => {
                 font-family: 'Source Code Pro'; }
             `}
           </style>
-          <HeadContainerEdit container={response} setMode={setMode} mode={mode} />
+          <HeadContainerEdit container={response} setMode={setMode} mode={mode} dispatch={dispatch}/>
         </>
     }
   }
@@ -311,7 +329,7 @@ const ContainerEdit = ( { index, data, type, setMode, mode } ) => {
 const Container = ( props ) => {
   const { i18n, t } = useTranslation()
   const [mode, setMode] = useState('normal')
-  const { loading, error, response } = useFetch('getContainer', props.id, i18n.language)
+  const { loading, error, response } = useFetch('getContainer', props.id, [i18n.language])
   const type = response.type_name
 
   if (loading) return <><Loading /></>
@@ -359,7 +377,7 @@ const GroupContainer = ( props ) => {
   const { i18n, t } = useTranslation()
   const crud_mode = (props.children) ? 'getChildrenIDof' : 'getContainersIDofType'
   const reference = (props.children) ? props.id : props.type
-  const { loading, error, response } = useFetch(crud_mode, reference, i18n.language)
+  const { loading, error, response } = useFetch(crud_mode, reference, [i18n.language])
 
   if (loading) return <><Loading /></>
   else if (error.state) return <><Error title={t('error:home.title')} 
