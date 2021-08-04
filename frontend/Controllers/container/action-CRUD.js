@@ -34,7 +34,7 @@ const getContainersOfType = (type_name, successCBK, failedCBK, finalCBK, isMount
 }
 
 const getContainersIDofType = (type_name, successCBK, failedCBK, finalCBK, isMounted) => {
-    const url = host + '/api/containers/type/' + type_name
+    const url = host + '/api/containers/type_id/' + type_name
     giveMe(url, successCBK, failedCBK, finalCBK, isMounted)
 }
 

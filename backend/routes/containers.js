@@ -33,10 +33,20 @@ router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
 /* GET containers list for :type_name 
   (can be any [subject, category, ...] 
    or what ever type you created) */
+router.get('/type_id/:type_name', (req, res) => {
+  Container.find({type_name: req.params.type_name}).exec()
+    .then(containers => {return containers.map((container) => { return {id: container._id, enabled: container.enable}})})
+    .then(response => {return res.status(200).json(response)})
+    .catch(error => { return res.status(401).json({ error }) })
+} )
+
+/* GET containers list for :type_name 
+  (can be any [subject, category, ...] 
+   or what ever type you created) */
 router.get('/type/:type_name', (req, res) => {
   Container.find({type_name: req.params.type_name}).exec()
     .then(containers => {return containers.map((container) => { return container.toJSON()})})
-    .then(jsonContainers => {return res.status(200).json(jsonContainers)})
+    .then(response => {return res.status(200).json(response)})
     .catch(error => { return res.status(401).json({ error }) })
 } )
 
