@@ -3,83 +3,54 @@
    to adapt return back for each situation depending on route and options
 */
 
-import React, { useState, useEffect, useRef, useReducer } from 'react'
-import { string, bool, object, func, exact, shape, arrayOf, number } from 'prop-types'
+import React from 'react'
+import { string, bool, object, func, exact, number } from 'prop-types'
 import { Loading, Error } from './Printers.component'
-import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
-import { colorType, trContainer } from '../../helpers/config'
-import { crud_caller, crud_list } from '../../../Controllers/container/action-CRUD'
+import { trContainer } from '../../helpers/config'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure } from 'react-bootstrap'
 import loadable from '@loadable/component'
+
+import { actionsContainerLinks, actionsContainer, useFetch } from './compositions/containers.actions'
+import { statesContainerLinks, statesHeadContainer, statesContainer } from './compositions/containers.states'
+
 const Editor = loadable(() => import('for-editor'))
 
+/* Pure UI components with HOC to compose with states and actions components.
+   -> ContainerLinks (with both edit and normal mode) show buttons for action on own Container
+   -> HeadContainer (and both normal and edit mode) show Top head container (root of tree called)
+   -> Container (and both normal and edit mode) to show a container of the children list content
+   -> Containers UI design to organize the full page to show containers content from specific call scenari
+*/ 
 
-/* fetching data to get database collection entries back */
-const useFetch = (crud_name, data, triggers) => {
-    const [ loading, setLoading ] = useState(true)
-    const [ error, setError ] = useState({state: false, content: ""})
-    const [ response, setResponse ] = useState({})
-    const isMounted = useRef(null)
-    useEffect(() => {
-        isMounted.current = true
-        console.log("==> useFetch for CRUD's container function name and content:", {crud_name, data})
-        if (crud_list.includes(crud_name)) {
-            crud_caller['$' + crud_name](data, setResponse, setError, setLoading, isMounted.current) 
-        }
-        return () => (isMounted.current = false)
-    }, triggers )
-    return { loading, error, response }
-}
+/* Buttons actions links UI design for normal and edit mode */
+const ContainerLinksUInormal = ( { t, data, type, edit, remove, cancel } ) => (
+      <>
+        <Button onClick={edit} variant="warning">
+          { t('containers.content.edit', { content: data.title }) }
+        </Button>
+        <Button onClick={() => remove(content, type)} variant="danger">
+          { t('containers.content.delete', { content: data.content }) }
+        </Button>
+        <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
+      </>
+)
 
-const deleteContent = (content, type) => { console.log("DELETE") }
+const ContainerLinksUIedit = ( { t, cancel } ) => (
+      <>
+        <Button type='submit' variant='warning'>
+            {t('containers.button_submit')}
+        </Button>
+        <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
+      </>
+)
 
-const ActionLinks = ( { data, type, callback, mode } ) => {
-  const { getUser, getRole } = useAuthenticate()
-  const { t } = useTranslation()
-  const user = getUser()
-  const role = getRole()
-  const editContent = () => { callback('edit') }
-  const cancel = () => { callback('normal') }
-  if (canModify(role, type) || itsMine(user, data)) {
-    switch (mode) {
-      case 'normal':
-        return (
-          <>
-            <Button onClick={editContent} variant="warning">
-              { t('containers.content.edit', { content: data.title }) }
-            </Button>
-            <Button onClick={() => deleteContent(content, type)} variant="danger">
-              { t('containers.content.delete', { content: data.content }) }
-            </Button>
-            <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
-          </>
-        )
-      case 'edit':
-        return (
-          <>
-            <Button type='submit' variant='warning'>
-                {t('containers.button_submit')}
-            </Button>
-            <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
-          </>
-        )
-    }
-  } else return null
-}
-
-const HeadContainerNormal = ({container, setMode, mode}) => {
-  const { i18n, t } = useTranslation()
-  const type_to_translate = "containers." + container.type_name
-  return <>
-    <style type='text/css'>
-      {` #head-container {
-           background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
-           background-color: rgba(99,99,99,0.75)
-        }       `}
-    </style>
+/* Head Containers UI design for normal and edit mode */
+const HeadContainerUInormal = ({t, i18n, type_to_translate, 
+                                container, setMode, mode}) => (
+  <>
     <Jumbotron id='head-container'>
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
@@ -92,47 +63,15 @@ const HeadContainerNormal = ({container, setMode, mode}) => {
         </Figure.Caption>
       </Figure>
       <br/>
-      <ActionLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
+      <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
     </Jumbotron>
   </>
-}
+)
 
-const HeadContainerEdit = ({container, setMode, mode, dispatch}) => {
-  const { i18n, t } = useTranslation()
-  const type_to_translate = "containers." + container.type_name
-  const [ validated, setValidated ] = useState(false)
-  const [ data, setData ] = useState(container)
-  const [ form, setForm ] = useState({ title:   { fr: container.title,   
-                                                  en: container.title_en }, 
-                                       content: { fr: container.content, 
-                                                  en: container.content_en } })
-  const change = target => value => {
-    console.log("change e:", value)
-    if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
-    else setForm({...form, content: { [i18n.language]: value } })
-    setData({title: data.title, title_en: data.title_en, content: data.content, content_en: data.content_en, 
-             type_name: data.type_name, parent_id: data.parent_id, enable: data.enable, [target]: value})
-    console.log("DATA =>", data)
-  }
-  const update = (container) => e => {
-      console.log("UPDATE CONTAINER EVENT")
-    const form_to_submit = e.currentTarget;
-    if (form_to_submit.checkValidity() === false) {
-        e.preventDefault();
-        e.stopPropagation();
-    } else {
-      console.log("UPDATE CONTAINER EVENT FOR", data)
-      dispatch({ type: 'update', reference: { id: container.id, body: data } })
-    }
-    setValidated(true)
-  }
-  return <>
-    <style type='text/css'>
-      {` #edit-container {
-           background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
-           background-color: rgba(199,2,2,0.75) }
-      `}
-    </style>
+const HeadContainerUIedit = ( {t, i18n, type_to_translate, 
+                               validated, update, change, form, 
+                               container, setMode, mode}) => (
+  <>
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
       <Form onSubmit={update(container)} noValidate validated={validated}>
@@ -159,79 +98,16 @@ const HeadContainerEdit = ({container, setMode, mode, dispatch}) => {
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
         </Form.Group>
-        <ActionLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
+        <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
       </Form>
     </Jumbotron>
   </>
-}
+)
 
-const dataReducer = (state, action) => {
-    console.log("dispatch for", action)
-  switch (action.type) {
-    case 'update':
-      return { crud: 'updateContainer', data: action.reference }
-    case 'delete':
-      return { crud: 'deleteContainer', data: action.reference }
-    case 'get':
-      return { crud: 'getContainer', data: action.reference }
-  }
-}
-
-/* Print the content of a container on top */
-const HeadContainer = ( {id} ) => {
-  const { i18n, t } = useTranslation()
-  const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: id})
-  const [ mode, setMode ] = useState('normal')
-  const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
-
-  if (loading) return <><Loading /></>
-  if(error.state) return <><Error title={t('error:home.title')} 
-                                  name={error.content.name}
-                                  message={error.content.message}
-                                  open={true} /></>
-  else {
-    switch (mode) {
-      case 'normal':
-        return <>
-          <style type='text/css'>
-            {` #head-container-title h1 { display: inline-block; }
-              #head-container-text { font-family: 'Santana'; }
-              .badge { 
-                vertical-align: middle; 
-                font-family: 'Source Code Pro'; }
-            `}
-          </style>
-          <HeadContainerNormal container={response} setMode={setMode} mode={mode} />
-        </>
-      case 'edit':
-        return <>
-          <style type='text/css'>
-            {` #edit-container-title h1 { display: inline-block; }
-              #edit-container-text { font-family: 'Santana'; }
-              .badge { 
-                vertical-align: middle; 
-                font-family: 'Source Code Pro'; }
-            `}
-          </style>
-          <HeadContainerEdit container={response} setMode={setMode} mode={mode} dispatch={dispatch}/>
-        </>
-    }
-  }
-}
-
-const ContainerNormal = ( { index, container, setMode, mode } ) => {
-  const { i18n, t } = useTranslation()
-  const type = container.type_name
-  const container_type = "containers." + type
-  return <>
-      <style type="text/css">
-        {`
-          #${type+'_'+index} .card-body { 
-            background-color: rgba(55, 44, 44, 0.85); 
-            background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22)); }
-          #${type+'_'+index} .card-title .h5 { display: inline; }
-        `}
-      </style>
+/* Container UI design for mode edit and normal */
+const ContainerUInormal = ( { t, i18n, type, container_type, 
+                              index, container, setMode, mode } ) => (
+  <>
       <Card id={type+'_'+index}>
         <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
         <Card.Body>
@@ -246,49 +122,16 @@ const ContainerNormal = ( { index, container, setMode, mode } ) => {
             {t('containers.link', { type, title: trContainer(i18n.language, container).title})}
             </Card.Link>
           <br/>
-        <ActionLinks data={container} type={container_type} callback={setMode} mode={mode}/>
+        <ContainerLinks data={container} type={container_type} callback={setMode} mode={mode}/>
         </Card.Body>
       </Card>
     </>
-}
+)
 
-const ContainerEdit = ( { index, container, setMode, mode, dispatch } ) => {
-  const { i18n, t } = useTranslation()
-  const [ validated, setValidated ] = useState(false)
-  const [ data, setData ] = useState(container)
-  const type = container.type_name
-  const container_type = "containers." + type
-  const [ form, setForm ] = useState({ title:   { fr: container.title,   
-                                                  en: container.title_en }, 
-                                       content: { fr: container.content, 
-                                                  en: container.content_en } })
-  const change = target => value => {
-    if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
-    else setForm({...form, content: { [i18n.language]: value } })
-    setData({title: data.title, title_en: data.title_en, content: data.content, content_en: data.content_en, 
-             type_name: data.type_name, parent_id: data.parent_id, enable: data.enable, [target]: value})
-    console.log("DATA =>", data)
-  }
-  const update = (container) => e => {
-    const form_to_submit = e.currentTarget;
-    if (form_to_submit.checkValidity() === false) {
-        e.preventDefault();
-        e.stopPropagation();
-    } else {
-      console.log("UPDATE CONTAINER EVENT FOR", container)
-      dispatch({ type: 'update', reference: { id: container.id, body: data } })
-    }
-    setValidated(true)
-  }
-  return <>
-      <style type="text/css">
-        {`
-          #${type+'_'+index} .card-body { 
-            background-color: rgba(55, 44, 44, 0.85); 
-            background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22)); }
-          #${type+'_'+index} .card-title .h5 { display: inline; }
-        `}
-      </style>
+const ContainerUIedit = ( { t, i18n, type, container_type, 
+                            validated, update, change, form, 
+                            index, container, setMode, mode } ) => (
+  <>
       <Card id={type+'_'+index}>
         <Form onSubmit={update(container)} noValidate validated={validated}>
           <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
@@ -319,71 +162,23 @@ const ContainerEdit = ( { index, container, setMode, mode, dispatch } ) => {
                   </InputGroup>
                   <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
               </Form.Group>
-              <ActionLinks container={data} type={data.type_name} callback={setMode} mode={mode}/>
+              <ContainerLinks container={container} type={container.type_name} callback={setMode} mode={mode}/>
             </Card.Text>
-            <Card.Link href={`/${container.type_name}/${data.id}`}>{t('containers.link', 
+            <Card.Link href={`/${container.type_name}/${container.id}`}>{t('containers.link', 
                              { type, title: trContainer(i18n.language, container).title})}</Card.Link>
             <br/>
           </Card.Body>
         </Form>
       </Card>
     </>
-}
+)
 
-/* Print cards with partial content and a link */
-const Container = ( props ) => {
-  const { i18n, t } = useTranslation()
-  const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: props.id})
-  const [ mode, setMode ] = useState('normal')
-  const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
-  const type = response.type_name
-
-  if (loading) return <><Loading /></>
-  if(error.state) return <><Error title={t('error:home.title')} 
-                                  name={error.content.name}
-                                  message={error.content.message}
-                                  open={true} /></>
-  switch (mode) {
-    case 'normal':
-      return <>
-        <style type="text/css">
-          {`
-              #${type+'_'+props.index} {
-                margin: 5px;
-                min-width: 520px;
-                max-width: 600px;
-                border: 1px solid ${colorType(type)}; }
-            .badge { 
-              vertical-align: middle;  
-              font-family: 'Source Code Pro';}
-          `}
-        </style>
-        <ContainerNormal {...props} container={response} setMode={setMode} mode={mode} />
-      </>
-    case 'edit':
-      return <>
-        <style type="text/css">
-          {`
-              #${type+'_'+props.index} {
-                margin: 5px;
-                min-width: 520px;
-                max-width: 600px;
-                border: 1px solid ${colorType(type)}; }
-            .badge { 
-              vertical-align: middle;  
-              font-family: 'Source Code Pro';}
-          `}
-        </style>
-        <ContainerEdit {...props} container={response} setMode={setMode} mode={mode} dispatch={dispatch} />
-      </>
-  }
-}
-
+/* Group of Containers */
 const GroupContainer = ( props ) => {
   const { i18n, t } = useTranslation()
   const crud_mode = (props.children) ? 'getChildrenIDof' : 'getContainersIDofType'
   const reference = (props.children) ? props.id : props.type
-  const { loading, error, response } = useFetch(crud_mode, reference, [i18n.language])
+  const { loading, error, response } = useFetch(crud_mode, reference, [])
 
   if (loading) return <><Loading /></>
   else if (error.state) return <><Error title={t('error:home.title')} 
@@ -431,6 +226,12 @@ const Containers = ({ type, children }) => {
   } else if (!children.same && !children.other) { }
 }
 
+/* Compose UI with actions and states to provide each Component */
+
+const ContainerLinks = actionsContainerLinks(statesContainerLinks(ContainerLinksUInormal, ContainerLinksUIedit))
+const HeadContainer = actionsContainer(statesHeadContainer(HeadContainerUInormal, HeadContainerUIedit))
+const Container = actionsContainer(statesContainer(ContainerUInormal, ContainerUIedit))
+
 /* Props Types checking part... */
 
 Containers.propTypes = {
@@ -454,10 +255,9 @@ GroupContainer.defaultProps = {
   children: false
 }
 
-ActionLinks.propTypes = {
-  data:     object.isRequired,
-  type:     string.isRequired,
-  callback: func.isRequired
+ContainerLinks.propTypes = {
+  type:       string.isRequired,
+  callback:   func.isRequired
 }
 
 HeadContainer.propTypes = {

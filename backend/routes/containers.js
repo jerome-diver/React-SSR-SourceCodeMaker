@@ -101,8 +101,7 @@ router.put('/:id/update', [hasAuthorization, checkContainer, sanitizer], (req, r
           { _id: req.params.id }, 
           { title, content, title_en, content_en, enable, parent_id, type_name } , 
           { new: true }).exec()
-        .then(container => {
-            return res.status(201).json({ accepted: true, container: container.toJSON() }) })
+        .then(container => { return res.status(201).json(container.toJSON()) })
         .catch(error => { return res.status(400).json( 
               { error: 
                 { title: req.i18n.t('error:database.containers.update.failed'), 
