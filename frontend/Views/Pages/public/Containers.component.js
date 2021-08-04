@@ -188,7 +188,7 @@ const HeadContainer = ( {id} ) => {
   if(error.state) return <><Error title={t('error:home.title')} 
                                   name={error.content.name}
                                   message={error.content.message}
-                                  open = {true} /></>
+                                  open={true} /></>
   else {
     switch (mode) {
       case 'normal':
@@ -219,8 +219,9 @@ const HeadContainer = ( {id} ) => {
   }
 }
 
-const ContainerNormal = ( { index, data, type, setMode, mode } ) => {
+const ContainerNormal = ( { index, container, setMode, mode } ) => {
   const { i18n, t } = useTranslation()
+  const type = container.type_name
   const container_type = "containers." + type
   return <>
       <style type="text/css">
@@ -232,46 +233,50 @@ const ContainerNormal = ( { index, data, type, setMode, mode } ) => {
         `}
       </style>
       <Card id={type+'_'+index}>
-        <Card.Img variant="top" src={`/uploads/${data.image_link}`} />
+        <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
         <Card.Body>
           <Card.Title>
-            {trContainer(i18n.language, data).title}&nbsp;
+            {trContainer(i18n.language, container).title}&nbsp;
             <Badge variant='primary'>{t(container_type)}</Badge>
           </Card.Title>
           <Card.Text as="div">
-            {parse(trContainer(i18n.language, data).content)}
+            {parse(trContainer(i18n.language, container).content)}
           </Card.Text>
-          <Card.Link href={`/${data.type_name}/${data.id}`}>
-            {t('containers.link', { type, title: trContainer(i18n.language, data).title})}
+          <Card.Link href={`/${container.type_name}/${container.id}`}>
+            {t('containers.link', { type, title: trContainer(i18n.language, container).title})}
             </Card.Link>
           <br/>
-        <ActionLinks data={data} type={container_type} callback={setMode} mode={mode}/>
+        <ActionLinks data={container} type={container_type} callback={setMode} mode={mode}/>
         </Card.Body>
       </Card>
     </>
 }
 
-const ContainerEdit = ( { index, data, type, setMode, mode } ) => {
+const ContainerEdit = ( { index, container, setMode, mode, dispatch } ) => {
   const { i18n, t } = useTranslation()
   const [ validated, setValidated ] = useState(false)
+  const [ data, setData ] = useState(container)
+  const type = container.type_name
   const container_type = "containers." + type
-  const [ form, setForm ] = useState({ title:   { fr: data.title,   
-                                                  en: data.title_en }, 
-                                       content: { fr: data.content, 
-                                                  en: data.content_en } })
-  const change = target => e => {
-    if (target == 'title') setForm({...form, title: { [i18n.language]: e.target.value} })
-    else setForm({...form, content: { [i18n.language]: e } })
+  const [ form, setForm ] = useState({ title:   { fr: container.title,   
+                                                  en: container.title_en }, 
+                                       content: { fr: container.content, 
+                                                  en: container.content_en } })
+  const change = target => value => {
+    if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
+    else setForm({...form, content: { [i18n.language]: value } })
+    setData({title: data.title, title_en: data.title_en, content: data.content, content_en: data.content_en, 
+             type_name: data.type_name, parent_id: data.parent_id, enable: data.enable, [target]: value})
+    console.log("DATA =>", data)
   }
-  const updateContainer = (container) => e => {
+  const update = (container) => e => {
     const form_to_submit = e.currentTarget;
     if (form_to_submit.checkValidity() === false) {
         e.preventDefault();
         e.stopPropagation();
     } else {
       console.log("UPDATE CONTAINER EVENT FOR", container)
-      const data = { id: container.id, body: {...container} }
-  //    const { loading, error } = useFetch('updateContainer', data, i18n.language)
+      dispatch({ type: 'update', reference: { id: container.id, body: data } })
     }
     setValidated(true)
   }
@@ -285,8 +290,8 @@ const ContainerEdit = ( { index, data, type, setMode, mode } ) => {
         `}
       </style>
       <Card id={type+'_'+index}>
-        <Form onSubmit={updateContainer(data)} noValidate validated={validated}>
-          <Card.Img variant="top" src={`/uploads/${data.image_link}`} />
+        <Form onSubmit={update(container)} noValidate validated={validated}>
+          <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
           <Card.Body>
             <Card.Title>
               <Form.Group controlId="formBasicText">
@@ -314,10 +319,10 @@ const ContainerEdit = ( { index, data, type, setMode, mode } ) => {
                   </InputGroup>
                   <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
               </Form.Group>
-              <ActionLinks data={data} type={data.type_name} callback={setMode} mode={mode}/>
+              <ActionLinks container={data} type={data.type_name} callback={setMode} mode={mode}/>
             </Card.Text>
-            <Card.Link href={`/${data.type_name}/${data.id}`}>{t('containers.link', 
-                             { type, title: trContainer(i18n.language, data).title})}</Card.Link>
+            <Card.Link href={`/${container.type_name}/${data.id}`}>{t('containers.link', 
+                             { type, title: trContainer(i18n.language, container).title})}</Card.Link>
             <br/>
           </Card.Body>
         </Form>
@@ -328,15 +333,16 @@ const ContainerEdit = ( { index, data, type, setMode, mode } ) => {
 /* Print cards with partial content and a link */
 const Container = ( props ) => {
   const { i18n, t } = useTranslation()
-  const [mode, setMode] = useState('normal')
-  const { loading, error, response } = useFetch('getContainer', props.id, [i18n.language])
+  const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: props.id})
+  const [ mode, setMode ] = useState('normal')
+  const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
   const type = response.type_name
 
   if (loading) return <><Loading /></>
   if(error.state) return <><Error title={t('error:home.title')} 
                                   name={error.content.name}
                                   message={error.content.message}
-                                  open = {true} /></>
+                                  open={true} /></>
   switch (mode) {
     case 'normal':
       return <>
@@ -352,7 +358,7 @@ const Container = ( props ) => {
               font-family: 'Source Code Pro';}
           `}
         </style>
-        <ContainerNormal {...props} data={response} type={type} setMode={setMode} mode={mode} />
+        <ContainerNormal {...props} container={response} setMode={setMode} mode={mode} />
       </>
     case 'edit':
       return <>
@@ -368,7 +374,7 @@ const Container = ( props ) => {
               font-family: 'Source Code Pro';}
           `}
         </style>
-        <ContainerEdit {...props} data={response} type={type} setMode={setMode} mode={mode}/>
+        <ContainerEdit {...props} container={response} setMode={setMode} mode={mode} dispatch={dispatch} />
       </>
   }
 }
@@ -383,13 +389,13 @@ const GroupContainer = ( props ) => {
   else if (error.state) return <><Error title={t('error:home.title')} 
                                    name={error.content.name}
                                    message={error.content.message}
-                                   open = {true} /></>
+                                   open={true} /></>
   else {
-    return <> <CardGroup>
+    return <CardGroup>
               { response.map( (data, index) => {
                 if (data.enabled) return <Container id={data.id} key={index} index={index} />
               }) }
-          </CardGroup> </>
+          </CardGroup> 
   }
 }
 
