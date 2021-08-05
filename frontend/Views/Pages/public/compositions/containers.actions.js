@@ -9,14 +9,18 @@ const useFetch = (crud_name, data, triggers) => {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState({state: false, content: ""})
     const [ response, setResponse ] = useState({})
-    const isMounted = useRef(null)
+    const isMounted = useRef(true)
     useEffect(() => {
-        isMounted.current = true
+    return () => {
+        isMounted.current = false;
+    }
+    }, [])
+    useEffect(() => {
+        //isMounted.current = true
         console.log("==> useFetch for CRUD's container function name and content:", {crud_name, data})
         if (crud_list.includes(crud_name)) {
-            crud_caller['$' + crud_name](data, setResponse, setError, setLoading, isMounted.current) 
+            crud_caller['$' + crud_name](data, setResponse, setError, setLoading, isMounted) 
         }
-        return () => (isMounted.current = false)
     }, triggers )
     return { loading, error, response }
 }

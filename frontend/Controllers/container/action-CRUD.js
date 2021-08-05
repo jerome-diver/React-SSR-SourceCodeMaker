@@ -8,9 +8,9 @@ const host = TAG + HOST + ":" + SERVER_PORT
 const giveMe = (url, successCBK, failedCBK, finalCBK, isMounted) => {
     fetch(url)
         .then( response => response.json() )
-        .then( response => { (isMounted) ? successCBK(response) : null } )
-        .catch( error => { (isMounted) ? failedCBK( { state: true, content: error } ) : null } )
-        .finally( () => { (isMounted) ? finalCBK(false) : null } )
+        .then( response => { (isMounted.current) ? successCBK(response) : null } )
+        .catch( error => { (isMounted.current) ? failedCBK( { state: true, content: error } ) : null } )
+        .finally( () => { (isMounted.current) ? finalCBK(false) : null } )
 }
 
 const getContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
@@ -47,9 +47,9 @@ const createContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
                        'Content-Type': 'application/json' },
             body: JSON.stringify( { data } ) })
         .then( response => response.json() )
-        .then( response => { (isMounted) ? successCBK(response) : null } )
-        .catch( error => { (isMounted) ? failedCBK( { state: true, content: error } ) : null } )
-        .finally( () => { (isMounted) ? finalCBK(false) : null } )
+        .then( response => { (isMounted.current) ? successCBK(response) : null } )
+        .catch( error => { (isMounted.current) ? failedCBK( { state: true, content: error } ) : null } )
+        .finally( () => { (isMounted.current) ? finalCBK(false) : null } )
 }
 
 const updateContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
@@ -62,9 +62,9 @@ const updateContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
                        'Content-Type': 'application/json' },
             body: JSON.stringify( data.body ) })
         .then( response => response.json() )
-        .then( response => { (isMounted) ? successCBK(response) : null }  )
-        .catch( error => { (isMounted) ? failedCBK( { state: true, content: error } ) : null } )
-        .finally( () => { (isMounted) ? finalCBK(false) : null } )
+        .then( response => { (isMounted.current) ? successCBK(response) : null }  )
+        .catch( error => { (isMounted.current) ? failedCBK( { state: true, content: error } ) : null } )
+        .finally( () => { (isMounted.current) ? finalCBK(false) : null } )
 }
 
 const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
@@ -75,9 +75,9 @@ const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
             headers: { 'Accept': 'application/json', 
                        'Content-Type': 'application/json' } })
         .then( response => response.json() )
-        .then( response => { (isMounted) ? successCBK(response) : null } )
-        .catch( error => { (isMounted) ? failedCBK( { state: true, content: error } ) : null } )
-        .finally( () => { (isMounted) ? finalCBK(false) : null } )
+        .then( response => { (isMounted.current) ? successCBK(response) : null } )
+        .catch( error => { (isMounted.current) ? failedCBK( { state: true, content: error } ) : null } )
+        .finally( () => { (isMounted.current) ? finalCBK(false) : null } )
 }
 
 const crud_caller = {
