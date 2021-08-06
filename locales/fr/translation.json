@@ -158,6 +158,7 @@
       "title": "Le titre contient 64 caractères maximum et aucun code injecté.",
       "content": "Le contenu est lisible via des balises HTML et ne doit contenir aucun code injecté."
     },
+    "delete_confirm": "Êtes-vous sûre de vouloir supprimer ce/cette $t(containers.{{type}}): '{{title}}' ?",
     "button_submit": "Valider",
     "edit": "Édition de $t(containers.{{type}})",
     "content": {

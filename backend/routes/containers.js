@@ -26,7 +26,7 @@ router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
           { error: {
               title: req.i18n.t('error:database.containers.create.failed.validation'), 
               message } }) })
-      return res.status(201).json( { accepted: true } )
+      return res.status(201).json( { created: true, content: container.toJSON() } )
   }
 } )
 
@@ -96,7 +96,7 @@ router.get('/children_of/:id', (req, res) => {
 /* GET a container from his id */
 router.get('/:id', (req, res) => {
   Container.findOne({ _id: req.params.id }).exec()
-    .then(container => { return res.status(200).json( container.toJSON() ) })
+    .then(container => { return res.status(200).json({find: true, content: container.toJSON()}) })
     .catch( error => { return res.status(401).json({ error }) })
 } )
 
@@ -111,7 +111,7 @@ router.put('/:id/update', [hasAuthorization, checkContainer, sanitizer], (req, r
           { _id: req.params.id }, 
           { title, content, title_en, content_en, enable, parent_id, type_name } , 
           { new: true }).exec()
-        .then(container => { return res.status(201).json(container.toJSON()) })
+        .then(container => { return res.status(201).json({updated: true, content: container.toJSON()}) })
         .catch(error => { return res.status(400).json( 
               { error: 
                 { title: req.i18n.t('error:database.containers.update.failed'), 
@@ -125,7 +125,7 @@ router.delete('/:id', [hasAuthorization], (req, res) => {
     Container.deleteOne( { _id: req.params.id }).exec()
       .then(response => { 
         if (response.acknowledged == false) throw req.i18n.t('error:database.containers.delete.unacknowledged')
-        else return res.status(200).json({ accepted: true }) })
+        else return res.status(200).json({deleted: true}) })
       .catch(error => { return res.status(401).json( 
         { error: {
             name: req.i18n.t('error:database.containers.delete.failed'),

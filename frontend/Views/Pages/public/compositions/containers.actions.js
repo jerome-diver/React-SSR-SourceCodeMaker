@@ -1,77 +1,60 @@
 /* HOC to Compose with Containers.component for ACTIONS */
 
-import React, { useState, useRef, useEffect, useReducer } from 'react'
-import { crud_caller, crud_list } from '../../../../Controllers/container/action-CRUD'
-import { useTranslation } from 'react-i18next'
+import React, { useEffect } from 'react'
+import { trContainer } from '../../../helpers/config'
 
 /* Component to use with ACTIONS (Private) */
-const useFetch = (crud_name, data, triggers) => {
-    const [ loading, setLoading ] = useState(true)
-    const [ error, setError ] = useState({state: false, content: ""})
-    const [ response, setResponse ] = useState({})
-    const isMounted = useRef(true)
-    useEffect(() => {
-    return () => {
-        isMounted.current = false;
-    }
-    }, [])
-    useEffect(() => {
-        //isMounted.current = true
-        console.log("==> useFetch for CRUD's container function name and content:", {crud_name, data})
-        if (crud_list.includes(crud_name)) {
-            crud_caller['$' + crud_name](data, setResponse, setError, setLoading, isMounted) 
-        }
-    }, triggers )
-    return { loading, error, response }
-}
-
-const dataReducer = (state, action) => {
-    console.log("dispatch for", action)
-  switch (action.type) {
-    case 'update':
-      return { crud: 'updateContainer', data: action.reference }
-    case 'delete':
-      return { crud: 'deleteContainer', data: action.reference }
-    case 'get':
-      return { crud: 'getContainer', data: action.reference }
-  }
-}
-
 /* Public ACTIONS HOC */
-const actionsContainerLinks = UI => {
+const actionsContainerLinks = UI => {   // actions comes first !
     const actions = (props) => {
         const edit = () => { props.callback('edit') }
-        const remove = (content, type) => { console.log("DELETE") }
         const cancel = () => { props.callback('normal') }
-        props = { ...props, edit, remove, cancel }
+        props = { ...props, edit, cancel }
         return <UI {...props} />
     }
     return actions
 }
 
-const actionsContainer = UI => {
+const actionsContainer = (UInormal, UIedit) => {  // actions comes after states !
     const actions = (props) => {
-        const { i18n } = useTranslation()
-        const [ validated, setValidated ] = useState(false)
-        const [ mode, setMode ] = useState('normal')
-        const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: props.id})
-        const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
-        const [ data, setData ] = useState({})
-        const [ form, setForm ] = useState({})
-        useEffect(()=>{
-            setForm({ title:   { fr: response.title,   
-                                 en: response.title_en }, 
-                      content: { fr: response.content, 
-                                 en: response.content_en } })
-            setData (response)  
+        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, setValidated } = props
+        useEffect(()=>{ 
+            const content = can_refresh()
+            if (content != undefined) refresh(content)
         }, [response])
-        const change = target => value => {
-            if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
-            else setForm({...form, content: { [i18n.language]: value } })
-            setData({title: data.title, title_en: data.title_en, content: data.content, content_en: data.content_en, 
-                    type_name: data.type_name, parent_id: data.parent_id, enable: data.enable, [target]: value})
+        /* View refresher after action CRUD*/
+        const can_refresh = () => { // test if can refresh with something, then give back this thing
+            console.log("show me if can refresh for:", state.called)
+            switch (state.called) {
+                case 'create':
+                    return (response.created) ? response.content : undefined
+                case 'read':
+                    return (response.find) ? response.content : undefined
+                case 'update':
+                    return (response.updated) ? response.content : undefined
+                case 'delete':
+                    return (response.deleted) ? null : undefined
+            }
         }
-        const update = (container) => e => {
+        const refresh = (d) => { // refresh content with data
+            console.log("yes i can with:", d)
+            if (d) {
+                setForm({ title:   { fr: d.title, en: d.title_en }, 
+                          content: { fr: d.content, en: d.content_en } })
+                setData (d)
+            } else setMode('empty')
+        }
+        /* onChange form control (or input tags) events */
+        const change = target => value => {
+            if (target == 'title') props.setForm({...form, title: { [i18n.language]: value} })
+            else setForm({...form, content: { [i18n.language]: value } })
+            setData({title: data.title, title_en: data.title_en, 
+                     content: data.content, content_en: data.content_en, 
+                     type_name: data.type_name, parent_id: data.parent_id, 
+                     enable: data.enable, [target]: value})
+        }
+        /* onClick buttons tags events */
+        const update = container => e => { // via submit form button
             e.preventDefault();
             const form_to_submit = e.currentTarget;
             if (form_to_submit.checkValidity() === false) {
@@ -82,11 +65,32 @@ const actionsContainer = UI => {
             setMode('normal')
             }
         }
-        props = {...props, i18n, form, mode, setMode, 
-                 update, change, validated, loading, error, response, dispatch}
-        return <UI {...props} />
+        const remove = () => { // via "remove" ContainerLinks props callback action
+            const answer = confirm(t('containers.delete_confirm', 
+                                    { type: response.content.type_name, 
+                                      title: trContainer(i18n.language, response.content).title}) )
+            if (answer) {
+                dispatch({ type: 'delete', reference: container.id })
+                setMode('empty')
+            }
+        }
+        props = {...props, update, change, remove}
+        switch (mode) {
+            case 'empty':
+                return null
+            case 'edit':
+                return <>
+                    <UIedit {...props} container={response.content} />
+                </>
+            case 'normal':
+                return <>
+                    <UInormal {...props} container={response.content} />
+                </>
+            default: 
+                return null
+        }
     }
     return actions
 }
 
-export { useFetch, actionsContainerLinks, actionsContainer }
+export { actionsContainerLinks, actionsContainer }

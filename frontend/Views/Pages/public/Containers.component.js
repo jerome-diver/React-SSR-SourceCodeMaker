@@ -9,12 +9,12 @@ import { Loading, Error } from './Printers.component'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
-import { trContainer } from '../../helpers/config'
+import { trContainer, colorType } from '../../helpers/config'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure } from 'react-bootstrap'
 import loadable from '@loadable/component'
 
-import { actionsContainerLinks, actionsContainer, useFetch } from './compositions/containers.actions'
-import { statesContainerLinks, statesHeadContainer, statesContainer } from './compositions/containers.states'
+import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
+import { statesContainerLinks, statesContainer, useFetch } from './compositions/containers.states'
 
 const Editor = loadable(() => import('for-editor'))
 
@@ -26,15 +26,14 @@ const Editor = loadable(() => import('for-editor'))
 */ 
 
 /* Buttons actions links UI design for normal and edit mode */
-const ContainerLinksUInormal = ( { t, data, type, edit, remove, cancel } ) => (
+const ContainerLinksUInormal = ( { t, data, edit, remove } ) => (
       <>
         <Button onClick={edit} variant="warning">
           { t('containers.content.edit', { content: data.title }) }
         </Button>
-        <Button onClick={() => remove(content, type)} variant="danger">
+        <Button onClick={remove} variant="danger">
           { t('containers.content.delete', { content: data.content }) }
         </Button>
-        <Button onClick={cancel}>{ t('containers.content.cancel') }</Button>
       </>
 )
 
@@ -48,13 +47,23 @@ const ContainerLinksUIedit = ( { t, cancel } ) => (
 )
 
 /* Head Containers UI design for normal and edit mode */
-const HeadContainerUInormal = ({t, i18n, type_to_translate, 
+const HeadContainerUInormal = ({t, i18n, remove,
                                 container, setMode, mode}) => (
   <>
+    <style type='text/css'>{`
+        #head-container-title h1 { display: inline-block; }
+        #head-container-text { font-family: 'Santana'; }
+        .badge { 
+            vertical-align: middle; 
+            font-family: 'Source Code Pro'; }
+        #head-container {
+        background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
+        background-color: rgba(99,99,99,0.75) }
+    `}</style>
     <Jumbotron id='head-container'>
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
-        <Badge variant='info'>{t(type_to_translate)}</Badge>
+        <Badge variant='info'>{t(container.type_name)}</Badge>
       </h1>
       <Figure>
         <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} />
@@ -63,15 +72,25 @@ const HeadContainerUInormal = ({t, i18n, type_to_translate,
         </Figure.Caption>
       </Figure>
       <br/>
-      <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
+      <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode} remove={remove} />
     </Jumbotron>
   </>
 )
 
-const HeadContainerUIedit = ( {t, i18n, type_to_translate, 
+const HeadContainerUIedit = ( {t, i18n,
                                validated, update, change, form, 
                                container, setMode, mode}) => (
   <>
+    <style type='text/css'>{`
+        #edit-container-title h1 { display: inline-block; }
+        #edit-container-text { font-family: 'Santana'; }
+        .badge { 
+            vertical-align: middle; 
+            font-family: 'Source Code Pro'; }
+        #edit-container {
+            background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
+            background-color: rgba(199,2,2,0.75) }
+    `}</style>
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
       <Form onSubmit={update(container)} noValidate validated={validated}>
@@ -82,11 +101,12 @@ const HeadContainerUIedit = ( {t, i18n, type_to_translate,
                             name="formContainerTitle"
                             onChange={change('title')}
                             value={form.title[i18n.language]}/>
-              <Badge variant='info'>{t(type_to_translate)}</Badge>
+              <Badge variant='info'>{t(container.type_name)}</Badge>
               <Form.Control.Feedback type="invalid">Please update the title.</Form.Control.Feedback>
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
+        <Image rounded fluid src={`/uploads/${container.image_link}`} />
         <Form.Group controlId="formBasicText">
             <Form.Label>Content this:</Form.Label>
             <InputGroup>
@@ -98,41 +118,69 @@ const HeadContainerUIedit = ( {t, i18n, type_to_translate,
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
         </Form.Group>
-        <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode}/>
+        <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode} />
       </Form>
     </Jumbotron>
   </>
 )
 
 /* Container UI design for mode edit and normal */
-const ContainerUInormal = ( { t, i18n, type, container_type, 
+const ContainerUInormal = ( { t, i18n, remove,
                               index, container, setMode, mode } ) => (
   <>
-      <Card id={type+'_'+index}>
+    <style type='text/css'>{` 
+        #${container.type_name+'_'+index} {
+            margin: 5px;
+            min-width: 520px;
+            max-width: 600px;
+            border: 1px solid ${colorType(container.type_name)}; }
+        .badge { 
+        vertical-align: middle;  
+        font-family: 'Source Code Pro';}
+        #${container.type_name+'_'+index} .card-body { 
+            background-color: rgba(55, 44, 44, 0.85); 
+            background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22)); }
+        #${container.type_name+'_'+index} .card-title .h5 { display: inline; }
+    `}</style>
+      <Card id={container.type_name+'_'+index}>
         <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
         <Card.Body>
           <Card.Title>
             {trContainer(i18n.language, container).title}&nbsp;
-            <Badge variant='primary'>{t(container_type)}</Badge>
+            <Badge variant='primary'>{t("containers."+container.type_name)}</Badge>
           </Card.Title>
           <Card.Text as="div">
             {parse(trContainer(i18n.language, container).content)}
           </Card.Text>
           <Card.Link href={`/${container.type_name}/${container.id}`}>
-            {t('containers.link', { type, title: trContainer(i18n.language, container).title})}
+            {t('containers.link', { type: container.type_name, title: trContainer(i18n.language, container).title})}
             </Card.Link>
           <br/>
-        <ContainerLinks data={container} type={container_type} callback={setMode} mode={mode}/>
+        <ContainerLinks data={container} type={container.type_name} callback={setMode} mode={mode} remove={remove} />
         </Card.Body>
       </Card>
     </>
 )
 
-const ContainerUIedit = ( { t, i18n, type, container_type, 
+const ContainerUIedit = ( { t, i18n, 
                             validated, update, change, form, 
                             index, container, setMode, mode } ) => (
   <>
-      <Card id={type+'_'+index}>
+    <style type='text/css'>{`
+        #${container.type_name+'_'+index} {
+            margin: 5px;
+            min-width: 520px;
+            max-width: 600px;
+            border: 1px solid ${colorType(container.type_name)}; }
+        .badge { 
+        vertical-align: middle;  
+        font-family: 'Source Code Pro';}
+        #${container.type_name+'_'+index} .card-body {
+            background-color: rgba(55, 44, 44, 0.85); 
+            background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22)); }
+        #${container.type_name+'_'+index} .card-title .h5 { display: inline; }
+    `}</style>
+      <Card id={container.type_name+'_'+index}>
         <Form onSubmit={update(container)} noValidate validated={validated}>
           <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
           <Card.Body>
@@ -144,7 +192,7 @@ const ContainerUIedit = ( { t, i18n, type, container_type,
                                   name="formContainerTitle"
                                   onChange={change('title')}
                                   value={form.title[i18n.language]}/>
-              <Badge variant='primary'>{t(container_type)}</Badge>
+              <Badge variant='primary'>{t("containers."+container.type_name)}</Badge>
                     <Form.Control.Feedback type="invalid">Please update the title.</Form.Control.Feedback>
                   </InputGroup>
                   <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
@@ -164,8 +212,10 @@ const ContainerUIedit = ( { t, i18n, type, container_type,
               </Form.Group>
               <ContainerLinks container={container} type={container.type_name} callback={setMode} mode={mode}/>
             </Card.Text>
-            <Card.Link href={`/${container.type_name}/${container.id}`}>{t('containers.link', 
-                             { type, title: trContainer(i18n.language, container).title})}</Card.Link>
+            <Card.Link href={`/${container.type_name}/${container.id}`}>
+              {t('containers.link', 
+                    { type: container.type_name, 
+                      title: trContainer(i18n.language, container).title})}</Card.Link>
             <br/>
           </Card.Body>
         </Form>
@@ -229,8 +279,8 @@ const Containers = ({ type, children }) => {
 /* Compose UI with actions and states to provide each Component */
 
 const ContainerLinks = actionsContainerLinks(statesContainerLinks(ContainerLinksUInormal, ContainerLinksUIedit))
-const HeadContainer = actionsContainer(statesHeadContainer(HeadContainerUInormal, HeadContainerUIedit))
-const Container = actionsContainer(statesContainer(ContainerUInormal, ContainerUIedit))
+const HeadContainer = statesContainer(actionsContainer(HeadContainerUInormal, HeadContainerUIedit))
+const Container = statesContainer(actionsContainer(ContainerUInormal, ContainerUIedit))
 
 /* Props Types checking part... */
 

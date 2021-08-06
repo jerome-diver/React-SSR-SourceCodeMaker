@@ -158,6 +158,7 @@
     },
     "button_submit": "Submit",
     "edit": "Edition of $t(containers.{{type}})",
+    "delete_confirm": "Are you sure to delete this $t(containers.{{type}}): '{{title}}' ?",
     "content": {
       "edit": "Edit",
       "delete": "Delete",
