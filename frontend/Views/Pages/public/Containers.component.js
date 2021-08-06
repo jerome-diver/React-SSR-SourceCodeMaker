@@ -178,7 +178,7 @@ const ContainerUInormal = ( { t, i18n, remove,
         .badge { 
         vertical-align: middle;  
         font-family: 'Source Code Pro';}
-        #${container.type_name+'_'+index} .card-body { 
+        #${container.type_name+'_'+index} .card-body, .card-footer { 
             background-color: rgba(55, 44, 44, 0.85); 
             background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22)); }
         #${container.type_name+'_'+index} .card-title .h5 { display: inline; }
@@ -196,9 +196,8 @@ const ContainerUInormal = ( { t, i18n, remove,
           <Card.Link href={`/${container.type_name}/${container.id}`}>
             {t('containers.link', { type: container.type_name, title: trContainer(i18n.language, container).title})}
             </Card.Link>
-          <br/>
-        <ContainerLinks data={container} callback={setMode} mode={mode} remove={remove} />
         </Card.Body>
+        <Card.Footer><ContainerLinks data={container} callback={setMode} mode={mode} remove={remove} /></Card.Footer>
       </Card>
     </>
 )
@@ -251,14 +250,9 @@ const ContainerUIedit = ( { t, i18n,
                   </InputGroup>
                   <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
               </Form.Group>
-              <ContainerLinks container={container} callback={setMode} mode={mode}/>
             </Card.Text>
-            <Card.Link href={`/${container.type_name}/${container.id}`}>
-              {t('containers.link', 
-                    { type: container.type_name, 
-                      title: trContainer(i18n.language, container).title})}</Card.Link>
-            <br/>
           </Card.Body>
+          <Card.Footer><ContainerLinks container={container} callback={setMode} mode={mode}/></Card.Footer>
         </Form>
       </Card>
     </>
