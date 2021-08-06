@@ -104,7 +104,7 @@ const HeadContainerUInormal = ({t, i18n, remove,
     <Jumbotron id='head-container'>
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
-        <Badge variant='info'>{t(container.type_name)}</Badge>
+        <Badge variant='info'>{t("containers."+container.type_name)}</Badge>
       </h1>
       <Figure>
         <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} />
