@@ -59,7 +59,9 @@
       "switch": "$t(account.user.{{action}})",
       "delete": "Destruct",
       "true": "Activate account",
-      "false": "Unactivate account"
+      "false": "Unactivate account",
+      "activated": "Enabled account",
+      "disabled": "Disabled account"
     },
     "role": {
       "title": "Roles",
@@ -163,6 +165,14 @@
       "edit": "Edit",
       "delete": "Delete",
       "cancel": "Cancel"
+    },
+    "update": {
+      "title": "Title",
+      "invalid_title": "Please, correct invalid title",
+      "content": "Content",
+      "invalid_content": "Please correct the invalid content",
+      "description": "Description",
+      "image": "Image header"
     },
     "category": "category",
     "category_plural": "categories",

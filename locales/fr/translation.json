@@ -166,6 +166,14 @@
       "delete": "Supprimer",
       "cancel": "Annuler"
     },
+    "update": {
+      "title": "Titre",
+      "invalid_title": "Svp, corrigez le titre",
+      "content": "Contenu",
+      "invalid_content": "Svp, corrigez le contenu",
+      "description": "Description",
+      "image": "Image d'entête"
+    },
     "category": "catégorie",
     "category_plural": "catégories",
     "subject": "sujet",
