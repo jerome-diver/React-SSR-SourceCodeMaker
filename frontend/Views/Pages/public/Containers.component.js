@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
 import loadable from '@loadable/component'
+import ImageUploading from 'react-images-uploading'
 
 import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
 import { statesContainerLinks, statesContainer, useFetch } from './compositions/containers.states'
@@ -131,6 +132,7 @@ const HeadContainerUIedit = ( {t, i18n,
         #edit-container {
             background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
             background-color: rgba(199,2,2,0.75) }
+        .for-container { flex-grow: 1; }
     `}</style>
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
@@ -147,14 +149,33 @@ const HeadContainerUIedit = ( {t, i18n,
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
-        <Image rounded fluid src={`/uploads/${container.image_link}`} />
+
+        <ImageUploading multiple value={form.image} onChange={change}
+          maxNumber='1' dataURLKey="data_url">
+          {({ onImageUpload, onImageRemove, isDragging, dragProps }) => (
+            <div id='drop-area' className="upload__image-wrapper">
+              <button style={isDragging ? { color: 'red' } : undefined} 
+                      onClick={onImageUpload}
+                      {...dragProps} >
+                Click or Drop here
+              </button>
+              &nbsp;
+              <div className="image-item">
+                <Image rounded fluid src={form.image} />
+                  <button onClick={() => onImageRemove(0)}>Remove</button>
+              </div>
+            </div>
+          )}
+        </ImageUploading>
+
+
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.content')}</Form.Label>
             <InputGroup>
-                <Editor value={form.content[i18n.language]} 
-                        onChange={change('content')}
-                        language='en'
-                        preview={true} />
+              <Editor value={form.content[i18n.language]} 
+                      onChange={change('content')}
+                      language={i18n.language}
+                      preview={true} />
               <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
@@ -215,6 +236,7 @@ const ContainerUIedit = ( { t, i18n,
         .badge { 
         vertical-align: middle;  
         font-family: 'Source Code Pro';}
+        .for-container { flex-grow: 1; }
         #${container.type_name+'_'+index} .card-body {
             background-color: rgba(55, 44, 44, 0.85); 
             background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22)); }
@@ -244,7 +266,7 @@ const ContainerUIedit = ( { t, i18n,
                   <InputGroup>
                       <Editor value={form.content[i18n.language]} 
                               onChange={change('content')}
-                              language='en'
+                              language={i18n.language}
                               preview={true} />
                     <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
                   </InputGroup>
@@ -341,7 +363,6 @@ GroupContainer.defaultProps = {
 }
 
 ContainerLinks.propTypes = {
-  type:       string.isRequired,
   callback:   func.isRequired
 }
 

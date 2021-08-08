@@ -40,13 +40,15 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
             console.log("yes i can with:", d)
             if (d) {
                 setForm({ title:   { fr: d.title, en: d.title_en }, 
-                          content: { fr: d.content, en: d.content_en } })
+                          content: { fr: d.content, en: d.content_en },
+                          image: '/uploads/'+d.image_link} )
                 setData (d)
             } else setMode('empty')
         }
         /* onChange form control (or input tags) events */
         const change = target => value => {
             if (target == 'title') props.setForm({...form, title: { [i18n.language]: value} })
+            else if (target == 'image') props.setForm({...form, image: '/uploads/'+value})
             else setForm({...form, content: { [i18n.language]: value } })
             setData({title: data.title, title_en: data.title_en, 
                      content: data.content, content_en: data.content_en, 

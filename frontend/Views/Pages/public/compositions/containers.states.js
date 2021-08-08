@@ -41,7 +41,7 @@ const useFetch = (crud_name, data, triggers) => {
     return { loading, error, response }
 }
 
-const statesContainerLinks = (UInormal, UIedit) => {   // states comes after actions !
+const statesContainerLinks = (UInormal, UIedit) => {   // states comes after actions for links!
     const states = (props) => {
         const { t, i18n } = useTranslation()
         const { getUser, getRole } = useAuthenticate()
@@ -64,7 +64,7 @@ const statesContainerLinks = (UInormal, UIedit) => {   // states comes after act
     return states
 }
 
-const statesContainer = UI => {   // states comes first !
+const statesContainer = UI => {   // states comes first for container !
     const states = (props) => {
         const { t, i18n } = useTranslation()
         const [ validated, setValidated ] = useState(false)
