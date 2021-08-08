@@ -12,7 +12,6 @@ import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
 import loadable from '@loadable/component'
-import ImageUploading from 'react-images-uploading'
 
 import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
 import { statesContainerLinks, statesContainer, useFetch } from './compositions/containers.states'
@@ -150,24 +149,7 @@ const HeadContainerUIedit = ( {t, i18n,
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
 
-        <ImageUploading multiple value={form.image} onChange={change}
-          maxNumber='1' dataURLKey="data_url">
-          {({ onImageUpload, onImageRemove, isDragging, dragProps }) => (
-            <div id='drop-area' className="upload__image-wrapper">
-              <button style={isDragging ? { color: 'red' } : undefined} 
-                      onClick={onImageUpload}
-                      {...dragProps} >
-                Click or Drop here
-              </button>
-              &nbsp;
-              <div className="image-item">
-                <Image rounded fluid src={form.image} />
-                  <button onClick={() => onImageRemove(0)}>Remove</button>
-              </div>
-            </div>
-          )}
-        </ImageUploading>
-
+        <Image rounded fluid src={form.image} />
 
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.content')}</Form.Label>
