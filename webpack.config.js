@@ -15,10 +15,10 @@ var config = {
         rules: [
             {
                 test: /\.jsx?$/,
-                use: [ 'babel-loader' ] },
+                exclude: /node_modules/,
+                use: ['babel-loader'] },
             {   test: /\.s[ac]ss$/,
-                use: [ 
-                    'css-loader', 'sass-loader' ] },
+                use: [ 'css-loader', 'sass-loader' ] },
             {   test: /\.css$/,
                 use: [ 'css-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,

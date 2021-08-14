@@ -2,7 +2,6 @@ var jwt = require('jsonwebtoken')
 import { isBefore } from 'date-fns'
 import User from '../../models/user.model'
 import Role from '../../models/role.model'
-import { i18n } from '../../i18n'
 require('dotenv').config('../../')
 
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */

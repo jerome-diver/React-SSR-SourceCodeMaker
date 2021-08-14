@@ -15,5 +15,6 @@
         "@loadable/babel-plugin",
         "react-hot-loader/babel",
         "@babel/plugin-proposal-class-properties",
+        "css-modules-transform",
     ]
 }

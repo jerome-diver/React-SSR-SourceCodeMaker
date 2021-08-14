@@ -18,6 +18,10 @@ import { statesContainerLinks, statesContainer, useFetch } from './compositions/
 
 const Editor = loadable(() => import('for-editor'))
 
+import ImageUpload from 'image-upload-react'
+//important for getting nice style.
+import '/node_modules/image-upload-react/dist/index.css'
+
 /* Pure UI components with HOC to compose with states and actions components.
    -> ContainerLinks (with both edit and normal mode) show buttons for action on own Container
    -> HeadContainer (and both normal and edit mode) show Top head container (root of tree called)
@@ -119,7 +123,7 @@ const HeadContainerUInormal = ({t, i18n, remove,
 )
 
 const HeadContainerUIedit = ( {t, i18n,
-                               validated, update, change, form, 
+                               validated, update, change, form, onPictureDraged, picture, setPicture,
                                container, setMode, mode}) => (
   <>
     <style type='text/css'>{`
@@ -149,7 +153,16 @@ const HeadContainerUIedit = ( {t, i18n,
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
 
-        <Image rounded fluid src={form.image} />
+        <ImageUpload
+              handleImageSelect={onPictureDraged}
+              imageSrc={picture}
+              setImageSrc={setPicture}
+              style={{
+                width: 700,
+                height: 500,
+                background: 'gold'
+              }}
+            />
 
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.content')}</Form.Label>

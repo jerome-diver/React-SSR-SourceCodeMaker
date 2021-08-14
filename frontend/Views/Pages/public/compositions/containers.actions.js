@@ -17,11 +17,12 @@ const actionsContainerLinks = UI => {   // actions comes first !
 
 const actionsContainer = (UInormal, UIedit) => {  // actions comes after states !
     const actions = (props) => {
-        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, setValidated } = props
+        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, setValidated, picture, setPicture } = props
         useEffect(()=>{ 
             const content = can_refresh()
             if (content != undefined) refresh(content)
         }, [response])
+            console.log("GET PICTURE at refresh: ", picture)
         /* View refresher after action CRUD*/
         const can_refresh = () => { // test if can refresh with something, then give back this thing
             console.log("show me if can refresh for:", state.called)
@@ -39,18 +40,30 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
         const refresh = (d) => { // refresh content with data
             console.log("yes i can with:", d)
             if (d) {
+                const image = '/uploads/'+d.image_link
                 setForm({ title:   { fr: d.title, en: d.title_en }, 
                           content: { fr: d.content, en: d.content_en },
-                          image: '/uploads/'+d.image_link} )
+                          image: image} )
                 setData (d)
+                setPicture(image)
+                //console.log("REFRESH PICTURE/", picture)
             } else setMode('empty')
+        }
+        /* On picture draged */
+        const onPictureDraged = e => {
+            setPicture(URL.createObjectURL(e.target.files[0]))
+            console.log("draged:", e.target.files[0].name)
         }
         /* onChange form control (or input tags) events */
         const change = target => value => {
-            if (target == 'title') props.setForm({...form, title: { [i18n.language]: value} })
-            else if (target == 'image') props.setForm({...form, image: '/uploads/'+value})
+            if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
+            else if (target == 'image') {
+                const source = '/uploads/' + value
+                setForm({...form, image: source })
+            }
             else setForm({...form, content: { [i18n.language]: value } })
-            setData({title: data.title, title_en: data.title_en, 
+            setData({title: data.title, title_en: data.title_en,
+                     image_link: data.image_link,
                      content: data.content, content_en: data.content_en, 
                      type_name: data.type_name, parent_id: data.parent_id, 
                      enable: data.enable, [target]: value})
@@ -76,7 +89,7 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
                 setMode('empty')
             }
         }
-        props = {...props, update, change, remove}
+        props = {...props, update, change, remove, onPictureDraged}
         switch (mode) {
             case 'empty':
                 return null

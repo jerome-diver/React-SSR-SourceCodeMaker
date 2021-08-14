@@ -156,7 +156,9 @@
   "containers": {
     "helper": {
       "title": "Le titre contient 64 caractères maximum et aucun code injecté.",
-      "content": "Le contenu est lisible via des balises HTML et ne doit contenir aucun code injecté."
+      "content": "Le contenu est lisible via des balises HTML et ne doit contenir aucun code injecté.",
+      "image_select": "Choisir une image"
+
     },
     "delete_confirm": "Êtes-vous sûre de vouloir supprimer ce/cette $t(containers.{{type}}): '{{title}}' ?",
     "button_submit": "Valider",

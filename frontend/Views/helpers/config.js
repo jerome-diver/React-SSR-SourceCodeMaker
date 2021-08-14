@@ -50,6 +50,8 @@ const trContainer = (lng, container) => {
       return {title: container.title_en, content: container.content_en}
     case 'us':
       return {title: container.title_en, content: container.content_en}
+    default:
+      return {title: container.title_en, content: container.content_en}
   }
 }
 
