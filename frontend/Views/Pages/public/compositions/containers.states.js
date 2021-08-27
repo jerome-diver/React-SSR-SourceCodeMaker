@@ -73,8 +73,9 @@ const statesContainer = UI => {   // states comes first for container !
         const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
         const [ data, setData ] = useState({})
         const [ form, setForm ] = useState({})
-        const [ picture, setPicture] = useState([])
-        props = {...props, t, i18n, validated, setValidated, mode, setMode, picture, setPicture,
+        const [ picture, setPicture] = useState("")
+        props = {...props, t, i18n, validated, setValidated, mode, setMode, 
+                 picture, setPicture, 
                  state, dispatch, response, data, setData, form, setForm}
         if (loading) return <><Loading /></>
         if(error.state) return <><Error title={t('error:home.title')} 

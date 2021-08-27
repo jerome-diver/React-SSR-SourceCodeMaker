@@ -172,6 +172,7 @@
       "invalid_title": "Please, correct invalid title",
       "content": "Content",
       "invalid_content": "Please correct the invalid content",
+      "invalid_image": "Please, choose an image's file",
       "description": "Description",
       "image": "Image header"
     },

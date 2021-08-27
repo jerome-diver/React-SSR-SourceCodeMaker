@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
 import loadable from '@loadable/component'
 
@@ -101,6 +103,9 @@ const HeadContainerUInormal = ({t, i18n, remove,
         .badge { 
             vertical-align: middle; 
             font-family: 'Source Code Pro'; }
+        #image {
+          width: 600px;
+          height: 400px; }
         #head-container {
         background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
         background-color: rgba(99,99,99,0.75) }
@@ -111,7 +116,7 @@ const HeadContainerUInormal = ({t, i18n, remove,
         <Badge variant='info'>{t("containers."+container.type_name)}</Badge>
       </h1>
       <Figure>
-        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} />
+        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} id="image" />
         <Figure.Caption>
           {parse(trContainer(i18n.language, container).content)}
         </Figure.Caption>
@@ -139,7 +144,7 @@ const HeadContainerUIedit = ( {t, i18n,
     `}</style>
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
-      <Form onSubmit={update(container)} noValidate validated={validated}>
+      <Form onSubmit={update(container)} noValidate validated={validated} encType="multipart/form-data">
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.title')}</Form.Label>
             <InputGroup>
@@ -152,18 +157,17 @@ const HeadContainerUIedit = ( {t, i18n,
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
-
-        <ImageUpload
-              handleImageSelect={onPictureDraged}
-              imageSrc={picture}
-              setImageSrc={setPicture}
-              style={{
-                width: 700,
-                height: 500,
-                background: 'gold'
-              }}
-            />
-
+        <Form.Group controlID='formFileImage'>
+            <Form.Label>{t('containers.update.image')}</Form.Label>
+            <ImageUpload handleImageSelect={onPictureDraged}
+                    imageSrc={picture}
+                    setImageSrc={setPicture}
+                    deleteIcon={ <FontAwesomeIcon icon={ faTrash } color='red' id='deleteImage' /> }
+                    style={{ width: 600,
+                              height: 400,
+                              background: 'gold' }} />
+            <Form.Control.Feedback type="invalid">{t('containers.update.invalid_image')}</Form.Control.Feedback>
+        </Form.Group>
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.content')}</Form.Label>
             <InputGroup>

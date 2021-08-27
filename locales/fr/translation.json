@@ -172,6 +172,7 @@
       "title": "Titre",
       "invalid_title": "Svp, corrigez le titre",
       "content": "Contenu",
+      "invalid_image": "Svp, choisissez un fichier image",
       "invalid_content": "Svp, corrigez le contenu",
       "description": "Description",
       "image": "Image d'entête"

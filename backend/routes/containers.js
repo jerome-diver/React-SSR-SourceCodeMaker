@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-import { promises } from 'fs';
-import { hasAuthorization } from './middlewares/authentication';
+//import { promises } from 'fs';
+import { hasAuthorization } from './middlewares/authentication'
+import { uploadImage } from './middlewares/upload'
 import { checkContainer, sanitizer } from './middlewares/sanitizer'
 import Container from '../models/container.model'
 import Type from '../models/type.model'
@@ -101,24 +102,23 @@ router.get('/:id', (req, res) => {
 } )
 
 /* PUT to update an existing container from his id */
-router.put('/:id/update', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
+router.post('/:id/update', [hasAuthorization, checkContainer, sanitizer, uploadImage], (req, res) => {
   console.log("UPDATE body:", req.body)
-  const {title, content, title_en, content_en, parent_id, type_name, enable, image_link} = req.body
+  //const {title, content, title_en, content_en, parent_id, type_name, enable, image_link} = req.body
   if (((req.token.role_name == 'Writer') && (req.token.id == author_id)) || 
       (req.token.role_name == 'Admin')) {
-        console.log("UPDATE possible by this user")
-    /* upload file if new */
-
-    /* add data to MongoDB "SourceCodeMaker" database "containers" document */
-    Container.findOneAndUpdate( 
-          { _id: req.params.id }, 
-          { title, content, title_en, content_en, enable, parent_id, type_name, image_link } , 
-          { new: true }).exec()
-        .then(container => { return res.status(201).json({updated: true, content: container.toJSON()}) })
-        .catch(error => { return res.status(400).json( 
-              { error: 
-                { title: req.i18n.t('error:database.containers.update.failed'), 
-                  message: error } }) })
+      /* upload file if exist in form and new in server side */
+      const toUpdate = (req.file) ? {...req.body, image_link: req.file.filename} : req.body
+      /* add data to MongoDB "SourceCodeMaker" database "containers" document */
+       Container.findOneAndUpdate( 
+         { _id: req.params.id }, 
+         toUpdate,   // no detailed list of field let Mangoose free to remove null values created for undefined entries
+         { new: true }).exec()
+           .then(container => { return res.status(201).json({updated: true, content: container.toJSON()}) })
+           .catch(error => { return res.status(400).json( 
+            { error: 
+              { title: req.i18n.t('error:database.containers.update.failed'), 
+                message: error } }) })
   }
 } )
 
@@ -131,7 +131,7 @@ router.delete('/:id', [hasAuthorization], (req, res) => {
         else return res.status(200).json({deleted: true}) })
       .catch(error => { return res.status(401).json( 
         { error: {
-            name: req.i18n.t('error:database.containers.delete.failed'),
+            title: req.i18n.t('error:database.containers.delete.failed'),
             message: error } } ) })
   }
 } )

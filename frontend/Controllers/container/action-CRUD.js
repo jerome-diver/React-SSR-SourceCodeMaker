@@ -55,12 +55,14 @@ const createContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
 const updateContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
     const url = host + '/api/containers/' + data.id + '/update'
     console.log("Go to update a container for url:", url)
+    const formData = new FormData()
+    Object.entries(data.body).forEach(([key, value]) => { formData.append(key, value)})
     fetch(url, {
-            method: 'PUT',
+            method: 'POST',
             credentials: 'include',
-            headers: { 'Accept': 'application/json', 
-                       'Content-Type': 'application/json' },
-            body: JSON.stringify( data.body ) })
+            headers: { 'Accept': 'application/json', },
+                      // 'Content-Type': 'application/json' }, 
+            body: formData, })  //JSON.stringify( data.body ) })
         .then( response => response.json() )
         .then( response => { (isMounted.current) ? successCBK(response) : null }  )
         .catch( error => { (isMounted.current) ? failedCBK( { state: true, content: error } ) : null } )

@@ -57,7 +57,7 @@ i18n
     app.set('views', 'backend/views')               // template views location
     app.set('view engine', 'pug')                   // template views engine type (pug)
     app.use(cors( { origin: 'http://localhost:3000',
-                    credentials: true, } ))                                 // Cross sites able
+                    credentials: true, } ))         // Cross sites able
     app.use(express.urlencoded({extended: true}));
     app.use(express.json())                         // JSON Express module used
     app.use(express.static('build/public'))          // read dir as public

@@ -1,6 +1,6 @@
 /* HOC to Compose with Containers.component for ACTIONS */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { trContainer } from '../../../helpers/config'
 
 /* Component to use with ACTIONS (Private) */
@@ -17,12 +17,24 @@ const actionsContainerLinks = UI => {   // actions comes first !
 
 const actionsContainer = (UInormal, UIedit) => {  // actions comes after states !
     const actions = (props) => {
-        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, setValidated, picture, setPicture } = props
+        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, 
+                setValidated, picture, setPicture } = props
         useEffect(()=>{ 
             const content = can_refresh()
             if (content != undefined) refresh(content)
         }, [response])
-            console.log("GET PICTURE at refresh: ", picture)
+        useLayoutEffect(() => {
+            /* on delete icon clicked */
+            const deleteImage = document.getElementById('deleteImage')
+            if (deleteImage) {
+                console.log("'click' event listener added to deleteimage HTML element (the delete icon)")
+                deleteImage.addEventListener('click', () => {
+                    console.log("deleted !")
+                    document.getElementById('toUpload').value = null
+                })
+            }
+        }, [picture]);
+        console.log("GET PICTURE at refresh: ", picture)
         /* View refresher after action CRUD*/
         const can_refresh = () => { // test if can refresh with something, then give back this thing
             console.log("show me if can refresh for:", state.called)
@@ -40,7 +52,7 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
         const refresh = (d) => { // refresh content with data
             console.log("yes i can with:", d)
             if (d) {
-                const image = '/uploads/'+d.image_link
+                const image = '/uploads/' + d.image_link
                 setForm({ title:   { fr: d.title, en: d.title_en }, 
                           content: { fr: d.content, en: d.content_en },
                           image: image} )
@@ -53,20 +65,21 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
         const onPictureDraged = e => {
             setPicture(URL.createObjectURL(e.target.files[0]))
             console.log("draged:", e.target.files[0].name)
+            setData((previous) => ({ ...previous, image: e.target.files[0]}) )
+            if (e.target.files[0] == undefined) {
+                console.log("we are there...")
+                document.getElementById('toUpload').value = null
+            }
         }
         /* onChange form control (or input tags) events */
         const change = target => value => {
-            if (target == 'title') setForm({...form, title: { [i18n.language]: value} })
+            if (target == 'title') setForm((previous) => ({...previous, title: { [i18n.language]: value} }) )
             else if (target == 'image') {
-                const source = '/uploads/' + value
-                setForm({...form, image: source })
+                const image = '/uploads/' + value
+                setForm((previous) => ({...previous, image }) )
             }
-            else setForm({...form, content: { [i18n.language]: value } })
-            setData({title: data.title, title_en: data.title_en,
-                     image_link: data.image_link,
-                     content: data.content, content_en: data.content_en, 
-                     type_name: data.type_name, parent_id: data.parent_id, 
-                     enable: data.enable, [target]: value})
+            else setForm((previous) => ({...previous, content: { [i18n.language]: value } } ))
+            setData((previous) => ({...previous, [target]: value}) )
         }
         /* onClick buttons tags events */
         const update = container => e => { // via submit form button
@@ -90,16 +103,17 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
             }
         }
         props = {...props, update, change, remove, onPictureDraged}
+        const answer = (response.content != undefined) ? response.content : response
         switch (mode) {
             case 'empty':
                 return null
             case 'edit':
                 return <>
-                    <UIedit {...props} container={response.content} />
+                    <UIedit {...props} container={answer} />
                 </>
             case 'normal':
                 return <>
-                    <UInormal {...props} container={response.content} />
+                    <UInormal {...props} container={answer} />
                 </>
             default: 
                 return null
