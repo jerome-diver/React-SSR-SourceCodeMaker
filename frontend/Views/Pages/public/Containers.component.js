@@ -11,7 +11,7 @@ import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faRegistered, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
 import loadable from '@loadable/component'
 
@@ -128,8 +128,9 @@ const HeadContainerUInormal = ({t, i18n, remove,
 )
 
 const HeadContainerUIedit = ( {t, i18n,
-                               validated, update, change, form, onPictureDraged, picture, setPicture,
-                               container, setMode, mode}) => (
+                               validated, form, control, Controller, register,
+                               update, change, onPictureDraged, handleSubmit,formState,
+                               container, setMode, mode, picture, setPicture,}) => (
   <>
     <style type='text/css'>{`
         #edit-container-title h1 { display: inline-block; }
@@ -142,40 +143,54 @@ const HeadContainerUIedit = ( {t, i18n,
             background-color: rgba(199,2,2,0.75) }
         .for-container { flex-grow: 1; }
     `}</style>
+    {console.log("formstate is", formState.isValid)}
     <Jumbotron id='edit-container'>
       <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
-      <Form onSubmit={update(container)} noValidate validated={validated} encType="multipart/form-data">
-        <Form.Group controlId="formBasicText">
+      <Form onSubmit={handleSubmit(update(container))} 
+            noValidate 
+            validated={validated} 
+            encType="multipart/form-data">
+        <Form.Group>
             <Form.Label>{t('containers.update.title')}</Form.Label>
-            <InputGroup>
-              <Form.Control type='text' 
-                            name="formContainerTitle"
-                            onChange={change('title')}
-                            value={form.title[i18n.language]}/>
+            <InputGroup hasValidation>
+              <Controller name='title' control={control} render={
+                ( {field: { onChange, ref }, 
+                   fieldState: { invalid }} ) => (
+                <Form.Control type='text' onChange={onChange} ref={ref} isInvalid={invalid}
+                              defaultValue={form.title[i18n.language]} /> )} />
               <Badge variant='info'>{t(container.type_name)}</Badge>
-              <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              {(formState.errors['title']) ? formState.errors.title.message : ''}
+              </Form.Control.Feedback>
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
-        <Form.Group controlID='formFileImage'>
+        <Form.Group >
             <Form.Label>{t('containers.update.image')}</Form.Label>
-            <ImageUpload handleImageSelect={onPictureDraged}
-                    imageSrc={picture}
-                    setImageSrc={setPicture}
-                    deleteIcon={ <FontAwesomeIcon icon={ faTrash } color='red' id='deleteImage' /> }
-                    style={{ width: 600,
-                              height: 400,
-                              background: 'gold' }} />
-            <Form.Control.Feedback type="invalid">{t('containers.update.invalid_image')}</Form.Control.Feedback>
+            <InputGroup hasValidation>
+                <ImageUpload handleImageSelect={onPictureDraged}
+                        {...register('photo')}
+                        imageSrc={picture}
+                        setImageSrc={setPicture}
+                        deleteIcon={ <FontAwesomeIcon icon={ faTrash } color='red' id='deleteImage' /> }
+                        style={{ width: 600,
+                                  height: 400,
+                                  background: 'gold' }} />
+            <Form.Control.Feedback type="invalid">
+              {(formState.errors['photo']) ? formState.errors.title.message : ''}
+              </Form.Control.Feedback>
+            </InputGroup>
         </Form.Group>
         <Form.Group controlId="formBasicText">
             <Form.Label>{t('containers.update.content')}</Form.Label>
-            <InputGroup>
+            <InputGroup hasValidation>
               <Editor value={form.content[i18n.language]} 
-                      onChange={change('content')}
+                      onChange={change}
                       language={i18n.language}
                       preview={true} />
-              <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+              {(formState.errors['content']) ? formState.errors.title.message : ''}
+                </Form.Control.Feedback>
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.content')}</Form.Text>
         </Form.Group>

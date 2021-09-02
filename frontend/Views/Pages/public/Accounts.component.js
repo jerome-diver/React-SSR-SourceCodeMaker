@@ -58,7 +58,7 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
         { existingRoles.map(role => { if (content.role.id != role.id) return (
                 <FormCheck key={role.id} id={'selectedRole' + role.id}>
                     <FormCheck.Input type='radio'        onChange={onRoleChange}
-                                        name='roleSelected' value={role.id} />
+                                     name='roleSelected' value={role.id} />
                     <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
                     <Form.Text className='text-muted'>{role.description}</Form.Text>
                 </FormCheck>
@@ -70,9 +70,9 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
 const ModalBodyEmailContactUI = ({t, onEmailContent, onEmailSubject}) => (
     <Form.Group as={Col}>
       <Form.Label>{t('mailer:account.user.contact.label.subject')}</Form.Label>
-        <Form.Control as="textarea" rows={5} onChange={onEmailSubject} />
-        <Form.Label>{t('mailer:account.user.contact.label.content')}</Form.Label>
-        <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
+      <Form.Control as="textarea" rows={5} onChange={onEmailSubject} />
+      <Form.Label>{t('mailer:account.user.contact.label.content')}</Form.Label>
+      <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
     </Form.Group>
 )
 
@@ -84,7 +84,7 @@ const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
         { modes.map((mode, index) => { return (
                 <FormCheck key={index} className='mr-4'>
                     <FormCheck.Input type='radio'        onChange={onModeChange}
-                                        name='modeSelected' value={mode.name} />
+                                     name='modeSelected' value={mode.name} />
                     <FormCheck.Label><Badge variant={mode.color}>{mode.name}</Badge></FormCheck.Label>
                 </FormCheck>
             )

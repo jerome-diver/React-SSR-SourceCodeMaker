@@ -17,7 +17,7 @@ const actionsContainerLinks = UI => {   // actions comes first !
 
 const actionsContainer = (UInormal, UIedit) => {  // actions comes after states !
     const actions = (props) => {
-        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode, 
+        const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode,
                 setValidated, picture, setPicture } = props
         useEffect(()=>{ 
             const content = can_refresh()
@@ -72,17 +72,19 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
             }
         }
         /* onChange form control (or input tags) events */
-        const change = target => value => {
-            if (target == 'title') setForm((previous) => ({...previous, title: { [i18n.language]: value} }) )
-            else if (target == 'image') {
-                const image = '/uploads/' + value
-                setForm((previous) => ({...previous, image }) )
+        const change = e => {
+            console.log("EVENT is", e)
+            if (e.target != undefined) {
+                setForm((previous) => ({...previous, [e.target.name]: { [i18n.language]: e.target.value} }) ) // }
+                setData((previous) => ({...previous, [e.target.name]: e.target.value}) ) }
+            else {
+                setForm((previous) => ({...previous, [e.name]: { [i18n.language]: e.value} }) ) 
+                setData((previous) => ({...previous, [e.name]: e.value}) ) 
             }
-            else setForm((previous) => ({...previous, content: { [i18n.language]: value } } ))
-            setData((previous) => ({...previous, [target]: value}) )
         }
         /* onClick buttons tags events */
         const update = container => e => { // via submit form button
+            console.log("SUBMIT with", container, e)
             e.preventDefault();
             const form_to_submit = e.currentTarget;
             if (form_to_submit.checkValidity() === false) {

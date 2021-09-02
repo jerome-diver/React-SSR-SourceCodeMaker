@@ -19,6 +19,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@hookform/resolvers": "^2.8.0",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.15.0",
     "@reduxjs/toolkit": "^1.5.1",
@@ -91,7 +92,8 @@
     "slate-react": "^0.65.3",
     "stream": "0.0.2",
     "sweetalert2": "^11.1.2",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "vest": "^3.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
