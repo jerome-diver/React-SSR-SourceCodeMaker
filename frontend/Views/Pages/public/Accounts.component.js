@@ -58,8 +58,8 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
         { existingRoles.map(role => { if (content.role.id != role.id) return (
                 <FormCheck key={role.id} id={'selectedRole' + role.id}>
                     <FormCheck.Input type='radio'        onChange={onRoleChange}
-                                        name='roleSelected' value={role.id} />
-                    <FormCheck.Label><Badge variant={role.color}>{role.name}</Badge></FormCheck.Label>
+                                     name='roleSelected' value={role.id} />
+                    <FormCheck.Label><Badge bg={role.color}>{role.name}</Badge></FormCheck.Label>
                     <Form.Text className='text-muted'>{role.description}</Form.Text>
                 </FormCheck>
             )
@@ -69,7 +69,7 @@ const ModalBodyRoleUI = ({existingRoles, content, onRoleChange}) => (
 
 const ModalBodyEmailContactUI = ({t, onEmailContent, onEmailSubject}) => (
     <Form.Group as={Col}>
-      <Form.Label>{t('mailer:account.user.contact.label.subject')}</Form.Label>
+        <Form.Label>{t('mailer:account.user.contact.label.subject')}</Form.Label>
         <Form.Control as="textarea" rows={5} onChange={onEmailSubject} />
         <Form.Label>{t('mailer:account.user.contact.label.content')}</Form.Label>
         <Form.Control as="textarea" rows={5} onChange={onEmailContent} />
@@ -84,8 +84,8 @@ const ModalBodySwitchUI = ({t, onModeChange, onEmailContent, modes }) => (
         { modes.map((mode, index) => { return (
                 <FormCheck key={index} className='mr-4'>
                     <FormCheck.Input type='radio'        onChange={onModeChange}
-                                        name='modeSelected' value={mode.name} />
-                    <FormCheck.Label><Badge variant={mode.color}>{mode.name}</Badge></FormCheck.Label>
+                                     name='modeSelected' value={mode.name} />
+                    <FormCheck.Label><Badge bg={mode.color}>{mode.name}</Badge></FormCheck.Label>
                 </FormCheck>
             )
         })}
@@ -158,13 +158,13 @@ const AccountUI = ({ account, t, selected, avatarUrl, editAccountRole, switchVal
                 <OverlayTrigger placement='right'
                                 overlay={
                                     <Popover id='popover-positioned-right'>
-                                        <Popover.Title as="h3">
+                                        <Popover.Header as="h3">
                                             {t('account.user.status.popover.title')}
-                                        </Popover.Title>
-                                        <Popover.Content>
+                                        </Popover.Header>
+                                        <Popover.Body>
                                             {t('account.user.switch',
                                             {action: selected.enabled})}
-                                        </Popover.Content>
+                                        </Popover.Body>
                                       </Popover> }>
                     <Button variant={`outline-${selected.color}`}
                             size='sm'

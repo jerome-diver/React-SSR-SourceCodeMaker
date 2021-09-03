@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { Jumbotron, Card, Form, Badge, Tooltip,Modal,
+import { Card, Form, Badge, Tooltip, Modal,
          Button, Alert, OverlayTrigger } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserEdit, faUserCheck, faUserCircle } from '@fortawesome/free-solid-svg-icons'
@@ -199,7 +199,8 @@ const Profile = (props) => {
                                  setShowModal={setShowPasswordModal} 
                                  setPasswordToUpdate={setPasswordToUpdate}
                                  setVariant={setTogglePwd} />
-            <Jumbotron>
+            
+            <div class="bg-dark p-5 rounded-lg m-3">
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: userForm.username})}&nbsp;&nbsp; 
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>
@@ -216,7 +217,7 @@ const Profile = (props) => {
                         <Form onSubmit={clickSubmit} noValidate validated={validated}>
                             <Card.Title>
                                 {avatar}{t('profile.header.title', { username: userForm.username })}
-                                <Badge variant={accountState.color} className='ml-2'>{accountState.status}</Badge>
+                                <Badge bg={accountState.color} className='ml-2'>{accountState.status}</Badge>
                                 </Card.Title>
                             <Card.Subtitle className='mb-2 text-muted' />
                             <Card.Text>{t('profile.header.description')}</Card.Text>
@@ -293,7 +294,7 @@ const Profile = (props) => {
                         </Form>
                     </Card.Body>
                 </Card>
-            </Jumbotron>
+            </div>
         </>
     } else {
         return <>

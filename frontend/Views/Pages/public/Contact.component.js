@@ -22,16 +22,18 @@ const FormContact = (props) => {
 
   return (
       <> <Form>
-        <Form.Row>
-          <Form.Group as={Col} controlId='formFamilyName'>
-            <Form.Label>{props.fname}</Form.Label>
-            <Form.Control type='text' placeholder='family name'/>
-          </Form.Group>
-          <Form.Group as={Col} controlId='formSecondName'>
-            <Form.Label>{props.sname}</Form.Label>
-            <Form.Control type='text' placeholder='second name'/>
-          </Form.Group>
-        </Form.Row>
+        <Form>
+          <Row>
+            <Form.Group as={Col} controlId='formFamilyName'>
+              <Form.Label>{props.fname}</Form.Label>
+              <Form.Control type='text' placeholder='family name'/>
+            </Form.Group>
+            <Form.Group as={Col} controlId='formSecondName'>
+              <Form.Label>{props.sname}</Form.Label>
+              <Form.Control type='text' placeholder='second name'/>
+            </Form.Group>
+          </Row>
+        </Form>
         <Form.Group as={Row} controlId='formTypeClient'>
           <Form.Label as='legend' column sm={4}>Vous êtes...</Form.Label>
           <Col sm={8}>

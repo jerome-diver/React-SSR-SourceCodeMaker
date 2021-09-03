@@ -4,9 +4,7 @@ const fs = require('fs')
 const url_db = `mongodb://${process.env.HOST}/${process.env.DB_NAME}`
 
 mongoose.connect(url_db, { useNewUrlParser: true,
-                           useUnifiedTopology: true,
-                           useFindAndModify: false,
-                           useCreateIndex: true })
+                           useUnifiedTopology: true })
 const db = mongoose.connection
 // Connect to MongoDB SourceCodeMaker database
 db.on('error', console.error.bind(console, 'connection error: '))

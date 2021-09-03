@@ -1,21 +1,25 @@
+/* Middlkeware used to upload files with multer library help */
+
+const format = require("date-fns/format")
 const util = require("util")
 const multer = require("multer")
 const maxSize = 2 * 1024 * 1024
 
-let storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, __basedir + "/build/public/uploads/");
+    cb(null, "./build/public/uploads/");
   },
   filename: (req, file, cb) => {
-    console.log(file.originalname);
-    cb(null, file.originalname);
+    const [name, ext] = file.originalname.split('.')
+    const fileName = name + " - " + format(Date.now(), "yyy-MM-dd_hhmmss") + "." + ext
+    console.log("Defin e uploaded file name:", fileName);
+    cb(null, fileName);
   },
 })
 
-let uploadFile = multer({
+const uploadImage = multer({
   storage: storage,
   limits: { fileSize: maxSize },
-}).single("file")
+}).single("image")
 
-let uploadFileMiddleware = util.promisify(uploadFile)
-module.exports = uploadFileMiddleware
+export { uploadImage }

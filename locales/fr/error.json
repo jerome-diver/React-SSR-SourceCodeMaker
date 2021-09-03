@@ -106,5 +106,19 @@
     "sign": {
       "failed": "Ne parvient pas à signer le jeton"
     }
+  },
+  "containers": {
+    "title": {
+      "required": "Le titre est requis",
+      "shorterThan": "Le titre doit être plus court que {{length}} caractères",
+      "longerThan": "Le titre doit être plus long que {{length}} caractères",
+      "startByAlphabetHiCap": "Le titre commence toujours par une majuscule de l'alphabet",
+      "noSpaceEnd": "Le titre ne finit jamais par un espace"
+    },
+    "photo": {
+      "isRequired": "Une image est requise",
+      "imageOnly": "Le fichier doit être une image reconnue (png, jpg, jpeg)",
+      "imageSize": "Le fichier image doit peser moins de {{size_mo}} Mo."
+    }
   }
 }

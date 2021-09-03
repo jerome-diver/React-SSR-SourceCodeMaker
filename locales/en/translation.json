@@ -4,7 +4,7 @@
   },
   "admin": {
     "system": {
-      "title": "System administartion"
+      "title": "System administration"
     },
     "main": {
       "title": "Administration page"
@@ -155,7 +155,7 @@
   },
   "containers": {
     "helper": {
-      "title": "Title should contain maximum 64 characters and no injected code.",
+      "title": "Should contain between 3 and 64 chars, start with high cap, never end with a space and no injected code",
       "content": "Content should be HTML tag able withjout any code injection",
       "image_select": "Chosse an image"
     },
@@ -169,9 +169,7 @@
     },
     "update": {
       "title": "Title",
-      "invalid_title": "Please, correct invalid title",
       "content": "Content",
-      "invalid_content": "Please correct the invalid content",
       "description": "Description",
       "image": "Image header"
     },

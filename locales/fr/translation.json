@@ -4,7 +4,7 @@
   },
   "admin": {
     "system": {
-      "title": "Administartion système"
+      "title": "Administration du système"
     },
     "main": {
       "title": "Page d'administration"
@@ -155,7 +155,7 @@
   },
   "containers": {
     "helper": {
-      "title": "Le titre contient 64 caractères maximum et aucun code injecté.",
+      "title": "Doit contenir de 3 à 64 caractères, commence par une majuscule, ne finit pas par un espace et n'a aucun code injecté",
       "content": "Le contenu est lisible via des balises HTML et ne doit contenir aucun code injecté.",
       "image_select": "Choisir une image"
 
@@ -170,9 +170,7 @@
     },
     "update": {
       "title": "Titre",
-      "invalid_title": "Svp, corrigez le titre",
       "content": "Contenu",
-      "invalid_content": "Svp, corrigez le contenu",
       "description": "Description",
       "image": "Image d'entête"
     },

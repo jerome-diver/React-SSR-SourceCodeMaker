@@ -79,8 +79,8 @@
     },
     "containers": {
       "delete": {
-        "failed": "Suppression impossible",
-        "unacknowledged": "Le conteneur est inconnu" },
+        "failed": "Forbiden deletion",
+        "unacknowledged": "Unknown conainer" },
       "create": {
         "failed": {
           "validation": "Failed database validation for 'containers' collection"
@@ -106,6 +106,20 @@
   "jwt": {
     "sign": {
       "failed": "Can not sign token"
+    }
+  },
+  "containers": {
+    "title": {
+      "required": "Title is required",
+      "shorterThan": "Title has to be shorter than {{lenght}}",
+      "longerThan": "Title has to be longer than {{length}}",
+      "startByAlphabetHiCap": "Title always start by high cap's alphabet char",
+      "noSpaceEnd": "Title never end with a space char"
+    },
+    "photo": {
+      "isRequired": "An image is required",
+      "imageOnly": "File has to be an image with format: [png, jpg, jpeg]",
+      "imageSize": "File weight has to be lighter than {{size_mo}} MB."
     }
   }
 }
