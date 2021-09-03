@@ -185,8 +185,8 @@ const FormIdEntrySelector = (props) => {
                 <ToggleButtonGroup name='IdentifierSelector' value={selection}
                                    onChange={switcher} 
                                    size='sm' aria-label="identifier selector">
-                    <ToggleButton value='Email' variant="secondary">{t('signin.email.label')}</ToggleButton>
-                    <ToggleButton value='Username' variant="secondary">{t('signin.username.label')} </ToggleButton>
+                    <ToggleButton id="email" value='Email' variant="secondary">{t('signin.email.label')}</ToggleButton>
+                    <ToggleButton id='username' value='Username' variant="secondary">{t('signin.username.label')} </ToggleButton>
                 </ToggleButtonGroup>
                 { selectedEntry() }
     </>)

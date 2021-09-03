@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
-import { Card, CardGroup, Jumbotron, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
+import { Card, CardGroup, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
 import loadable from '@loadable/component'
 
 import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
@@ -65,7 +65,7 @@ const ContainerCreatorUI = ( {t}) => (
                               name="formContainerTitle"
                               onChange={change('title')}
                               value={form.title[i18n.language]}/>
-                <Badge variant='info'>{t(container.type_name)}</Badge>
+                <Badge bg='info'>{t(container.type_name)}</Badge>
                 <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
               </InputGroup>
               <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
@@ -105,26 +105,28 @@ const HeadContainerUInormal = ({t, i18n, remove,
         background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
         background-color: rgba(99,99,99,0.75) }
     `}</style>
-    <Jumbotron id='head-container'>
+
+    <div id="head-container" class="bg-light p-5 rounded-lg m-3">
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
-        <Badge variant='info'>{t("containers."+container.type_name)}</Badge>
+        <Badge bg='info'>{t("containers."+container.type_name)}</Badge>
       </h1>
       <Figure>
-        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} />
+        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} id='image' />
         <Figure.Caption>
           {parse(trContainer(i18n.language, container).content)}
         </Figure.Caption>
       </Figure>
       <br/>
       <ContainerLinks data={container} callback={setMode} mode={mode} remove={remove} />
-    </Jumbotron>
+    </div>
   </>
 )
 
 const HeadContainerUIedit = ( {t, i18n,
-                               validated, update, change, form, onPictureDraged, picture, setPicture,
-                               container, setMode, mode}) => (
+                               validated, form, control, Controller, register,
+                               update, change, onPictureDraged, handleSubmit,formState,
+                               container, setMode, mode, picture, setPicture,}) => (
   <>
     <style type='text/css'>{`
         #edit-container-title h1 { display: inline-block; }
@@ -137,18 +139,24 @@ const HeadContainerUIedit = ( {t, i18n,
             background-color: rgba(199,2,2,0.75) }
         .for-container { flex-grow: 1; }
     `}</style>
-    <Jumbotron id='edit-container'>
-      <Badge variant='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
-      <Form onSubmit={update(container)} noValidate validated={validated}>
-        <Form.Group controlId="formBasicText">
+    <div id='edit-container' class="bg-light p-5 rounded-lg m-3">
+      <Badge bg='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
+      <Form onSubmit={handleSubmit(update(container))}
+            noValidate 
+            validated={validated} 
+            encType="multipart/form-data">
+        <Form.Group>
             <Form.Label>{t('containers.update.title')}</Form.Label>
-            <InputGroup>
-              <Form.Control type='text' 
-                            name="formContainerTitle"
-                            onChange={change('title')}
-                            value={form.title[i18n.language]}/>
-              <Badge variant='info'>{t(container.type_name)}</Badge>
-              <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
+            <InputGroup hasValidation>
+              <Controller name='title' control={control} render={
+                ( {field: { onChange, ref }, 
+                   fieldState: { invalid }} ) => (
+                <Form.Control type='text' onChange={onChange} ref={ref} isInvalid={invalid}
+                              defaultValue={form.title[i18n.language]} /> )} />
+              <Badge bg='info'>{t(container.type_name)}</Badge>
+              <Form.Control.Feedback type="invalid">
+                {(formState.errors['title']) ? formState.errors.title.message : ''}
+                </Form.Control.Feedback>
             </InputGroup>
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
@@ -168,7 +176,7 @@ const HeadContainerUIedit = ( {t, i18n,
             <Form.Label>{t('containers.update.content')}</Form.Label>
             <InputGroup>
               <Editor value={form.content[i18n.language]} 
-                      onChange={change('content')}
+                      onChange={change}
                       language={i18n.language}
                       preview={true} />
               <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
@@ -177,7 +185,7 @@ const HeadContainerUIedit = ( {t, i18n,
         </Form.Group>
         <ContainerLinks data={container} callback={setMode} mode={mode} />
       </Form>
-    </Jumbotron>
+    </div>
   </>
 )
 
@@ -204,7 +212,7 @@ const ContainerUInormal = ( { t, i18n, remove,
         <Card.Body>
           <Card.Title>
             {trContainer(i18n.language, container).title}&nbsp;
-            <Badge variant='primary'>{t("containers."+container.type_name)}</Badge>
+            <Badge bg='primary'>{t("containers."+container.type_name)}</Badge>
           </Card.Title>
           <Card.Text as="div">
             {parse(trContainer(i18n.language, container).content)}
@@ -249,7 +257,7 @@ const ContainerUIedit = ( { t, i18n,
                                   name="formContainerTitle"
                                   onChange={change('title')}
                                   value={form.title[i18n.language]}/>
-              <Badge variant='primary'>{t("containers."+container.type_name)}</Badge>
+              <Badge bg='primary'>{t("containers."+container.type_name)}</Badge>
                     <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
                   </InputGroup>
                   <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>

@@ -4,6 +4,9 @@ import React, { useState, useReducer, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate, itsMine, canModify } from '../../../../Controllers/context/authenticate'
 import { crud_caller, crud_list } from '../../../../Controllers/container/action-CRUD'
+import { useForm, Controller } from 'react-hook-form';
+import { vestResolver } from '@hookform/resolvers/vest'
+import { tests } from '../../../../Models/containers.validations'
 import { Error, Loading } from '../Printers.component'
 
 
@@ -73,9 +76,12 @@ const statesContainer = UI => {   // states comes first for container !
         const { loading, error, response } = useFetch(state.crud, state.data, [i18n.language, state])
         const [ data, setData ] = useState({})
         const [ form, setForm ] = useState({})
-        const [ picture, setPicture] = useState([])
-        props = {...props, t, i18n, validated, setValidated, mode, setMode, picture, setPicture,
-                 state, dispatch, response, data, setData, form, setForm}
+        const [ picture, setPicture] = useState("")
+        const { register, control, handleSubmit, formState } = useForm({mode:'all', resolver: vestResolver(tests)})
+        props = {...props, t, i18n, 
+                 mode, setMode, picture, setPicture,  data, setData,
+                 state, dispatch, response, 
+                 form, setForm, validated, setValidated, register, Controller, control, handleSubmit, formState }
         if (loading) return <><Loading /></>
         if(error.state) return <><Error title={t('error:home.title')} 
                                               name={error.content.name}

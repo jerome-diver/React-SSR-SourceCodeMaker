@@ -23,37 +23,38 @@ const Admin = (props) => {
                 name={error.name} 
                 message={error.message} /> )
     return (<>
+        <style type='text/css'>{`
+          .accordion-header {
+            background-color: rgb(25,25,25);
+          }
+          .accordion-button {
+            color: rgb(200,55,26);
+            background-color: rgb(35,35,35);
+          }
+        `}</style>
         <h1><FontAwesomeIcon icon={faCogs}
                              size="xs"
                              color="blue"
                              className='mr-2'/>{t('admin.main.title')}</h1>
         <hr />
-        <Jumbotron fluid id="accounts" fluid>
-          <h2>{t('admin.system.title')}</h2>
+        <div id='accounts' class="bg-dark p-5 rounded-lg m-3">
+          <h1>{t('admin.system.title')}</h1>
           <hr/>
-          <Accordion>
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  {t('nav_bar.user.list')}
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey="0">
-                <Card.Body><AccountsManager/></Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                  Role maybe ?
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>Hello! I'm another body</Card.Body>
-              </Accordion.Collapse>
-            </Card>
+          <Accordion flush>
+            <Accordion.Item eventKey="0" arrow>
+              <Accordion.Header>{t('nav_bar.user.list')}</Accordion.Header>
+              <Accordion.Body>
+                  <AccountsManager/>
+              </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="1">
+              <Accordion.Header>Role Maybe ?</Accordion.Header>
+              <Accordion.Body>
+                  Hello! I'm another body
+              </Accordion.Body>
+            </Accordion.Item>
           </Accordion>
-        </Jumbotron>
+        </div>
     </>)
 }
 

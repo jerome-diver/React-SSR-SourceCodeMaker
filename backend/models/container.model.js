@@ -35,6 +35,7 @@ const ContainerSchema = new Schema({
     },
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,
+        optional: true,
         unique: false
     },
     type_name: {
