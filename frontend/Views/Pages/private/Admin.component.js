@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
-import { Button, Jumbotron, Accordion, Card, OverlayTrigger, Popover } from 'react-bootstrap'
+import { Button, Accordion, Card, OverlayTrigger, Popover } from 'react-bootstrap'
 import { useAuthenticate, itsMine, canModify } from '../../../Controllers/context/authenticate'
 import { Loading, Error } from '../public/Printers.component'
 import { useTranslation } from 'react-i18next'

@@ -112,7 +112,12 @@ const HeadContainerUInormal = ({t, i18n, remove,
         <Badge bg='info'>{t("containers."+container.type_name)}</Badge>
       </h1>
       <Figure>
-        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} id='image' />
+        <Figure.Image rounded fluid src={`/uploads/${container.image_link}`} id='image'
+              style={{
+                width: 700,
+                height: 500,
+                background: 'gold'
+              }} />
         <Figure.Caption>
           {parse(trContainer(i18n.language, container).content)}
         </Figure.Caption>
@@ -161,18 +166,20 @@ const HeadContainerUIedit = ( {t, i18n,
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
 
-        <ImageUpload
-              handleImageSelect={onPictureDraged}
-              imageSrc={picture}
-              setImageSrc={setPicture}
-              style={{
-                width: 700,
-                height: 500,
-                background: 'gold'
-              }}
-            />
+        <Form.Group as="Row">
+            <Form.Label>{t('containers.update.image')}</Form.Label>
+            <ImageUpload handleImageSelect={onPictureDraged}
+                         imageSrc={picture}
+                         setImageSrc={setPicture}
+                         style={{
+                           width: 700,
+                           height: 500,
+                           background: 'gold' }} />
+            <Form.Control.Feedback type="invalid">et voilà</Form.Control.Feedback>
+            <Form.Text className="text-muted">{t('containers.helper.image_select')}</Form.Text>
+        </Form.Group>
 
-        <Form.Group controlId="formBasicText">
+        <Form.Group>
             <Form.Label>{t('containers.update.content')}</Form.Label>
             <InputGroup>
               <Editor value={form.content[i18n.language]} 
