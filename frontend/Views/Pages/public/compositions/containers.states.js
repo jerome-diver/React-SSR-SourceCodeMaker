@@ -22,6 +22,8 @@ const dataReducer = (state, action) => {
       return { crud: 'updateContainer', data: action.reference, called: 'update' }
     case 'delete':
       return { crud: 'deleteContainer', data: action.reference, called: 'delete' }
+    default:
+        break
   }
 }
 
@@ -45,7 +47,7 @@ const useFetch = (crud_name, data, triggers) => {
 }
 
 const statesContainerLinks = (UInormal, UIedit) => {   // states comes after actions for links!
-    const states = (props) => {
+    const States = (props) => {
         const { t, i18n } = useTranslation()
         const { getUser, getRole } = useAuthenticate()
         const user = getUser()
@@ -64,11 +66,11 @@ const statesContainerLinks = (UInormal, UIedit) => {   // states comes after act
             }
         } else return null
     }
-    return states
+    return States
 }
 
 const statesContainer = UI => {   // states comes first for container !
-    const states = (props) => {
+    const States = (props) => {
         const { t, i18n } = useTranslation()
         const [ validated, setValidated ] = useState(false)
         const [ mode, setMode ] = useState('normal')
@@ -92,7 +94,7 @@ const statesContainer = UI => {   // states comes first for container !
             return <UI {...props} />
         }
     }
-    return states
+    return States
 }
 
 

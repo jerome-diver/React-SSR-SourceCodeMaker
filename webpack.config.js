@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const mode = (process.env.NODE_ENV === 'dev') ? 'development' : 'production'
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { I18NextHMRPlugin } = require('i18next-hmr/plugin')
@@ -17,7 +18,7 @@ var config = {
                 exclude: /node_modules/,
                 use: ['babel-loader'] },
             {   test: /\.s[ac]ss$/,
-                use: [ 'css-loader', 'sass-loader' ] },
+                use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ] },
             {   test: /\.css$/,
                 use: [ 'css-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
@@ -76,9 +77,6 @@ const clientConfig = Object.assign({}, config, {
     target: "web",
     entry: {
         client: [ './frontend/client.js' ],
-    },
-    resolve: { 
-      fallback: { "crypto": require.resolve("crypto-browserify") }
     },
     output: {
         path: path.resolve(__dirname, 'build/public/'),

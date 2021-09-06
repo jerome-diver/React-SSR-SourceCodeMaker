@@ -5,16 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserEdit, faUserCheck, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
-import styles from '../../../stylesheet/Profile.sass'
+import '../../../stylesheet/Profile.sass'
 import { validatePassword, cypher, sendEmailLink, fireError } from '../../../Controllers/user/user-form-helper'
 import { update, updatePassword } from '../../../Controllers/user/action-CRUD'
 import { checkEmail } from '../../../Controllers/user/authenticate-api'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
 import { getGravatarUrl } from 'react-awesome-gravatar';
+import { Loading } from '../public/Printers.component'
 const navigatorInfo = require('navigator-info')
 const _ = require('lodash')
-import { Loading } from '../public/Printers.component'
 
 const messageReducer = (state, action) => {
     return {
