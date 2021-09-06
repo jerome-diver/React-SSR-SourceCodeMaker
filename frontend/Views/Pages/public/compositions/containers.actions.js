@@ -1,6 +1,7 @@
 /* HOC to Compose with Containers.component for ACTIONS */
 
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { trContainer } from '../../../helpers/config'
 
 /* Component to use with ACTIONS (Private) */
@@ -18,7 +19,7 @@ const actionsContainerLinks = UI => {   // actions comes first !
 const actionsContainer = (UInormal, UIedit) => {  // actions comes after states !
     const actions = (props) => {
         const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode,
-                setValidated, picture, setPicture } = props
+                setValidated, picture, setPicture, setPictures } = props
         useEffect(()=>{ 
             const content = can_refresh()
             if (content != undefined) refresh(content)
@@ -61,16 +62,23 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
                 //console.log("REFRESH PICTURE/", picture)
             } else setMode('empty')
         }
-        /* On picture draged */
-        const onPictureDraged = e => {
-            setPicture(URL.createObjectURL(e.target.files[0]))
-            console.log("draged:", e.target.files[0].name)
-            setData((previous) => ({ ...previous, image: e.target.files[0]}) )
-            if (e.target.files[0] == undefined) {
-                console.log("we are there...")
+        /*on picture dropped */
+        const onDrop = useCallback(acceptedFiles => {
+            console.log("Dropped files:", acceptedFiles)
+            if (acceptedFiles.length == 0) {
+                console.log("No file in list...")
                 document.getElementById('toUpload').value = null
+            } else {
+                const acceptedFilesURL = acceptedFiles.map(file => URL.createObjectURL(file))
+                setPictures(acceptedFilesURL)
+                setData((previous) => ({ ...previous, image: acceptedFiles[0]}) )
             }
-        }
+        }, [])
+        /* getters for Dropzone area */
+        const {getRootProps, getInputProps, isDragActive, acceptedFiles, rejectedFiles} = useDropzone({onDrop, accept: 'image/jpeg, image/png'})
+        console.log("this is getRootProps:", getRootProps)
+        console.log("and thi is get InputProps:", getInputProps)
+        console.log("is isDragActive ?", isDragActive)
         /* onChange form control (or input tags) events */
         const change = e => {
             console.log("EVENT is", e)
@@ -109,7 +117,8 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
                 setMode('empty')
             }
         }
-        props = {...props, update, change, remove, onPictureDraged}
+        props = {...props, update, change, remove, 
+                    onDrop, getRootProps, getInputProps, isDragActive, acceptedFiles, rejectedFiles }
         const answer = (response.content != undefined) ? response.content : response
         switch (mode) {
             case 'empty':

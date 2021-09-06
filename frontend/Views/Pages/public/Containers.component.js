@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
-import { Card, CardGroup, Badge, Button, Form, InputGroup, Image, Figure, Modal } from 'react-bootstrap'
+import { Card, CardGroup, Badge, Button, Form, InputGroup, Image, Figure, Modal, Accordion } from 'react-bootstrap'
 import loadable from '@loadable/component'
 
 import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
@@ -18,9 +18,6 @@ import { statesContainerLinks, statesContainer, useFetch } from './compositions/
 
 const Editor = loadable(() => import('for-editor'))
 
-import ImageUpload from 'image-upload-react'
-//important for getting nice style.
-import '/node_modules/image-upload-react/dist/index.css'
 
 /* Pure UI components with HOC to compose with states and actions components.
    -> ContainerLinks (with both edit and normal mode) show buttons for action on own Container
@@ -130,8 +127,9 @@ const HeadContainerUInormal = ({t, i18n, remove,
 
 const HeadContainerUIedit = ( {t, i18n,
                                validated, form, control, Controller, register,
-                               update, change, onPictureDraged, handleSubmit,formState,
-                               container, setMode, mode, picture, setPicture,}) => (
+                               update, change, handleSubmit,formState,
+                               getRootProps, getInputProps, isDragActive, acceptedFiles, rejectedFiles,
+                               container, setMode, mode, picture, setPicture, pictures, setPictures}) => (
   <>
     <style type='text/css'>{`
         #edit-container-title h1 { display: inline-block; }
@@ -143,9 +141,24 @@ const HeadContainerUIedit = ( {t, i18n,
             background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
             background-color: rgba(199,2,2,0.75) }
         .for-container { flex-grow: 1; }
+        #selectedImage {
+          width: 500px;
+          height: 400px;
+        }
+        .viewCard {
+          width: 200px;
+          height: 150px;
+        }
+        .accordion-header {
+            background-color: rgb(25,25,25);
+        }
+        .accordion-button {
+          color: rgb(55,155,26);
+          background-color: rgb(35,35,35);
+        }
     `}</style>
     <div id='edit-container' class="bg-light p-5 rounded-lg m-3">
-      <Badge bg='warning'>{t('containers.edit', {type: container.type_name})}</Badge>
+      <Badge bg='warning'><h1>{t('containers.edit', {type: container.type_name})}</h1></Badge>
       <Form onSubmit={handleSubmit(update(container))}
             noValidate 
             validated={validated} 
@@ -166,15 +179,39 @@ const HeadContainerUIedit = ( {t, i18n,
             <Form.Text className="text-muted">{t('containers.helper.title')}</Form.Text>
         </Form.Group>
 
-        <Form.Group as="Row">
+        <Form.Group>
             <Form.Label>{t('containers.update.image')}</Form.Label>
-            <ImageUpload handleImageSelect={onPictureDraged}
-                         imageSrc={picture}
-                         setImageSrc={setPicture}
-                         style={{
-                           width: 700,
-                           height: 500,
-                           background: 'gold' }} />
+            <br/>
+            <Image src={picture} id='selectedImage' />
+            <InputGroup {...getRootProps()}>
+              <Form.Control {...getInputProps()}/>
+                { isDragActive 
+                  ? <p>{t('containers.update.dropFiles')}</p>
+                  : <p>{t('containers.update.dragFiles')} </p>
+                }
+            </InputGroup>
+            {(acceptedFiles.length != 0) && (
+              <>
+            <h4>{t('containers.update.viewSelection')} </h4>
+            <Accordion>
+              { acceptedFiles.map((file, index) => (
+                <Accordion.Item eventKey={index}>
+                  <Accordion.Header>{file.name}</Accordion.Header>
+                  <Accordion.Body>
+                    <Image src={pictures[index]} 
+                           rounded
+                           className='viewCard' 
+                           onClick={() => setPicture(pictures[index]) } />
+                    <Button onClick={() => {
+                      acceptedFiles.slice(index, 1)
+                      console.log("now we have acceptedFiles:", acceptedFiles)
+                      setPictures(acceptedFiles)
+                    } }>Delete</Button>
+                  </Accordion.Body>
+                </Accordion.Item>
+              ) )}
+            </Accordion>
+            </> ) }
             <Form.Control.Feedback type="invalid">et voilà</Form.Control.Feedback>
             <Form.Text className="text-muted">{t('containers.helper.image_select')}</Form.Text>
         </Form.Group>

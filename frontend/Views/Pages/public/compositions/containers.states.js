@@ -77,9 +77,10 @@ const statesContainer = UI => {   // states comes first for container !
         const [ data, setData ] = useState({})
         const [ form, setForm ] = useState({})
         const [ picture, setPicture] = useState("")
+        const [ pictures, setPictures] = useState([])
         const { register, control, handleSubmit, formState } = useForm({mode:'all', resolver: vestResolver(tests)})
         props = {...props, t, i18n, 
-                 mode, setMode, picture, setPicture,  data, setData,
+                 mode, setMode, picture, setPicture, pictures, setPictures, data, setData,
                  state, dispatch, response, 
                  form, setForm, validated, setValidated, register, Controller, control, handleSubmit, formState }
         if (loading) return <><Loading /></>

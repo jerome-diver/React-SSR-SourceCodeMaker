@@ -5,7 +5,6 @@ import { updateAccount } from '../../../Controllers/user/authenticate-api'
 import { Modal, Alert, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Loading } from './Printers.component'
-import '../../../stylesheet/users.sass'
 
 const Validate = (props) => {
     const { username, token, ticket } = useParams()

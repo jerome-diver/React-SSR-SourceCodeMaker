@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserEdit, faUserCheck, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { accountEnabled } from '../../helpers/config'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
-import '../../../stylesheet/users.sass'
+import styles from '../../../stylesheet/Profile.sass'
 import { validatePassword, cypher, sendEmailLink, fireError } from '../../../Controllers/user/user-form-helper'
 import { update, updatePassword } from '../../../Controllers/user/action-CRUD'
 import { checkEmail } from '../../../Controllers/user/authenticate-api'
@@ -200,7 +200,7 @@ const Profile = (props) => {
                                  setPasswordToUpdate={setPasswordToUpdate}
                                  setVariant={setTogglePwd} />
             
-            <div class="bg-dark p-5 rounded-lg m-3">
+            <div className="jumbo">
                 <h4>
                     <FontAwesomeIcon icon={faUserEdit} /> &nbsp;{t('profile.title', {username: userForm.username})}&nbsp;&nbsp; 
                     <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={roleTooltip}>

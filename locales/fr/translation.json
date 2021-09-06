@@ -172,7 +172,10 @@
       "title": "Titre",
       "content": "Contenu",
       "description": "Description",
-      "image": "Image d'entête"
+      "image": "Image d'entête",
+      "dropFiles": "Lâchez les images de pré-selection ici...",
+      "dragFiles": "Déplacez des images à pré-selectionner et posez les ici, ou cliquez pour les choisir via le menu.",
+      "viewSelection": "Vues sur les images pré-sélectionnées"
     },
     "category": "catégorie",
     "category_plural": "catégories",

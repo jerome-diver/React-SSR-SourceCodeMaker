@@ -1,6 +1,5 @@
 import React from 'react'
 import { Modal, Badge, Card, Button, Col, Row, Form, FormCheck, OverlayTrigger, Popover } from 'react-bootstrap'
-import '../../../stylesheet/users.sass'
 import { Calendar2Date } from 'react-bootstrap-icons'
 import { date_formed } from '../../helpers/config'
 import { actionsAccountsManager, actionsModalBodyRole,

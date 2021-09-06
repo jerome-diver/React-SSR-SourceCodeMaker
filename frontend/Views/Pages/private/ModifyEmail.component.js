@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import parse from 'html-react-parser'
 import { Loading } from '../public/Printers.component'
-import '../../../stylesheet/users.sass'
 
 const reducer = (state, action) => {
     switch (action.validated) {

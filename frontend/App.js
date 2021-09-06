@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie'
 import { useTranslation } from 'react-i18next'
 import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detect"
 import './stylesheet/menu.sass'
+import './stylesheet/app.sass'
 import { Error} from './Views/Pages/public/Printers.component'
 import { AuthenticateContext } from './Controllers/context/authenticate'
 import useNavigatorLanguage from '@rooks/use-navigator-language'

@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faMailBulk, faKey } from '@fortawesome/free-solid-svg-icons'
-import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup,
-         Collapse, Form, Alert, Modal } from 'react-bootstrap'
+import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup, Collapse, Form } from 'react-bootstrap'
 import { useAuthenticate } from '../../Controllers/context/authenticate'
 import { useTranslation } from 'react-i18next'
 import { signin } from '../../Controllers/user/authenticate-api'
@@ -105,8 +104,7 @@ const SignIn = (props) => {
                name={sign.error.name}
                message={sign.error.message}
                open={sign.hasError} />
-        <Card id='sign'>
-        <Form onSubmit={clickSubmit} noValidate validated={validated}>
+        <Card id='sign'><Form onSubmit={clickSubmit} noValidate validated={validated}>
             <Card.Header><h2><FontAwesomeIcon icon={ faUserCheck } /> {t('signin.title')}</h2></Card.Header>
             <Card.Body>
                 <Card.Title>{t('signin.header.title')}</Card.Title>
@@ -116,16 +114,12 @@ const SignIn = (props) => {
                                     selection={selectIdentifier} handleChange={handleChange} />
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>{t('signin.password.label')} </Form.Label>
-                    <InputGroup>
-                        <InputGroup.Prepend>
-                            <InputGroup.Text id="inputGroupPrepend">
-                                <FontAwesomeIcon icon={ faKey }/>
-                            </InputGroup.Text>
-                        </InputGroup.Prepend>
+                    <InputGroup className='mb-3'>
+                        <InputGroup.Text><FontAwesomeIcon icon={ faKey }/></InputGroup.Text>
                         <Form.Control type='password' placeholder={t('signin.password.placeholder')} 
                                     onChange={handleChange('password')} />
-                        <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
                     </InputGroup>
+                    <Form.Control.Feedback type="invalid">Failed with password</Form.Control.Feedback>
                     <Form.Text className='text-muted'>{t('signin.password.helper')}</Form.Text>
                 </Form.Group>
             </Card.Body>
@@ -135,8 +129,7 @@ const SignIn = (props) => {
                 </Button>
                 <FixProblem username={form.username} email={form.email} password={form.password} />
             </Card.Footer>
-        </Form>
-        </Card> 
+        </Form></Card> 
     </>
 }
 
@@ -149,16 +142,12 @@ const FormIdEntrySelector = (props) => {
                 return (
                     <Form.Group controlId="formBasicEmail">
                         <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="inputGroupPrepend">
-                                    <FontAwesomeIcon icon={ faMailBulk }/>
-                                </InputGroup.Text>
-                            </InputGroup.Prepend>
+                            <InputGroup.Text><FontAwesomeIcon icon={ faMailBulk }/></InputGroup.Text>
                             <Form.Control type='email' placeholder={t('signin.email.placeholder')} name='formEmail'
                                             onChange={handleChange('email')}
                                             value={email} />
-                            <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
                         </InputGroup>
+                        <Form.Control.Feedback type="invalid">Please choose a valid email.</Form.Control.Feedback>
                         <Form.Text className="text-muted">{t('signin.email.helper')}</Form.Text>
                     </Form.Group> 
                 )
@@ -166,14 +155,12 @@ const FormIdEntrySelector = (props) => {
                 return (
                     <Form.Group controlId="formBasicText">
                         <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                            </InputGroup.Prepend>
+                            <InputGroup.Text>@</InputGroup.Text>
                             <Form.Control type='text' placeholder={t('signin.username.placeholder')} name="formUsername"
                                             onChange={handleChange('username')}
                                             value={username}/>
-                            <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
                         </InputGroup>
+                        <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
                         <Form.Text className="text-muted">{t('signin.username.helper')}</Form.Text>
                     </Form.Group>
                 )
