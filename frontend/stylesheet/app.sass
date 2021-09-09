@@ -1,19 +1,12 @@
-@import url(https://fonts.googleapis.com/css?family=Josefin+Sans+Medium|Delicious+Adventures|Source+Code+Pro|Santana|Santana-Black|Nerko+One|Poppins)
 @import "~bootstrap/scss/bootstrap"
-$ff_title: 'Santana-Black'
-$ff_text: Poppins
-$ff_header: 'Nerko One'
-$ff_brand: 'Delicious Adventures'
-$ff_card: 'Josefin Sans Medium'
-$ff_jumbo: Santana
-$ff_badge: 'Source Code Pro'
-
-$color-content-background: rgba(33,33,33,0.75)
+@import "fonts.sass"
+@import "colors.sass"
+@import 'images.sass'
 
 body
   position: relative
   background-color: #000
-  background-image: url('../img/background_dark_leether_canvas.png')
+  background-image: $img_body
   display: block
   height: 100vh
   width: 100%
@@ -38,7 +31,7 @@ header
   width: 100%
   font-family: $ff_header
   font-weight: 700
-  background-image: url("../img/source_code_maker_HEADER.png")
+  background-image: $img_header
   background-clip: border-box
   background-repeat: no-repeat
   background-size: 100% 250px
@@ -103,11 +96,12 @@ article
   margin-left: 2%
   padding: 8px
   width: 350px
+  height: 150px
   border: 1px solid #172e64
   border-radius: 8px
   box-shadow: 10px 10px 6px rgb(20,20,20)
   //background-color: rgba(75,75,75,0.75)
-  background-image: url('../img/background_dark_canvas.png')
+  background-image: $img_home_article
   background-size: 150% 150%
   animation: spin 2s linear
 
@@ -152,10 +146,12 @@ article
 #head-container
   font-family: $ff_jumbo
   #home_article
-    background-image: url('../img/background_dark_canvas.png')
+    background-image: $img_home_article
     background-size: 150% 150%
   #head-content
     background-color: $color-content-background
 
 .badge
   font-family: $ff_badge
+  h1
+    font-familly: $ff_header

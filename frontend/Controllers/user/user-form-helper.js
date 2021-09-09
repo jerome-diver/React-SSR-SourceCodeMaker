@@ -1,8 +1,8 @@
-const CryptoJS = require('crypto-js')
 import Swal from 'sweetalert2'
 import { validateAccount, modifyEmail, resetPassword } from '../../Controllers/user/authenticate-api'
 import { emailContact, emailAlert } from './admin-send-email'
 import { i18n } from '../../../backend/i18n'
+const CryptoJS = require('crypto-js')
 
 const cypher = (password) => {
     return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)
@@ -109,6 +109,8 @@ const sendEmailLink = (target, user_data, local) => {
                 link_ok: i18n.t('popup.password.reset.failed.link.ok'),
                 icon: 'error'
             }
+            break
+        default:
             break
     }
     action(user_data, local)

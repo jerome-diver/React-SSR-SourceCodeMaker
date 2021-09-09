@@ -12,9 +12,12 @@ import { useParams } from 'react-router-dom'
 import { trContainer, colorType } from '../../helpers/config'
 import { Card, CardGroup, Badge, Button, Form, InputGroup, Image, Figure, Modal, Accordion } from 'react-bootstrap'
 import loadable from '@loadable/component'
+import { ImageViewer } from '../../components/ImageViewer'
 
 import { actionsContainerLinks, actionsContainer } from './compositions/containers.actions'
 import { statesContainerLinks, statesContainer, useFetch } from './compositions/containers.states'
+
+import '../../../stylesheet/container.sass'
 
 const Editor = loadable(() => import('for-editor'))
 
@@ -47,7 +50,7 @@ const ContainerLinksUIedit = ( { t, cancel } ) => (
       </>
 )
 
-const ContainerCreatorUI = ( {t}) => (
+const ContainerCreatorUI = ( {t, create, submit, validated, form, container, i18n, change}) => (
   <>
     <Modal show={create}>
       <Modal.Header closeButton>
@@ -60,7 +63,7 @@ const ContainerCreatorUI = ( {t}) => (
               <InputGroup>
                 <Form.Control type='text' 
                               name="formContainerTitle"
-                              onChange={change('title')}
+                              onChange={change}
                               value={form.title[i18n.language]}/>
                 <Badge bg='info'>{t(container.type_name)}</Badge>
                 <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
@@ -72,7 +75,7 @@ const ContainerCreatorUI = ( {t}) => (
               <Form.Label>{t('containers.update.content')}</Form.Label>
               <InputGroup>
                   <Editor value={form.content[i18n.language]} 
-                          onChange={change('content')}
+                          onChange={change}
                           language='en'
                           preview={true} />
                 <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
@@ -92,18 +95,7 @@ const ContainerCreatorUI = ( {t}) => (
 const HeadContainerUInormal = ({t, i18n, remove,
                                 container, setMode, mode}) => (
   <>
-    <style type='text/css'>{`
-        #head-container-title h1 { display: inline-block; }
-        #head-container-text { font-family: 'Santana'; }
-        .badge { 
-            vertical-align: middle; 
-            font-family: 'Source Code Pro'; }
-        #head-container {
-        background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22));
-        background-color: rgba(99,99,99,0.75) }
-    `}</style>
-
-    <div id="head-container" class="bg-light p-5 rounded-lg m-3">
+    <div id="head-container" class="bg-dark p-5 rounded-lg m-5">
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
         <Badge bg='info'>{t("containers."+container.type_name)}</Badge>
@@ -131,35 +123,9 @@ const HeadContainerUIedit = ( {t, i18n,
                                getRootProps, getInputProps, isDragActive, acceptedFiles, rejectedFiles,
                                container, setMode, mode, picture, setPicture, pictures, setPictures}) => (
   <>
-    <style type='text/css'>{`
-        #edit-container-title h1 { display: inline-block; }
-        #edit-container-text { font-family: 'Santana'; }
-        .badge { 
-            vertical-align: middle; 
-            font-family: 'Source Code Pro'; }
-        #edit-container {
-            background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22));
-            background-color: rgba(199,2,2,0.75) }
-        .for-container { flex-grow: 1; }
-        #selectedImage {
-          width: 500px;
-          height: 400px;
-        }
-        .viewCard {
-          width: 200px;
-          height: 150px;
-        }
-        .accordion-header {
-            background-color: rgb(25,25,25);
-        }
-        .accordion-button {
-          color: rgb(55,155,26);
-          background-color: rgb(35,35,35);
-        }
-    `}</style>
-    <div id='edit-container' class="bg-light p-5 rounded-lg m-3">
+    <div id='head-container' class="bg-light p-5 rounded-lg m-3 edit">
       <Badge bg='warning'><h1>{t('containers.edit', {type: container.type_name})}</h1></Badge>
-      <Form onSubmit={handleSubmit(update(container))}
+      <Form onSubmit={handleSubmit(update)}
             noValidate 
             validated={validated} 
             encType="multipart/form-data">
@@ -190,28 +156,11 @@ const HeadContainerUIedit = ( {t, i18n,
                   : <p>{t('containers.update.dragFiles')} </p>
                 }
             </InputGroup>
-            {(acceptedFiles.length != 0) && (
-              <>
-            <h4>{t('containers.update.viewSelection')} </h4>
-            <Accordion>
-              { acceptedFiles.map((file, index) => (
-                <Accordion.Item eventKey={index}>
-                  <Accordion.Header>{file.name}</Accordion.Header>
-                  <Accordion.Body>
-                    <Image src={pictures[index]} 
-                           rounded
-                           className='viewCard' 
-                           onClick={() => setPicture(pictures[index]) } />
-                    <Button onClick={() => {
-                      acceptedFiles.slice(index, 1)
-                      console.log("now we have acceptedFiles:", acceptedFiles)
-                      setPictures(acceptedFiles)
-                    } }>Delete</Button>
-                  </Accordion.Body>
-                </Accordion.Item>
-              ) )}
-            </Accordion>
-            </> ) }
+            {(acceptedFiles.length !== 0) && 
+              <ImageViewer acceptedFiles={acceptedFiles}
+                           pictures={pictures}
+                           setPictures={setPictures}
+                           setPicture={setPicture} /> }
             <Form.Control.Feedback type="invalid">et voilà</Form.Control.Feedback>
             <Form.Text className="text-muted">{t('containers.helper.image_select')}</Form.Text>
         </Form.Group>
@@ -243,9 +192,6 @@ const ContainerUInormal = ( { t, i18n, remove,
             min-width: 520px;
             max-width: 600px;
             border: 1px solid ${colorType(container.type_name)}; }
-        .badge { 
-        vertical-align: middle;  
-        font-family: 'Source Code Pro';}
         #${container.type_name+'_'+index} .card-body, .card-footer { 
             background-color: rgba(55, 44, 44, 0.85); 
             background-image: linear-gradient(to bottom left, rgb(99,99,99), rgb(44,32,22)); }
@@ -271,7 +217,7 @@ const ContainerUInormal = ( { t, i18n, remove,
 )
 
 const ContainerUIedit = ( { t, i18n, 
-                            validated, update, change, form, 
+                            validated, update, change, form, handleSubmit, 
                             index, container, setMode, mode } ) => (
   <>
     <style type='text/css'>{`
@@ -280,17 +226,16 @@ const ContainerUIedit = ( { t, i18n,
             min-width: 520px;
             max-width: 600px;
             border: 1px solid ${colorType(container.type_name)}; }
-        .badge { 
-        vertical-align: middle;  
-        font-family: 'Source Code Pro';}
-        .for-container { flex-grow: 1; }
         #${container.type_name+'_'+index} .card-body {
             background-color: rgba(55, 44, 44, 0.85); 
             background-image: linear-gradient(to bottom left, rgb(199,19,99), rgb(44,32,22)); }
         #${container.type_name+'_'+index} .card-title .h5 { display: inline; }
     `}</style>
       <Card id={container.type_name+'_'+index}>
-        <Form onSubmit={update(container)} noValidate validated={validated}>
+        <Form onSubmit={handleSubmit(update)} 
+              noValidate
+              validated={validated} 
+              encType="multipart/form-data">
           <Card.Img variant="top" src={`/uploads/${container.image_link}`} />
           <Card.Body>
             <Card.Title>
@@ -299,7 +244,7 @@ const ContainerUIedit = ( { t, i18n,
                   <InputGroup>
                     <Form.Control type='text' 
                                   name="formContainerTitle"
-                                  onChange={change('title')}
+                                  onChange={change}
                                   value={form.title[i18n.language]}/>
               <Badge bg='primary'>{t("containers."+container.type_name)}</Badge>
                     <Form.Control.Feedback type="invalid">{t('containers.update.invalid_title')}</Form.Control.Feedback>
@@ -312,7 +257,7 @@ const ContainerUIedit = ( { t, i18n,
                   <Form.Label>{t('containers.update.content')}</Form.Label>
                   <InputGroup>
                       <Editor value={form.content[i18n.language]} 
-                              onChange={change('content')}
+                              onChange={change}
                               language={i18n.language}
                               preview={true} />
                     <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
@@ -329,7 +274,7 @@ const ContainerUIedit = ( { t, i18n,
 
 /* Group of Containers */
 const GroupContainer = ( props ) => {
-  const { i18n, t } = useTranslation()
+  const { t } = useTranslation()
   const crud_mode = (props.children) ? 'getChildrenIDof' : 'getContainersIDofType'
   const reference = (props.children) ? props.id : props.type
   const { loading, error, response } = useFetch(crud_mode, reference, [])
@@ -359,7 +304,7 @@ const CardTree = ({ data, link, text }) => (
    head is a boolean value for show params :id container content on head first. */
 const Containers = ({ type, children }) => {
   const { id } = useParams()
-  const { i18n, t } = useTranslation()
+  const { t } = useTranslation()
 
   if (children == undefined) { // print containers list only
       return (

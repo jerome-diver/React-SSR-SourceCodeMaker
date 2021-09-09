@@ -1,0 +1,24 @@
+/*! IageViewer component stylesheet */
+
+@import 'colors'
+@import 'fonts'
+
+.preview-selection
+    border: dashed 3px yellow
+    border-radius: 5px
+    padding: 5px
+
+.accordion
+    .accordion-item
+        .accordion-header
+            background-color: $color-imageviewer-header-fg
+            .accordion-button
+                color: $color-imageviewer-header-fg
+                background-color: $color-imageviewer-header-bg
+            .accordion-button::after
+                color: white
+        .accordion-collapse
+            background-color: $color-imageviewer-body-bg
+            .accordion.body
+                background-color: $color-imageviewer-body-bg
+                color: $color-imageviewer-body-fg

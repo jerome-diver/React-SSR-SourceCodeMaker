@@ -1,6 +1,9 @@
 import express from 'express'
 import morganBody from 'morgan-body'
 import fs from 'fs'
+import { i18n, options } from './i18n'
+import { agenda, agenda_schedule } from './controllers/schedule'
+import { db, init_db } from './controllers/database'
 const path = require('path')
 const mailer = require('express-mailer')
 const cors = require('cors')
@@ -8,10 +11,7 @@ const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
 const Backend = require('i18next-fs-backend')
 const i18nextMiddleWare = require('i18next-http-middleware')
-import { i18n, options } from './i18n'
 require('dotenv').config('../')
-import { agenda, agenda_schedule } from './controllers/schedule'
-import { db, init_db } from './controllers/database'
 var app = express()
 //app.set('trust proxy', 1)   // NGINX proxy web server requirement
 

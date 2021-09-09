@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* CRUD for container collection to call from server API
    at /api/containers address */
 

@@ -19,12 +19,10 @@ var config = {
                 use: ['babel-loader'] },
             {   test: /\.s[ac]ss$/,
                 use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ] },
-            {   test: /\.css$/,
-                use: [ 'css-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
                 exclude: [/node_modules/],
                 use: [ {
-                    loader: 'file-loader',
+                    loader: 'url-loader',
                     options: {
                         name: '[name].[ext]',
                         publicPath: '/img',

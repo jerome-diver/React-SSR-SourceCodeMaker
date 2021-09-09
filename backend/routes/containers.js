@@ -1,23 +1,17 @@
-const express = require('express');
-const router = express.Router();
 import { hasAuthorization } from './middlewares/authentication';
 import { checkContainer, sanitizer } from './middlewares/sanitizer'
 import { uploadImage } from './middlewares/upload'
 import Container from '../models/container.model'
 import Type from '../models/type.model'
+const express = require('express');
+const router = express.Router();
 
 /* POST to create a new container for :type name */
 router.post('/', [hasAuthorization, checkContainer, sanitizer], (req, res) => {
-  const { title, content, image_link,  parent_id, type_id, enable } = req.body
-  if (type.error) return res.status(401).json({ error: type.error })
-  if ((req.token.id == user_id) || 
-      (req.token.role_title == 'Writer') || 
-      (req.token.role_title == 'Admin')) {
-    const container = new Container({
-      title, content, image_link, parent_id, 
-      type_id, enable, author_id: user_id })
-    container.save()
-      .catch(error => {
+  const { title, content, image_link,  parent_id, type_id, enable, author_id } = req.body
+  if ((req.token.role_title === 'Writer') || (req.token.role_title === 'Admin')) {
+    const container = new Container({title, content, image_link, parent_id, type_id, enable, author_id: req.token.id })
+    container.save().catch(error => {
         let message = ''
         if (error.errors) {
           error.errors.forEach(err => message += `${err.title}: ${err.message}\n`)
@@ -103,13 +97,9 @@ router.get('/:id', (req, res) => {
 /* POST to update an existing container from his id */
 router.post('/:id/update', [hasAuthorization, checkContainer, sanitizer, uploadImage], (req, res) => {
   console.log("UPDATE body:", req.body)
-  const {title, content, title_en, content_en, parent_id, type_name, enable, image_link} = req.body
-  if (((req.token.role_name == 'Writer') && (req.token.id == author_id)) || 
-      (req.token.role_name == 'Admin')) {
+  if (((req.token.role_name == 'Writer') && (req.token.id == req.body.author_id)) || (req.token.role_name == 'Admin')) {
       console.log("UPDATE possible by this user")
-      /* upload file if exist in form and new in server side */
       const toUpdate = (req.file) ? {...req.body, image_link: req.file.filename} : req.body
-      /* add data to MongoDB "SourceCodeMaker" database "containers" document */
       Container.findOneAndUpdate( { _id: req.params.id }, toUpdate, { new: true }).exec()
         .then(container => { return res.status(201).json({updated: true, content: container.toJSON()}) })
         .catch(error => { return res.status(400).json( 
