@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { Route, Switch } from "react-router-dom"
-import PrivateRoute from './private/PrivateRoute.component'
+import { Route, Routes } from "react-router-dom"
+import PrivateRoutes from './private/PrivateRoutes.component'
 import Home from '../Pages/public/Home.component'
 import Contact from '../Pages/public/Contact.component'
 import Containers from '../Pages/public/Containers.component'
@@ -21,30 +21,25 @@ const PageSwitcher = (props) => {
     }, [])
 
     return (
-        <Switch>
-            <Route exact path="/" component={Home}/>
-            <Route path="/contact" component={Contact}/>
-            <Route path="/categories" component={(props) => <Containers {...props} type="category"/>}/>
-            <Route path="/category/:id"
-                   component={ (props) => <Containers {...props} type="category"
-                                                                 children={{same: false, other: true}} /> } />
-            <Route path="/subject/:id"
-                   component={ (props) => <Containers {...props} type="subject"
-                                                                 children={{same: false, other: true}}/> } />
-            <PrivateRoute path="/admin" component={Admin} authority="Admin"/>
-            <PrivateRoute path="/profile" 
-                          component={(props) => <Profile {...props} userProfile={getUser()} 
-                                                                    userRole={getRole()} />}/>
-            <Route path="/signin" render={(props) => <Sign {...props} action="in" />} />
-            <Route path="/signup" render={(props) => <Sign {...props} action="up" />}/>
-            <PrivateRoute path="/signout" 
-                          component={(props) => <Sign {...props} action="out" />}/>
-            <Route path="/validate/:username/:token/:ticket" component={Validate}/>
-            <PrivateRoute path="/setup_password/:id/:ticket" 
-                          component={(props) => <SetupPassword {...props} /> }/>
-            <PrivateRoute path='/modify_email/:id/:ticket/:new_email' 
-                          component={(props) => <ModifyEmail {...props} /> }/>
-      </Switch>
+        <Routes>
+            <Route path="/" element={<PrivateRoutes restricted="Admin" />} >
+                <Route path="admin" element={<Admin />} />
+            </ Route>
+            <Route path="/" element={<PrivateRoutes />} >
+                <Route path="profile" element={<Profile userProfile={getUser()} userRole={getRole()} />} />
+                <Route path="signout" element={<Sign action="out" />}/>
+                <Route path="setup_password/:id/:ticket" element={<SetupPassword />}/>
+                <Route path='modify_email/:id/:ticket/:new_email' element={<ModifyEmail />}/>
+            </Route>
+            <Route exact path="/"       element={<Home />} />
+            <Route path="contact"      element={<Contact />} />
+            <Route path="categories"   element={<Containers type="category" />}/>
+            <Route path="category/:id" element={<Containers type="category" children={{same: false, other: true}} />} />
+            <Route path="subject/:id"  element={<Containers type="subject" children={{same: false, other: true}} />} />
+            <Route path="signin"       element={<Sign action="in" />} />
+            <Route path="signup"       element={<Sign action="up" />} />
+            <Route path="validate/:username/:token/:ticket" element={<Validate />}/>
+      </Routes>
   )
 }
 

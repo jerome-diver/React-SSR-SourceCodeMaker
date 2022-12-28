@@ -57,9 +57,7 @@ const I18nSelector = (props) => {
 
     const changeLanguage = lng => () => {
         i18n.changeLanguage(lng)
-        if (getUser()) {
-            setLanguage(lng)
-        }
+        if (getUser()) { setLanguage(lng) }
         setFlagSelected(imgFlag(lng, 20))
     }
 
@@ -79,13 +77,13 @@ const UserRoleEntries = ({ role }) => {
     switch (role) {
       case 'Admin':
         return (
-            <NavLink as={NavLink} to='/admin' activeClassName='menuselected'>
-                <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.admin')}</NavLink>
+            <Nav.Link as={NavLink} to='/admin' className='menuselected'>
+                <FontAwesomeIcon icon={faUserTie}/> {t('nav_bar.user.admin')}</Nav.Link>
           )
       case 'Writer':
          return (
-             <NavLink as={NavLink} to='/my_contents' activeClassName='menuselected'>
-                 <FontAwesomeIcon icon={faUsers}/>{t('nav_bar.user.list')}</NavLink>
+             <Nav.Link as={NavLink} to='/my_contents' className='menuselected'>
+                 <FontAwesomeIcon icon={faUsers}/>{t('nav_bar.user.list')}</Nav.Link>
          )
       default:
         return <></>
@@ -106,20 +104,20 @@ const UserEntries = ({ username, email, role }) => {
       return (<>
           <NavDropdown title={<span>{avatar}{username}</span>}
                        id="basic-nav-dropdown">
-            <NavLink as={NavLink} to={'/profile'}   activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</NavLink>
+            <Nav.Link as={NavLink} to={'/profile'} className='menuselected'>
+              <FontAwesomeIcon icon={faUserEdit}/> {t('nav_bar.user.profile')}</Nav.Link>
             <UserRoleEntries role={role} />
-            <NavLink as={NavLink} to='/signout' activeClassName='menuselected'>
-              <FontAwesomeIcon icon={faSignOutAlt}/> {t('nav_bar.user.signout')}</NavLink>
+            <Nav.Link as={NavLink} to='/signout' className='menuselected'>
+              <FontAwesomeIcon icon={faSignOutAlt}/> {t('nav_bar.user.signout')}</Nav.Link>
           </NavDropdown>
       </>)
     }
     return (<>
         <NavDropdown title={<span>{avatar}{t('nav_bar.user.main')}</span>}>
-          <NavLink as={NavLink} to='/signin' activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.user.signin')}</NavLink>
-          <NavLink as={NavLink} to='/signup' activeClassName='menuselected'>
-            <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.user.signup')}</NavLink>
+          <Nav.Link as={NavLink} to='/signin' className='menuselected'>
+            <FontAwesomeIcon icon={faSignInAlt}/> {t('nav_bar.user.signin')}</Nav.Link>
+          <Nav.Link as={NavLink} to='/signup' className='menuselected'>
+            <FontAwesomeIcon icon={faUserPlus}/> {t('nav_bar.user.signup')}</Nav.Link>
         </NavDropdown>
     </>)
 }
@@ -133,7 +131,7 @@ const Navigation = (props) => {
 
   useEffect( () => {
     dispatch({user: getUser(), role: getRole(), language: getLanguage()})
-  }, [getUser(), getLanguage()] )
+  }, [getUser, getLanguage, getRole] )
 
   return (
     <>
@@ -142,11 +140,11 @@ const Navigation = (props) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link as={NavLink} to='/' exact activeClassName="menuselected">
+                  <Nav.Link as={NavLink} to='/' exact className="menuselected">
                       <FontAwesomeIcon icon={faHome}/> {t('nav_bar.home')}</Nav.Link>
-                  <Nav.Link as={NavLink} to='/categories' activeClassName="menuselected">
+                  <Nav.Link as={NavLink} to='/categories' className="menuselected">
                       <FontAwesomeIcon icon={faFolder}/> {t('nav_bar.contents')}</Nav.Link>
-                  <Nav.Link as={NavLink} to='/contact' activeClassName="menuselected">
+                  <Nav.Link as={NavLink} to='/contact' className="menuselected">
                       <FontAwesomeIcon icon={faAddressCard}/> {t('nav_bar.contacts')}</Nav.Link>
                   <UserEntries username={session.username} role={session.role} email={session.email} />
                   <I18nSelector/>

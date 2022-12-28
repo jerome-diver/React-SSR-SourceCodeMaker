@@ -70,6 +70,7 @@ const statesContainerLinks = (UInormal, UIedit) => {   // states comes after act
 const statesContainer = UI => {   // states comes first for container !
     const States = (props) => {
         const { t, i18n } = useTranslation()
+        const { getLanguage } = useAuthenticate()
         const [ validated, setValidated ] = useState(false)
         const [ mode, setMode ] = useState('normal')
         const [ state, dispatch ] = useReducer(dataReducer, {crud: 'getContainer', data: props.id, called: 'read'})
@@ -79,7 +80,7 @@ const statesContainer = UI => {   // states comes first for container !
         const [ picture, setPicture] = useState("")
         const [ pictures, setPictures] = useState([])
         const { register, control, handleSubmit, formState } = useForm({mode:'all', resolver: vestResolver(tests)})
-        props = {...props, t, i18n, 
+        props = {...props, t, i18n, getLanguage,
                  mode, setMode, picture, setPicture, pictures, setPictures, data, setData,
                  state, dispatch, response, 
                  form, setForm, validated, setValidated, register, Controller, control, handleSubmit, formState }
@@ -94,6 +95,5 @@ const statesContainer = UI => {   // states comes first for container !
     }
     return States
 }
-
 
 export { statesContainerLinks, statesContainer, useFetch }

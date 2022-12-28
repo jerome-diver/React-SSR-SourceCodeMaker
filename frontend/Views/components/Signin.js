@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react'
-import { Redirect } from 'react-router-dom'
-import { useLocation } from 'react-router'
+import { Navigate } from 'react-router-dom'
+// import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faMailBulk, faKey } from '@fortawesome/free-solid-svg-icons'
 import { Card, ToggleButtonGroup, ToggleButton, Button, InputGroup, Collapse, Form } from 'react-bootstrap'
@@ -28,9 +28,8 @@ const reducer = (state, action) => {
     }
 }
 
-const SignIn = (props) => {
+const SignIn = () => {
     const { i18n, t } = useTranslation()
-    const [ loaded, setLoaded ] = useState(false)
     const [ submit, setSubmit ] = useState(false)
     const [ validated, setValidated ] = useState(false)
     const [ selectIdentifier, setSelectIdentifier ] = useState('Email')
@@ -41,12 +40,12 @@ const SignIn = (props) => {
                                                      from: '/login', 
                                                      user: {} })
     const { setSession, getUser } = useAuthenticate()
-    const location = useLocation()
+    // const location = useLocation()
   
     useEffect( () => {
         console.log("--- SignIn component useEffect")
-        console.log('\tLocation is', location)
-        setLoaded(!submit)
+        // console.log('\tLocation is', location)
+        //setLoaded(!submit)
         focusOnSelectedIdEntry()    // put the cursor at the end of the input entry of selected one
     }, [submit, selectIdentifier, i18n.language] )
 
@@ -56,8 +55,8 @@ const SignIn = (props) => {
         setSubmit(false) }
     const getLoggedUser = (data) => {
         console.log("\tOK, signed in for ", data.user.username)
-        const go_to = (location.state) ? location.state.from : '/profile'
-        dispatch({from: go_to, isLogged: true})
+        // const go_to = (location.state) ? location.state.from : '/profile'
+        dispatch({from: '/profile', isLogged: true})
         setSession( data ) // with Context hook, setter (App component) define cookie (set if data, else remove) to hold session
         setSubmit(false)
     }
@@ -96,9 +95,8 @@ const SignIn = (props) => {
         setSelectIdentifier(status) 
     }
 
-    if (!loaded) { return <><Loading/> </> }
-    if (sign.isLogged) return <> <Redirect to={sign.from}/> </>
-    if (getUser()) return <> <Redirect to='/' /> </>
+    if (sign.isLogged) return <> <Navigate to={sign.from}/> </>
+    if (getUser()) return <> <Navigate to='/' /> </>
     return <>  
         <Error title='Sign in error'
                name={sign.error.name}
@@ -164,6 +162,7 @@ const FormIdEntrySelector = (props) => {
                         <Form.Text className="text-muted">{t('signin.username.helper')}</Form.Text>
                     </Form.Group>
                 )
+                default: return <></>
         }
     }
 
@@ -187,14 +186,14 @@ const FixProblem = ({ username, email, password }) => {
     const toggle = () => { setCollapse(!collapse)}
     const forgetPassword = () => {
         const emailSent = sendEmailLink('resetPassword', {username})
-        if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
+        if (emailSent) { setRedirect('/signin') }
     }
     const sendValidationAgain = () => { 
         const emailSent = sendEmailLink('validateAccount', {username})
-        if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
+        if (emailSent) { setRedirect('/signin') }
     }
 
-    if (redirect != '') { return ( <Redirect to={redirect} /> )}
+    if (redirect !== '') { return ( <Navigate to={redirect} /> )}
     if (username || (email && validator.isEmail(email))) {
         return (
             <>

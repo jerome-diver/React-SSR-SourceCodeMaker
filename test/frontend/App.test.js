@@ -1,16 +1,15 @@
 import React from "react"
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
-import { shallow, mount, configure } from 'enzyme'
 import fetchMock from 'jest-fetch-mock'
 import { BrowserRouter } from 'react-router-dom'
 import App from '../../frontend/App'
 import Navigation from '../../frontend/Views/routes/Navigation.component'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom'
 
-configure({ adapter: new Adapter() })
 fetchMock.enableMocks()
 
 
-describe('render Frontend React App with Jest & Enzyme', () => {
+/**describe('render Frontend React App with Jest & Enzyme', () => {
   it('Should contain an "App" component', () => { // shallow just write tags, do not traverse it
     const wrapper = shallow(<div id="root"><BrowserRouter><App /></BrowserRouter></div>)
     expect(wrapper.find(App)).toHaveLength(1)
@@ -22,8 +21,8 @@ describe('render Frontend React App with Jest & Enzyme', () => {
   })
 })
 
-import { render } from '@testing-library/react'
-import '@testing-library/jest-dom'
+**/
+
 
 describe('render Frontend React App with @testing-library/react & jest-dom', () => {
   it('Should have an ARIA role "navigation"', () => {

@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom'
 import { updateAccount } from '../../../Controllers/user/authenticate-api'
 import { Modal, Alert, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { Loading } from './Printers.component'
 
 const Validate = (props) => {
     const { username, token, ticket } = useParams()
@@ -50,26 +49,23 @@ const Validate = (props) => {
             </>
         }
     }
-
-    if (load) {
-        return <>
-            {renderRedirect()}
-            <Modal show={show}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{t('error:validation.status', {username: username})}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{renderValidationStatus()}</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={goHome}>
-                        Go home
-                    </Button>
-                    <Button variant="primary" onClick={signIn}>
-                        Sign in
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    } else return <><Loading /></>
+    return <>
+        {renderRedirect()}
+        <Modal show={show}>
+            <Modal.Header closeButton>
+                <Modal.Title>{t('error:validation.status', {username: username})}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{renderValidationStatus()}</Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={goHome}>
+                    Go home
+                </Button>
+                <Button variant="primary" onClick={signIn}>
+                    Sign in
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    </>
 }
 
 export default Validate

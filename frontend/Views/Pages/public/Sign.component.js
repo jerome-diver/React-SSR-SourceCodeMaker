@@ -1,17 +1,19 @@
-import React, { Component } from 'react'
+import React from 'react'
 import SignIn from '../../components/Signin'
 import SignUp from '../../components/Signup'
 import SignOut from '../../components/Signout'
 
-const Sign = (props) => {
+const Sign = ({action}) => {
 
-    switch (props.action) {
+    switch (action) {
         case 'up':
-          return ( <SignUp /> )
+          return <SignUp />
         case 'in':
-          return ( <SignIn /> )
+          return <SignIn />
         case 'out':
-          return ( <SignOut /> )
+          return <SignOut />
+        default:
+          return <SignUp />
     }
 }
 

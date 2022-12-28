@@ -12,7 +12,6 @@ import { checkEmail } from '../../../Controllers/user/authenticate-api'
 import parse from 'html-react-parser'
 import { useTranslation } from 'react-i18next'
 import { getGravatarUrl } from 'react-awesome-gravatar';
-import { Loading } from '../public/Printers.component'
 const navigatorInfo = require('navigator-info')
 const _ = require('lodash')
 
@@ -64,7 +63,6 @@ const Profile = (props) => {
     const [ userSession, setUserSession ] = useState(washUser(getUser()))
     const [ accountState, setAccountState ] = useState({ color:"success", status: 'disable' })
     const [ userNotChanged, setUserNotChanged ] = useState(true)
-    const [ loaded, setLoaded ] = useState(false)
     const [ emailReadOnly, setEmailReadOnly ] = useState(true)
     const [ message, setMessage ] = useReducer(messageReducer, initMessage)
     const [ passwordToUpdate, setPasswordToUpdate ] = useState('')
@@ -79,12 +77,10 @@ const Profile = (props) => {
         const options = {size: 18, default: 'mp'}
         const gravatar = getGravatarUrl(userSession.email, options)
         setAvatar(<img src={gravatar} className='mr-2'/>)
-        setLoaded(true)
     }, [userSession, message] )
   
     const info = navigatorInfo()
     const clickSubmit = (e) => { // should update user if form entries are conform
-        setLoaded(false)
         const form_to_submit = e.currentTarget;
         if (form_to_submit.checkValidity() === false) {
             e.preventDefault();
@@ -131,7 +127,6 @@ const Profile = (props) => {
                             message += t('profile.modal.success.text') + "\n"
                         })
                         .catch(error => setMessage({text: error}) )
-                        .finally(() => setLoaded(true))
                     setMessage( {text: { name, message }})
                 }
             } else setMessage( {text: { name: t('sanitizer.frontend.password.missing.title'), 
@@ -166,12 +161,12 @@ const Profile = (props) => {
     }
     const handleChange = (name, origin) => event => { 
         if ((name === 'email') && (!emailReadOnly)) {
-            event.target.style.color = (event.target.value == origin.email) ? 'black' : 'red' }
+            event.target.style.color = (event.target.value === origin.email) ? 'black' : 'red' }
         const value = event.target.value
         const result = { ...userForm, [name]: value }
         setUserForm( uf => { return {...uf, [name]: value} } )
         const compared = _.isEqual(origin, prepareCompareUser(result))
-        if (name != 'password') setUserNotChanged(compared)
+        if (name !== 'password') setUserNotChanged(compared)
         console.log("--- Profile (handleChange) | %s for: userProfile => %s | EditField => %s | compared is %s", 
                     name, origin[name], result[name], compared)
     }
@@ -192,7 +187,7 @@ const Profile = (props) => {
         return ( <Tooltip id="email-tooltip" {...props}>{text}</Tooltip> )
     }
 
-    if (loaded && userSession) {
+    if (userSession) {
         return <>
             <Messenger message={message} setMessage={setMessage} />
             <PasswordUpdateModal showModal={showPasswordModal} 
@@ -296,12 +291,7 @@ const Profile = (props) => {
                 </Card>
             </div>
         </>
-    } else {
-        return <>
-            <Messenger message={message} setMessage={setMessage} />
-            <Loading />
-        </>
-    }
+    } else { return <Messenger message={message} setMessage={setMessage} /> }
 }
 
 const Messenger = (props) => {
@@ -333,12 +323,12 @@ const passwordReducer = (state, action) => {
             return { error,
                      first: action.value, 
                      second: state.second , 
-                     match: ((action.value === state.second) && (state.second != '') && passwordValidated) }
+                     match: ((action.value === state.second) && (state.second !== '') && passwordValidated) }
         case 'second':
             return { error,
                      first: state.first, 
                      second: action.value, 
-                     match: ((action.value === state.first) && (state.first != '') && passwordValidated) }
+                     match: ((action.value === state.first) && (state.first !== '') && passwordValidated) }
         default:
             return initPassword
     }

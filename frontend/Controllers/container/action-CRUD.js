@@ -44,7 +44,7 @@ const createContainer = (data, successCBK, failedCBK, finalCBK, isMounted) => {
     fetch(url, {
             method: 'POST',
             credentials: 'include',
-            headers: { 'Accept': 'application/json', 
+            headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' },
             body: JSON.stringify( { data } ) })
         .then( response => response.json() )
@@ -73,7 +73,7 @@ const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
     fetch(url, {
             method: 'DELETE',
             credentials: 'include',
-            headers: { 'Accept': 'application/json', 
+            headers: { 'Accept': 'application/json',
                        'Content-Type': 'application/json' } })
         .then( response => response.json() )
         .then( response => { (isMounted.current) ? successCBK(response) : null } )
@@ -81,6 +81,7 @@ const deleteContainer = (id, successCBK, failedCBK, finalCBK, isMounted) => {
         .finally( () => { (isMounted.current) ? finalCBK(false) : null } )
 }
 
+// crud_caller return as value, the kind of Container to get from the type of crud_mode requested (the key)
 const crud_caller = {
     $getContainer: getContainer,
     $getContainersOfType: getContainersOfType,

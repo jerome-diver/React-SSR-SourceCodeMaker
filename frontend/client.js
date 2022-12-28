@@ -1,14 +1,13 @@
-import React, { Suspense } from 'react'
-import { hydrate } from 'react-dom'
+import React, { StrictMode } from 'react'
+import { hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from "react-router-dom"
-import '../node_modules/bootstrap/scss/bootstrap.scss'
-import "./stylesheet/awesome.sass"
-import './stylesheet/index.sass'
 import App from './App'
-import { Loading } from './Views/Pages/public/Printers.component'
 import { CookiesProvider } from 'react-cookie'
 import { Provider } from 'react-redux'
 import store from './Redux/store'
+import '../node_modules/bootstrap/scss/bootstrap.scss'
+import "./stylesheet/awesome.sass"
+import './stylesheet/index.sass'
 
 const unSubscribe = store.subscribe(() => {
   console.log("*** store state is: %s ***", store.getState())
@@ -18,18 +17,18 @@ const unSubscribe = store.subscribe(() => {
 const BaseAppI18n = () => {
   //useSSR(window.initialI18nStore, window.initialLanguage)
   return (
-    <Suspense fallback={<Loading/>}>
       <CookiesProvider>
-          <BrowserRouter>
-            <Provider store={store}>
+        <Provider store={store}>
+          {/* <StrictMode> */}
+            <BrowserRouter>
               <App />
-            </Provider>
-          </BrowserRouter>
+            </BrowserRouter>
+          {/* </StrictMode> */}
+        </Provider>
       </CookiesProvider>
-    </Suspense>
   )
 }
 
-hydrate(
-  <BaseAppI18n/>,
-  document.getElementById('root'));
+const container = document.getElementById('root')
+hydrateRoot(container, <BaseAppI18n/>)
+export default BaseAppI18n

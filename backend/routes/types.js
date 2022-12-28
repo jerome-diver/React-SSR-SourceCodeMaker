@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
 import { hasAuthorization, isOwnerOrAdmin } from './middlewares/authentication';
 import { checkType, sanitizer } from './middlewares/sanitizer'
 import Type from '../models/type.model'
+const express = require('express');
+const router = express.Router();
 
 /* POST to create a new type */
 router.post('/', [hasAuthorization, isOwnerOrAdmin], (req, res) => {

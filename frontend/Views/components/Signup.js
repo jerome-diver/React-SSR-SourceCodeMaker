@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
-import { useLocation } from 'react-router'
+import { Navigate } from 'react-router-dom'
+// import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Card, Button, Form } from 'react-bootstrap'
@@ -8,19 +8,17 @@ import { useTranslation } from 'react-i18next'
 import { fireError, validatePassword, sendEmailLink } from '../../Controllers/user/user-form-helper'
 import { create } from '../../Controllers/user/action-CRUD'
 import { useCookies } from 'react-cookie'
-import { Loading, Error } from '../Pages/public/Printers.component'
 
 const SignUp = (props) => {
     const { i18n, t } = useTranslation()
     const [user, setUser] = useState({ username: "", email: '', pass1: '', pass2: ''})
-    const [loaded, setLoaded] = useState(false)
     const [submit, setSubmit] = useState(false)
     const [redirect, setRedirect] = useState('signup')
-    const location = useLocation()
+    // const location = useLocation()
     const [ cookies, setCookies, removeCookies ] = useCookies(['session'])
     
     useEffect( () => {
-        setLoaded(!submit)
+      //  setLoaded(!submit)
     }, [submit, t] )
     
     const handleChange = name => event => { setUser({...user, [name]: event.target.value}) }
@@ -33,7 +31,7 @@ const SignUp = (props) => {
                     .then(response => {
                         if (response.accepted) {
                             const emailSent = sendEmailLink('validateAccount', user, i18n.language)
-                            if (emailSent) { setRedirect('/signin') } else { setRedirect(location.state.from) }
+                            if (emailSent) { setRedirect('/signin') }
                         } else if (response.error) {
                             fireError(response.error.name, response.error.message)
                         } else {
@@ -47,10 +45,10 @@ const SignUp = (props) => {
     const renderRedirect = () => { 
         console.log("--- Signup component: Rich redirection to", redirect)
         //if (redirect !== '') { return <Redirect to={redirect}/> }
-        if (cookies.session && cookies.session.user) { return <Redirect to={'/'}/> }
+        if (cookies.session && cookies.session.user) { return <Navigate to={'/'}/> }
     }
 
-    if (!loaded) return <><Loading /></>
+    //if (!loaded) return <><Loading /></>
     return <>
         {/* <Error title='Sign up error'
                name={sign.error.name}

@@ -5,7 +5,7 @@
 
 import React from 'react'
 import { string, bool, object, func, exact, number } from 'prop-types'
-import { Loading, Error } from './Printers.component'
+import { Error } from './Printers.component'
 import { useTranslation } from "react-i18next"
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
@@ -26,8 +26,8 @@ const Editor = loadable(() => import('for-editor'))
    -> ContainerLinks (with both edit and normal mode) show buttons for action on own Container
    -> HeadContainer (and both normal and edit mode) show Top head container (root of tree called)
    -> Container (and both normal and edit mode) to show a container of the children list content
-   -> Containers UI design to organize the full page to show containers content from specific call scenari
-*/ 
+   -> Containers UI design to organize the full page to show containers content from specific call scenario
+*/
 
 /* Buttons actions links UI design for normal and edit mode */
 const ContainerLinksUInormal = ( { t, data, edit, remove } ) => (
@@ -95,7 +95,7 @@ const ContainerCreatorUI = ( {t, create, submit, validated, form, container, i18
 const HeadContainerUInormal = ({t, i18n, remove,
                                 container, setMode, mode}) => (
   <>
-    <div id="head-container" class="bg-dark p-5 rounded-lg m-5">
+    <div id="head-container" className="bg-dark p-5 rounded-lg m-5">
       <h1 id='head-container-title'>
         {trContainer(i18n.language, container).title}&nbsp;
         <Badge bg='info'>{t("containers."+container.type_name)}</Badge>
@@ -117,13 +117,13 @@ const HeadContainerUInormal = ({t, i18n, remove,
   </>
 )
 
-const HeadContainerUIedit = ( {t, i18n,
+const HeadContainerUIedit = ( {t, i18n, getLanguage,
                                validated, form, control, Controller, register,
                                update, change, handleSubmit,formState,
                                getRootProps, getInputProps, isDragActive, acceptedFiles, rejectedFiles,
                                container, setMode, mode, picture, setPicture, pictures, setPictures}) => (
   <>
-    <div id='head-container' class="bg-light p-5 rounded-lg m-3 edit">
+    <div id='head-container' className="bg-light p-5 rounded-lg m-3 edit">
       <Badge bg='warning'><h1>{t('containers.edit', {type: container.type_name})}</h1></Badge>
       <Form onSubmit={handleSubmit(update)}
             noValidate 
@@ -136,7 +136,7 @@ const HeadContainerUIedit = ( {t, i18n,
                 ( {field: { onChange, ref }, 
                    fieldState: { invalid }} ) => (
                 <Form.Control type='text' onChange={onChange} ref={ref} isInvalid={invalid}
-                              defaultValue={form.title[i18n.language]} /> )} />
+                              defaultValue={form.title[getLanguage()]} /> )} />
               <Badge bg='info'>{t(container.type_name)}</Badge>
               <Form.Control.Feedback type="invalid">
                 {(formState.errors['title']) ? formState.errors.title.message : ''}
@@ -168,9 +168,9 @@ const HeadContainerUIedit = ( {t, i18n,
         <Form.Group>
             <Form.Label>{t('containers.update.content')}</Form.Label>
             <InputGroup>
-              <Editor value={form.content[i18n.language]} 
+              <Editor value={form.content[getLanguage()]} 
                       onChange={change}
-                      language={i18n.language}
+                      language={getLanguage()}
                       preview={true} />
               <Form.Control.Feedback type="invalid">{t('containers.update.invalid_content')}</Form.Control.Feedback>
             </InputGroup>
@@ -274,23 +274,28 @@ const ContainerUIedit = ( { t, i18n,
 
 /* Group of Containers */
 const GroupContainer = ( props ) => {
+  /* For a group of Containers, there is two modes "type" props that can exist: 
+   1/ The "id" type:
+     It does exist if there is a children React Element inside.
+     So the "id" is for a specific group of any Containers of the same "id" parent Container
+   2/ The "type" type :
+     It defines a group of parent type Container.
+     As a group of any category of Container (parent of same Containers type) 
+  */ 
   const { t } = useTranslation()
   const crud_mode = (props.children) ? 'getChildrenIDof' : 'getContainersIDofType'
   const reference = (props.children) ? props.id : props.type
   const { loading, error, response } = useFetch(crud_mode, reference, [])
 
-  if (loading) return <><Loading /></>
-  else if (error.state) return <><Error title={t('error:home.title')} 
+  if (error.state) return <Error title={t('error:home.title')} 
                                    name={error.content.name}
                                    message={error.content.message}
-                                   open={true} /></>
-  else {
-    return <CardGroup>
-              { response.map( (data, index) => {
-                if (data.enabled) return <Container id={data.id} key={index} index={index} />
-              }) }
-          </CardGroup> 
-  }
+                                   open={true} />
+  return <CardGroup>
+            { response.map( (data, index) => {
+              if (data.enabled) return <Container id={data.id} key={index} index={index} />
+            }) }
+        </CardGroup> 
 }
 
 const CardTree = ({ data, link, text }) => (
@@ -306,7 +311,7 @@ const Containers = ({ type, children }) => {
   const { id } = useParams()
   const { t } = useTranslation()
 
-  if (children == undefined) { // print containers list only
+  if (children === undefined) { // print containers list only
       return (
         <>
           <h1>{t('containers.list', {type})}</h1>

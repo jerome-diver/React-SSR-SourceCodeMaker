@@ -157,7 +157,7 @@
     "helper": {
       "title": "Should contain between 3 and 64 chars, start with high cap, never end with a space and no injected code",
       "content": "Content should be HTML tag able withjout any code injection",
-      "image_select": "Chosse an image"
+      "image_select": "Choose an image"
     },
     "button_submit": "Submit",
     "edit": "Edition of $t(containers.{{type}})",

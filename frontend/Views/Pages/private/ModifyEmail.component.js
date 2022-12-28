@@ -6,13 +6,14 @@ import { updateEmail } from '../../../Controllers/user/action-CRUD'
 import { useTranslation } from 'react-i18next'
 import { useAuthenticate } from '../../../Controllers/context/authenticate'
 import parse from 'html-react-parser'
-import { Loading } from '../public/Printers.component'
 
 const reducer = (state, action) => {
     switch (action.validated) {
         case true:
             return { error: action.error, show: action.show, validated: true, process: action.process }
         case false:
+            return { error: action.error, show: action.show, validated: false, process: 'Prending' }
+        default:
             return { error: action.error, show: action.show, validated: false, process: 'Prending' }
     }
 }
@@ -27,7 +28,7 @@ const ModifyEmail = (props) => {
 
     useEffect( () => {
         const user = getUser()
-        if (id == user.id) {
+        if (id === user.id) {
             updateEmail(ticket, new_email)
                 .then(res => res.json())
                 .then(response => {
@@ -66,8 +67,16 @@ const ModifyEmail = (props) => {
                     </Alert>
                 </>) 
             break
-        case 'Pending':
-            return <><Loading/></>
+        default:
+            title = 'On the way to go...'
+            content = (<>
+                    <Alert variant='warning'>
+                        <h3>Waiting</h3>
+                        <hr/>
+                        Processing on the run...
+                    </Alert>
+                </>) 
+            break
     }
     return <>
         <Modal show={status.show} onHide={handleClose}>

@@ -54,8 +54,8 @@ i18n
     app.use(i18nextMiddleWare.handle(i18n))
     app.use(favicon("./backend/img/favicon.ico"))   // add icon on tab browser
     app.use(cookieParser())                         // parse Cookies to router
-    app.set('views', 'backend/views')               // template views location
     app.set('view engine', 'pug')                   // template views engine type (pug)
+    app.set('views', 'backend/views')               // template views location
     app.use(cors( { origin: 'http://localhost:3000',
                     credentials: true, } ))                                 // Cross sites able
     app.use(express.urlencoded({extended: true}));
@@ -83,7 +83,7 @@ i18n
 init_db()
 
 // Logger body pretty if not production
-if (process.env.NODE_ENV != 'production') { 
+if (process.env.NODE_ENV !== 'production') { 
   morganBody(app, 
     {theme: 'darkened'}) 
 } else {

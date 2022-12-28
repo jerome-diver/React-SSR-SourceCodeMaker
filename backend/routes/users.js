@@ -1,15 +1,13 @@
-const express = require('express')
-const router = express.Router()
 import User from '../models/user.model'
 import Role from '../models/role.model'
 import { checkNewUser, checkUpdateUser, checkPassword, checkEmail, sanitizer } from './middlewares/sanitizer'
 import { hasAuthorization, isRole, isValid, isAdmin, isOwnerOrAdmin } from './middlewares/authentication'
+const express = require('express')
+const router = express.Router()
 require('dotenv').config('../../')
 
 /* GET users list */
-router.get('/',
-           [hasAuthorization, isAdmin],
-           (req, res) => {
+router.get('/', [hasAuthorization, isAdmin], (req, res) => {
     User.find({}).exec()
         .then(users => { 
             Promise.all(users.map(user => {
@@ -22,9 +20,7 @@ router.get('/',
 })
 
 /* GET user profile. */
-router.get('/user',
-           [hasAuthorization],
-           (req, res) => {
+router.get('/user', [hasAuthorization], (req, res) => {
     console.log('=== users router (/user GET)')
     User.findOne({_id: req.token.id}).exec()
         .then(user => { 
@@ -35,9 +31,7 @@ router.get('/user',
         .catch(error => { return res.status(401).json({error}) })
 })
 
-router.post('/',
-            [checkNewUser, sanitizer],
-            (req, res) => {
+router.post('/', [checkNewUser, sanitizer], (req, res) => {
     Role.findOne({name: 'Reader'}).exec()
         .then(role => {  // find Role.id for Reader
             const user = new User( { // Record to MongoDB 
@@ -50,7 +44,7 @@ router.post('/',
             let message = ''
             let name = ''
             if (error.errors) {
-                err.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
+                error.errors.forEach(error => message += `${error.name}: ${error.message}\n`)
                 name = req.i18n.t('error:database.users.create.failed.validation')
             }
             name = error.name

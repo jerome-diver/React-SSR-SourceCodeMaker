@@ -1,8 +1,8 @@
-import express from 'express'
-const router = express.Router()
 import { db } from '../controllers/database'
 import { hasAuthorization, isOwnerOrAdmin } from './middlewares/authentication'
 import Role from '../models/role.model'
+import express from 'express'
+const router = express.Router()
 require('dotenv').config('../../')
 
 

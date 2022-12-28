@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Form, Button, Card, Col, Row, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHandPointRight, faPaperPlane, faEnvelope, faPen, faEnvelopeOpen, faPhone } from '@fortawesome/free-solid-svg-icons'
-import { Loading } from './Printers.component'
 import { TAG, HOST, SERVER_PORT } from '../../helpers/config'
 
 const host = TAG + HOST + ":" + SERVER_PORT
@@ -78,39 +77,37 @@ const Contact = (props) => {
   const handleClose = () => { setShow( false ) }
   const openForm = () => { setShow( true ) }
 
-  if (load) {
-    return (
-      <>
-        <Card id='contact'>
-          <Card.Body>
-            <Card.Title>Contact</Card.Title>
-            <Card.Text>{data.fname} {data.sname}</Card.Text>
-            <Card.Text>{data.address_road}</Card.Text>
-            <Card.Text>{data.address_CP} {data.address_city}, {data.address_country}</Card.Text>
-            <Card.Text>SIRET: {data.enterprise_SIRET}</Card.Text>
-            <Card.Link>
-                <Button onClick={openForm}><FontAwesomeIcon icon={ faEnvelopeOpen } /> {data.caption}</Button>
-            </Card.Link>
-          </Card.Body>
-        </Card>
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title><FontAwesomeIcon icon={faHandPointRight}/> Contact me by anyway...</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <FormContact fname={data.f_fname} 
-                        sname={data.f_sname} 
-                        email={data.f_email} 
-                        message={data.f_message}/>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='primary' onClick={handleClose}>Cancel</Button>
-            <Button type='submit'><FontAwesomeIcon icon={faPaperPlane}/>{data.f_submit}</Button>
-          </Modal.Footer>
-        </Modal> 
-      </> 
-    )
-  } else return <><Loading /></>
+  return (
+    <>
+      <Card id='contact'>
+        <Card.Body>
+          <Card.Title>Contact</Card.Title>
+          <Card.Text>{data.fname} {data.sname}</Card.Text>
+          <Card.Text>{data.address_road}</Card.Text>
+          <Card.Text>{data.address_CP} {data.address_city}, {data.address_country}</Card.Text>
+          <Card.Text>SIRET: {data.enterprise_SIRET}</Card.Text>
+          <Card.Link>
+              <Button onClick={openForm}><FontAwesomeIcon icon={ faEnvelopeOpen } /> {data.caption}</Button>
+          </Card.Link>
+        </Card.Body>
+      </Card>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title><FontAwesomeIcon icon={faHandPointRight}/> Contact me by anyway...</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FormContact fname={data.f_fname} 
+                      sname={data.f_sname} 
+                      email={data.f_email} 
+                      message={data.f_message}/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='primary' onClick={handleClose}>Cancel</Button>
+          <Button type='submit'><FontAwesomeIcon icon={faPaperPlane}/>{data.f_submit}</Button>
+        </Modal.Footer>
+      </Modal> 
+    </> 
+  )
 }
 
 export default Contact

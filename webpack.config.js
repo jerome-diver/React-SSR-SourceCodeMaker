@@ -5,18 +5,27 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const mode = (process.env.NODE_ENV === 'dev') ? 'development' : 'production'
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { I18NextHMRPlugin } = require('i18next-hmr/plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+
+const mode = (process.env.NODE_ENV === 'development') ? 'development' : 'production'
+const isDev = mode !== 'production';
 
 /* GENERAL config */
 var config = {
     mode: mode,
+    devServer: {
+	    hot: true,
+    },
     module: {
         rules: [
             {   test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: ['babel-loader'] },
+			 loader: 'babel-loader',
+			 options: {
+          		plugins: [isDev && require.resolve('react-refresh/babel')].filter(Boolean),
+        		}, },
             {   test: /\.s[ac]ss$/,
                 use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ] },
             {   test: /\.(png|jpe?g|gif|ico|svg)$/i,
@@ -63,10 +72,12 @@ var config = {
             filename: (mode === 'production') ? 'css/[contentHash].css' : 'css/[id].css',
             chunkFilename: (mode === 'production') ? 'css/[contentHash].css' : 'css/[id].css'
             }),
+	isDev  && new webpack.HotModuleReplacementPlugin(),
+	isDev && new ReactRefreshWebpackPlugin(),
         new I18NextHMRPlugin({
           localesDir: path.resolve(__dirname, 'locales'),
         })
-    ],
+    ].filter(Boolean),
  }
 
 /* Frontend (client browser with React.js) side config  */

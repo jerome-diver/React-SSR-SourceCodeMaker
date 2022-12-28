@@ -1,6 +1,6 @@
+import { canConnect, findRole, hasAuthorization, isRole } from './middlewares/authentication'
 const express = require('express')
 const router = express.Router()
-import { canConnect, findRole, hasAuthorization, isRole } from './middlewares/authentication'
 var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 

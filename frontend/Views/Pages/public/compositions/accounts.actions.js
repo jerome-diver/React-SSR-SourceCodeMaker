@@ -14,7 +14,7 @@ import { setSelectedAccount, setSelectedAccountValidity, setValidityToUpdate,
 import { sendEmailLink } from '../../../../Controllers/user/user-form-helper'
 
 const actionsAccountsManager = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         const { i18n } = useTranslation()
         const handleClose = () => { dispatch(setModalOpen(false)) }
@@ -55,11 +55,11 @@ const actionsAccountsManager = UI => {
         props = { ...props, handleClose, submitFN }
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsModalBodyRole = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         const onRoleChange = (e) => {
             const role_id = e.target.value
@@ -69,11 +69,11 @@ const actionsModalBodyRole = UI => {
         props = {...props, onRoleChange}
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsModalBodyEmailContact = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         const onEmailContent = (e) => {
             const content = e.target.value
@@ -88,11 +88,11 @@ const actionsModalBodyEmailContact = UI => {
         props = {...props, onEmailContent, onEmailSubject}
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsModalBodySwitch = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         const onEmailContent = (e) => { 
             const content = e.target.value
@@ -106,11 +106,11 @@ const actionsModalBodySwitch = UI => {
         props = {...props, onModeChange, onEmailContent}
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsActionLinks = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const { t } = useTranslation()
         const dispatch = useDispatch()
         const deleteAccount = (account) => {
@@ -134,11 +134,11 @@ const actionsActionLinks = UI => {
         props = {...props, deleteAccount, sendEmailToUser}
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsAccount =  UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         const { t }    = useTranslation()
         const switchValidity = (account) => { 
@@ -169,16 +169,16 @@ const actionsAccount =  UI => {
         props = {...props, switchValidity, editAccountRole}
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 const actionsAccounts = UI => {
-    const actions = (props) => {
+    const Actions = (props) => {
         const dispatch = useDispatch()
         props = {...props, }
         return <UI {...props} />
     }
-    return actions
+    return Actions
 }
 
 export { actionsAccountsManager, actionsModalBodyRole, 

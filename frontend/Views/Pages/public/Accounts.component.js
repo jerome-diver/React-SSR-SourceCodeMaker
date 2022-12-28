@@ -24,11 +24,13 @@ import { statesAccountsManager, statesModalBodyRole,
 const renderSwitch = (param) => {
     switch (param) {
         case 'body_roles': 
-            return (<ModalBodyRole />)
+            return <ModalBodyRole />
         case 'body_switch':
-            return (<ModalBodySwitch />)
+            return <ModalBodySwitch />
         case 'body_contact':
-            return (<ModalBodyEmailContact />)
+            return <ModalBodyEmailContact />
+        default:
+            return <></>
     }
 }
 

@@ -12,7 +12,7 @@ import { getRoles } from '../../../../Controllers/roles/action-CRUD'
 import { setExistingRoles, setError, setLoading } from '../../../../Redux/Slices/accounts'
 
 const statesAccountsManager = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t } = useTranslation()
         const { open, submit, title, body } = useSelector(state => state.accounts.modal)
         const { error } = useSelector(state => state.accounts.componentStatus)
@@ -25,41 +25,41 @@ const statesAccountsManager = UI => {
                     message={error.message} /> )
         return <UI {...props} />
     }
-    return states
+    return States
 }
 
 const statesModalBodyRole = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { existingRoles } = useSelector(state => state.accounts)
         const { content }       = useSelector(state => state.accounts.selectedAccount)
         props = { ...props, existingRoles, content}
         if (content.role) return ( <UI {...props} /> )
         return null
     }
-    return states
+    return States
 }
 
 const statesModalBodyEmailContact  = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t }    = useTranslation()
         props = {...props, t}
         return <UI {...props} />
     }
-    return states
+    return States
 }
 
 const statesModalBodySwitch  = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t }    = useTranslation()
         const { modes } = useSelector(state => state.accounts.email)
         props = {...props, t, modes}
         return <UI {...props} />
     }
-    return states
+    return States
 }
 
 const statesActionLinks  = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t }    = useTranslation()
         const { getUser, getRole } = useAuthenticate()
         const user = getUser()
@@ -70,11 +70,11 @@ const statesActionLinks  = UI => {
             return <UI {...props} />
         } else return null
     }
-    return states
+    return States
 }
 
 const statesAccount  = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t }    = useTranslation()
         const [ avatarUrl, setAvatarUrl ]   = useState('')
         const { account } = props
@@ -89,11 +89,11 @@ const statesAccount  = UI => {
         props = {...props, account, t, avatarUrl, selected}
         return <UI {...props} />
     }
-    return states
+    return States
 }
 
 const statesAccounts  = UI => {
-    const states = (props) => {
+    const States = (props) => {
         const { t }                     = useTranslation()
         const [ accounts, setAccounts ] = useState([])    // list data from mongodb accounts server collection
         const selectedAccount           = useSelector(state => state.accounts.selectedAccount.content)
@@ -121,7 +121,7 @@ const statesAccounts  = UI => {
         if (loading) return (<Loading />)
         return <UI {...props} />
     }
-    return states
+    return States
 }
 
 export { statesAccountsManager, statesModalBodyRole, 

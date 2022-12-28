@@ -20,9 +20,10 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
     const Actions = (props) => {
         const { t, i18n, state, dispatch, response, form, setForm, data, setData, mode, setMode,
                 setValidated, picture, setPicture, setPictures } = props
+                console.log("NOW, we get 'form'=", form)
         useEffect(()=>{ 
-            const can_refresh = () => { // test if can refresh with something, then give back this thing
-                console.log("show me if can refresh for:", state.called)
+            const get_content = () => { // test if can refresh with something, then give back this thing
+                console.log("_ Can i refresh for: '%s' ?", state.called)
                 switch (state.called) {
                     case 'create':
                         return (response.created) ? response.content : undefined
@@ -31,13 +32,13 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
                     case 'update':
                         return (response.updated) ? response.content : undefined
                     case 'delete':
-                        return (response.deleted) ? null : undefined
+                        return (response.deleted) ? undefined : undefined
                     default:
-                        return null
+                        return undefined
                 }
             }
             const refresh = (d) => { // refresh content with data
-                console.log("yes i can with:", d)
+                console.log("==> YES i can with:", d)
                 if (d) {
                     const image = '/uploads/' + d.image_link
                     setForm({ title:   { fr: d.title, en: d.title_en }, 
@@ -46,11 +47,12 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
                     setData(d)
                     setPicture(image)
                     //console.log("REFRESH PICTURE/", picture)
-                } else setMode('empty')
+                } else {
+                    setMode('empty')
+                    console.log("=> No i can not refresh !")
+                }
             }
-            const content = can_refresh()
-            if (content !== undefined) refresh(content)
-            return () => refresh()
+            refresh(get_content()) 
         }, [response])
         useLayoutEffect(() => {
             /* on delete icon clicked */
@@ -88,7 +90,7 @@ const actionsContainer = (UInormal, UIedit) => {  // actions comes after states 
             if (e.target != undefined) {
                 if (e.target.name == 'image') {
                     const source = '/uploads/' + e.target.value
-                    setForm({...form, image: source })
+                    setForm((previous) => ({...previous, image: source }))
                 } else {
                     setForm((previous) => ({...previous, [e.target.name]: { [i18n.language]: e.target.value} }) )
                 }

@@ -1,7 +1,7 @@
-var jwt = require('jsonwebtoken')
 import { isBefore } from 'date-fns'
 import User from '../../models/user.model'
 import Role from '../../models/role.model'
+var jwt = require('jsonwebtoken')
 require('dotenv').config('../../')
 
 /* ALL MIDDLEWARE USED TO AUTHORITY SESSION OR PROCESS TO CHECK FROM ROUTER */
@@ -45,10 +45,10 @@ const canConnect  = (req, res, next) => {
     User.findOne(id).exec()
         .then(user => {
             if (user) {
-                if(!user.authenticate(req.body.password)) throw ({ error: {
+                if(!user.authenticate(req.body.password)) return res.status(401).json({ error: {
                     name: req.i18n.t('error:authenticate.user.password.title'), 
                     message: req.i18n.t('error:authenticate.user.password.message')} })
-                if (!user.validated) throw ({ error: {
+                if (!user.validated) return res.status(401).json({ error: {
                     name: req.i18n.t('error:authenticate.user.disabled.title'),
                     message:  req.i18n.t('error:authenticate.user.disabled.message')} })
                 req.user = user.toJSON()
